@@ -9,6 +9,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: white;
+  font-size: 16px;
+}
+
+/* Заголовки */
+h1 {
+  font-size: 24px;
+  font-weight: 600;
 }
 
 /* Flex-позиционирование */
@@ -31,6 +39,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
+  text-align: left;
 }
 
 .flex-col-sb-right {
@@ -38,6 +47,27 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
+  text-align: right;
+}
+
+.flex-gap-50 {
+  gap: 50px;
+}
+
+.flex-gap-40 {
+  gap: 40px;
+}
+
+.flex-gap-30 {
+  gap: 30px;
+}
+
+.flex-gap-15 {
+  gap: 15px;
+}
+
+.flex-gap-10 {
+  gap: 10px;
 }
 
 /* Границы */
@@ -61,4 +91,71 @@ section {
 .container {
   max-width: 1116px;
   margin: 0 auto;
+}
+
+/* Кнопки */
+.button-image-big {
+  background-color: var(--background-element-gray);
+  border: 3px solid transparent;
+  border-radius: 10px;
+  height: 50px;
+  width: 50px;
+  padding: 7px;
+}
+
+.button-image-big img {
+  max-height: 30px;
+  max-width: 30px;
+}
+
+.button-text-usual {
+  padding: 5px 15px;
+  background-color: var(--background-element-gray);
+  border: 3px solid transparent;
+  border-radius: 5px;
+}
+
+/* Выпадающий список */
+.dropdown-item {
+  width: 100%;
+  text-decoration: none;
+  padding: 7px;
+}
+
+.dropdown-item:hover, .dropdown-item.active {
+  background-color: var(--background-element-gray);
+}
+
+.dropdown-menu {
+  background-color: var(--background-panel-gray);
+  border-radius: 5px;
+  display: none;
+}
+
+.show {
+  display: flex;
+}
+
+/* Поля ввода */
+.textInput-usual {
+  background-color: var(--background-element-gray);
+  border: 1px solid white;
+  padding: 5px 10px;
+  border-radius: 2px;
+}
+
+/* Отдельные элементы */
+.logo img {
+  height: 39px;
+}
+
+.active, .button-image-big:hover, .dropdown-toggle[aria-expanded="true"] {
+  border: 3px solid white;
+}
+
+.signInUpContainer {
+  width: 400px;
+  padding: 62px 40px;
+  background-color: var(--background-panel-gray);
+  border-radius: 30px;
 }
