@@ -1,7 +1,6 @@
 import { Link, Route, Router } from "react-router-dom"
 import Authorization from "../authorization/authorization"
 import logoImage from "../../assets/Logo.png"
-import "./signInUpPanel.css"
 import Registration from "../registration/registration";
 
 function SignInUpPanel() {

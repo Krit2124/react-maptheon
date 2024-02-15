@@ -1,11 +1,9 @@
-import "./header.css"
 import logoImage from "../../assets/Logo.png"
 import personalMapsImage from "../../assets/icons/PersonalMaps.png"
 import publicMapsImage from "../../assets/icons/PublicMaps.png"
 import userImage from "../../assets/icons/User.png"
 import { Link, NavLink } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
-
 
 function Header() {
     return (
@@ -25,7 +23,7 @@ function Header() {
                     </NavLink>
                 </div>
                 
-                <Dropdown className="flex-col-sb-right">
+                <Dropdown className="flex-col-sb-right white-border-when-active" align="end">
                     <Dropdown.Toggle variant="success" className="button-image-big" id="dropdown-basic">
                         <img src={userImage} alt="Действия с аккаунтом" />
                     </Dropdown.Toggle>

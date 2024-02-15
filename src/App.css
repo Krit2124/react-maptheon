@@ -19,11 +19,23 @@ h1 {
   font-weight: 600;
 }
 
+h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
 /* Flex-позиционирование */
 .flex-row-sb-c {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+}
+
+.flex-row-left-c {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -62,12 +74,20 @@ h1 {
   gap: 30px;
 }
 
+.flex-gap-20 {
+  gap: 20px;
+}
+
 .flex-gap-15 {
   gap: 15px;
 }
 
 .flex-gap-10 {
   gap: 10px;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 /* Границы */
@@ -84,13 +104,21 @@ h1 {
 }
 
 /* Контейнеры */
-section {
-  padding: 20px 0;
+section .container {
+  padding-top: 30px;
 }
 
 .container {
   max-width: 1116px;
   margin: 0 auto;
+}
+
+.background-gray-default {
+  background-color: var(--background-gray);
+}
+
+.background-gray-search {
+  background-color: var(--background-find-gray);
 }
 
 /* Кнопки */
@@ -130,10 +158,17 @@ section {
   background-color: var(--background-panel-gray);
   border-radius: 5px;
   display: none;
+  z-index: 4;
 }
 
 .show {
   display: flex;
+}
+
+.textInput-search .btn {
+  white-space: nowrap;
+  background: none;
+  border: none;
 }
 
 /* Поля ввода */
@@ -144,12 +179,34 @@ section {
   border-radius: 2px;
 }
 
+.textInput-search {
+  border: 1px solid #757575;
+  border-radius: 20px;
+  padding: 8px 15px;
+}
+
+.textInput-search-field {
+  width: 100%;
+  margin: 0 15px;
+  background: none;
+  border: none;
+}
+
+.textInput-search-field:focus {
+  outline: none;
+}
+
 /* Отдельные элементы */
+header {
+  background-color: var(--background-panel-gray);
+  padding: 10px 0;
+}
+
 .logo img {
   height: 39px;
 }
 
-.active, .button-image-big:hover, .dropdown-toggle[aria-expanded="true"] {
+.active, .button-image-big:hover, .white-border-when-active .dropdown-toggle[aria-expanded="true"] {
   border: 3px solid white;
 }
 
@@ -158,4 +215,25 @@ section {
   padding: 62px 40px;
   background-color: var(--background-panel-gray);
   border-radius: 30px;
+}
+
+.size-image-small {
+  max-width: 24px;
+  max-height: 24px;
+}
+
+.publicMapCard {
+  padding: 15px 0;
+}
+
+.mapCardContent {
+  width: 100%;
+  padding: 0 20px;
+}
+
+/* Временные заглушки */
+.mapCardPlaceholder {
+  width: 350px;
+  height: 215px;
+  background-color: #FFCD9F;
 }
