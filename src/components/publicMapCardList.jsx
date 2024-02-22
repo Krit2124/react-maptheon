@@ -1,4 +1,5 @@
-import PublicMapCard from "../publicMapCard/publicMapCard";
+import PublicMapCard from "./publicMapCard";
+
 
 function PublicMapCardList() {
     return (

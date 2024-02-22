@@ -141,6 +141,7 @@ section .container {
   background-color: var(--background-element-gray);
   border: 3px solid transparent;
   border-radius: 5px;
+  white-space: nowrap;
 }
 
 /* Выпадающий список */
@@ -226,9 +227,17 @@ header {
   padding: 15px 0;
 }
 
+.personalMapCard {
+  padding-bottom: 15px;
+}
+
 .mapCardContent {
   width: 100%;
   padding: 0 20px;
+}
+
+.textInput-search {
+  width: 100%;
 }
 
 /* Временные заглушки */

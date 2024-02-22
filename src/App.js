@@ -1,7 +1,8 @@
 import './App.css';
-import Header from './components/header/header';
-import PublicMapsPage from './components/publicMapsPage/publicMapsPage';
-import SignInUpPanel from './components/signInUpPanel/signInUpPanel';
+import Header from './components/header';
+import PersonalMapsPage from './components/personalMapsPage';
+import PublicMapsPage from './components/publicMapsPage';
+import SignInUpPanel from './components/signInUpPanel';
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
 
       {/* <SignInUpPanel /> */}
 
-      <PublicMapsPage />
+      <PersonalMapsPage />
     </div>
   );
 }

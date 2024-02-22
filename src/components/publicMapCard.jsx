@@ -1,6 +1,6 @@
-import userImage from "../../assets/icons/User.png"
-import favouriteImage from "../../assets/icons/Favourite.png"
-import notFavouriteImage from "../../assets/icons/NotFavourite.png"
+import userImage from "../assets/icons/User.png"
+import favouriteImage from "../assets/icons/Favourite.png"
+import notFavouriteImage from "../assets/icons/NotFavourite.png"
 import { useState } from "react";
 
 function PublicMapCard() {

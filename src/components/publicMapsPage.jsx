@@ -1,5 +1,5 @@
-import PublicMapCardList from "../publicMapCardList/publicMapCardList";
-import SearchField from "../searchField/searchField";
+import PublicMapCardList from "./publicMapCardList";
+import SearchField from "./searchField";
 
 function PublicMapsPage() {
     return (

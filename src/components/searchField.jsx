@@ -4,8 +4,8 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import { useState } from 'react'
 
-import loupeImage from "../../assets/icons/Loupe.png"
-import showOrHideImage from "../../assets/icons/ShowOrHide.png"
+import loupeImage from "../assets/icons/Loupe.png"
+import showOrHideImage from "../assets/icons/ShowOrHide.png"
 import { DropdownMenu } from 'react-bootstrap'
 
 function SearchField() {

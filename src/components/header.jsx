@@ -1,7 +1,7 @@
-import logoImage from "../../assets/Logo.png"
-import personalMapsImage from "../../assets/icons/PersonalMaps.png"
-import publicMapsImage from "../../assets/icons/PublicMaps.png"
-import userImage from "../../assets/icons/User.png"
+import logoImage from "../assets/Logo.png"
+import personalMapsImage from "../assets/icons/PersonalMaps.png"
+import publicMapsImage from "../assets/icons/PublicMaps.png"
+import userImage from "../assets/icons/User.png"
 import { Link, NavLink } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 
