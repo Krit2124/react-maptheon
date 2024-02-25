@@ -1,3 +1,5 @@
+import React from 'react';
+
 function Authorization() {
     return (
         <div className="flex-col-sb-left flex-gap-30">
@@ -5,7 +7,7 @@ function Authorization() {
 
             <form className="flex-col-sb-left flex-gap-30">
                 <div className="flex-col-sb-left flex-gap-15">
-                    <input className="textInput-usual" type="text" placeholder="Email"/>
+                    <input className="textInput-usual" type="email" placeholder="Email"/>
                     <input className="textInput-usual" type="password" placeholder="Пароль"/>
                 </div>
                 

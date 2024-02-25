@@ -1,12 +1,14 @@
+import React from 'react';
+
 import Dropdown from 'react-bootstrap/Dropdown'
 import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import { useState } from 'react'
+import { DropdownMenu } from 'react-bootstrap'
 
 import loupeImage from "../assets/icons/Loupe.png"
 import showOrHideImage from "../assets/icons/ShowOrHide.png"
-import { DropdownMenu } from 'react-bootstrap'
 
 function SearchField() {
     const [selectedSort, setSelectedSort] = useState('Недавние');

@@ -1,13 +1,6 @@
-import userImage from "../assets/icons/User.png"
-import { useState } from "react";
+import React from 'react';
 
 function PersonalMapCard() {
-    const [isFavourite, setIsFavourite] = useState(false);
-
-    const switchToFavourite = () => {
-        setIsFavourite(!isFavourite);
-    };
-
     return (
         <div className="flex-col-sb-c background-gray-search flex-gap-15 personalMapCard">
             <div className="mapCardPlaceholder"></div>

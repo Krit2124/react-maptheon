@@ -1,7 +1,10 @@
-import Link from "react-router-dom"
-import Authorization from "./authorization"
-import logoImage from "../assets/Logo.png"
+import React from 'react';
+
+import {Link} from "react-router-dom";
+import Authorization from "./authorization";
 import Registration from "./registration";
+
+import logoImage from "../assets/Logo.png";
 
 function SignInUpPanel() {
     return (

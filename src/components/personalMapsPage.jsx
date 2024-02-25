@@ -1,5 +1,7 @@
-import PersonalMapCardList from "./personalMapCardList";
+import React from 'react';
+
 import SearchField from "./searchField";
+import MapCardList from './mapCardList';
 
 function PersonalMapsPage() {
     return (
@@ -16,7 +18,7 @@ function PersonalMapsPage() {
             </div>
 
             <div className="container">
-                <PersonalMapCardList />
+                <MapCardList />
             </div>
         </section>
     );

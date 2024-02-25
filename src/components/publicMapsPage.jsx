@@ -1,5 +1,7 @@
-import PublicMapCardList from "./publicMapCardList";
+import React from 'react';
+
 import SearchField from "./searchField";
+import MapCardList from './mapCardList';
 
 function PublicMapsPage() {
     return (
@@ -9,7 +11,7 @@ function PublicMapsPage() {
             </div>
 
             <div className="container">
-                <PublicMapCardList />
+                <MapCardList />
             </div>
         </section>
     );
