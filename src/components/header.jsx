@@ -10,11 +10,11 @@ import userImage from "../assets/icons/User.png"
 
 function Header() {
     return (
-        <header className="border-black-bottom">
+        <header className="border-black-bottom background-black">
             <div className="container flex-row-sb-c">
                 <div className="flex-row-sb-c flex-gap-40">
                     <Link to="/signIn" className="logo">
-                        <img src={logoImage} alt="logo"/>
+                        <img src={logoImage} alt="Логотип"/>
                     </Link>
                     
                     <NavLink to="/personalMaps" className="button-image-big">

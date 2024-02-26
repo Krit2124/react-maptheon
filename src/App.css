@@ -1,7 +1,7 @@
 :root {
   --background-find-gray: #1E1E1E;
   --background-element-gray: #2B2A2A;
-  --background-panel-gray: #161616;
+  --background-panel-black: #161616;
   --background-gray: #252525;
 }
 
@@ -13,8 +13,22 @@
   font-size: 16px;
 }
 
-.allSizeElement {
+/* Размеры */
+.size-full-horizontal-percent {
   width: 100%;
+}
+
+.size-full-vertical-pagePercent-withHeader {
+  min-height: calc(100vh - 72px);
+}
+
+.size-full-vertical-pagePercent {
+  min-height: 100vh;
+}
+
+.size-image-small {
+  max-width: 24px;
+  max-height: 24px;
 }
 
 /* Текст */
@@ -65,19 +79,26 @@ h2 {
   text-align: left;
 }
 
-.flex-col-c-c {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 .flex-col-sb-right {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
   text-align: right;
+}
+
+.flex-col-top-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flex-col-c-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .flex-gap-50 {
@@ -139,6 +160,14 @@ section .container {
   background-color: var(--background-find-gray);
 }
 
+.background-black {
+  background-color: var(--background-panel-black);
+}
+
+.background-beige {
+  background-color: #FFCD9F;
+}
+
 /* Кнопки */
 .button-image-big {
   background-color: var(--background-element-gray);
@@ -152,6 +181,22 @@ section .container {
 .button-image-big img {
   max-height: 30px;
   max-width: 30px;
+}
+
+.button-image-placeSwitcher {
+  background-color: var(--background-element-gray);
+  border: 1px solid transparent;
+  width: 20px;
+  height: 16px;
+}
+
+.button-image-placeSwitcher img {
+  max-height: 10px;
+  max-width: 12px;
+}
+
+.button-image-placeSwitcher:hover {
+  border: 1px solid white;
 }
 
 .button-text-usual {
@@ -174,7 +219,7 @@ section .container {
 }
 
 .dropdown-menu {
-  background-color: var(--background-panel-gray);
+  background-color: var(--background-panel-black);
   border-radius: 5px;
   display: none;
   z-index: 4;
@@ -215,30 +260,41 @@ section .container {
   outline: none;
 }
 
+.textInput-search {
+  width: 100%;
+}
+
+/* Повороты элементов */
+.rotate-left {
+  transform: rotate(-90deg);
+}
+
+.rotate-down {
+  transform: rotate(180deg);
+}
+
+.rotate-right {
+  transform: rotate(90deg);
+}
+
 /* Отдельные элементы */
 header {
-  background-color: var(--background-panel-gray);
-  padding: 10px 0;
+  padding: 10px;
 }
 
 .logo img {
   height: 39px;
 }
 
-.active, .button-image-big:hover, .white-border-when-active .dropdown-toggle[aria-expanded="true"] {
+.active, .button-image-big:hover, .button-text-usual:hover, .white-border-when-active .dropdown-toggle[aria-expanded="true"] {
   border: 3px solid white;
 }
 
 .signInUpContainer {
   width: 400px;
   padding: 62px 40px;
-  background-color: var(--background-panel-gray);
+  background-color: var(--background-panel-black);
   border-radius: 30px;
-}
-
-.size-image-small {
-  max-width: 24px;
-  max-height: 24px;
 }
 
 .publicMapCard {
@@ -254,21 +310,38 @@ header {
   padding: 0 20px;
 }
 
-.textInput-search {
-  width: 100%;
-}
-
-.userSettingsContainer {
-  height: calc(100vh - 72px);
-}
-
 .userSettingsContent {
   width: 530px;
+}
+
+.tagBox {
+  background-color: var(--background-element-gray);
+  padding: 5px 8px;
+}
+
+.canvasPanel {
+  padding: 20px 10px;
+}
+
+.objectCard-canvas {
+  width: 280px;
 }
 
 /* Временные заглушки */
 .mapCardPlaceholder {
   width: 350px;
   height: 215px;
+  background-color: #FFCD9F;
+}
+
+.mapCardBigPlaceholder {
+  width: 1116px;
+  height: 580px;
+  background-color: #FFCD9F;
+}
+
+.smallObjectPlaceholder {
+  width: 32px;
+  height: 32px;
   background-color: #FFCD9F;
 }
