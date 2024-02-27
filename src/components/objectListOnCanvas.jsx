@@ -23,6 +23,24 @@ function ObjectListOnCanvas() {
             <ObjectCardOnCanvas />
             <ObjectCardOnCanvas />
             <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
+            <ObjectCardOnCanvas />
         </div>
     );
 }

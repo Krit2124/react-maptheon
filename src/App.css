@@ -3,6 +3,7 @@
   --background-element-gray: #2B2A2A;
   --background-panel-black: #161616;
   --background-gray: #252525;
+  --background-beige: #FFCD9F;
 }
 
 * {
@@ -11,6 +12,27 @@
   box-sizing: border-box;
   color: white;
   font-size: 16px;
+  /* Кастомизация полосы прокрутки дял Firefox */
+  scrollbar-color: #888 #f1f1f1;
+  scrollbar-width: thin;
+}
+
+/* Полосы прокрутки */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--background-gray);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--background-element-gray);
 }
 
 /* Размеры */
@@ -19,11 +41,11 @@
 }
 
 .size-full-vertical-pagePercent-withHeader {
-  min-height: calc(100vh - 72px);
+  height: calc(100vh - 72px);
 }
 
 .size-full-vertical-pagePercent {
-  min-height: 100vh;
+  height: 100vh;
 }
 
 .size-image-small {
@@ -94,6 +116,13 @@ h2 {
   align-items: center;
 }
 
+.flex-col-top-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
 .flex-col-c-c {
   display: flex;
   flex-direction: column;
@@ -113,6 +142,10 @@ h2 {
   gap: 30px;
 }
 
+.flex-gap-25 {
+  gap: 25px;
+}
+
 .flex-gap-20 {
   gap: 20px;
 }
@@ -123,6 +156,10 @@ h2 {
 
 .flex-gap-10 {
   gap: 10px;
+}
+
+.flex-gap-5 {
+  gap: 5px;
 }
 
 .flex-wrap {
@@ -152,6 +189,7 @@ section .container {
   margin: 0 auto;
 }
 
+/* Цвета фона */
 .background-gray-default {
   background-color: var(--background-gray);
 }
@@ -165,10 +203,14 @@ section .container {
 }
 
 .background-beige {
-  background-color: #FFCD9F;
+  background-color: var(--background-beige);
 }
 
 /* Кнопки */
+button {
+  cursor: pointer;
+}
+
 .button-image-big {
   background-color: var(--background-element-gray);
   border: 3px solid transparent;
@@ -183,6 +225,19 @@ section .container {
   max-width: 30px;
 }
 
+.button-image-closePanel {
+  background-color: var(--background-element-gray);
+  border: 1px solid transparent;
+  border-radius: 5px;
+  width: 25px;
+  height: 25px;
+}
+
+.button-image-closePanel img {
+  max-height: 15px;
+  max-width: 15px;
+}
+
 .button-image-placeSwitcher {
   background-color: var(--background-element-gray);
   border: 1px solid transparent;
@@ -193,10 +248,6 @@ section .container {
 .button-image-placeSwitcher img {
   max-height: 10px;
   max-width: 12px;
-}
-
-.button-image-placeSwitcher:hover {
-  border: 1px solid white;
 }
 
 .button-text-usual {
@@ -235,6 +286,80 @@ section .container {
   border: none;
 }
 
+/* Поля для ввода числа */
+input[type="number"] {
+  width: 40px;
+  height: 20px;
+  border-radius: 2px;
+  background-color: var(--background-element-gray);
+  border: 1px solid white;
+  text-align: center;
+  font-size: 14px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]::-ms-clear {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Ползунки */
+input[type="range"] {
+	width: 190px;
+	color: var(--background-beige);
+	cursor: pointer;
+	--thumb-height: 16px;
+	--track-height: 5px;
+	--track-color: var(--background-element-gray);
+	--clip-edges: 0.125rem;
+	position: relative;
+	background: none;
+	overflow: hidden;
+}
+
+input[type="range"]:active {
+	cursor: grabbing;
+}
+
+input[type="range"],
+input[type="range"]::-webkit-slider-runnable-track,
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	height: var(--thumb-height);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	--clip-top: calc((var(--thumb-height) - var(--track-height)) * 0.5 - 0.5px);
+	--clip-bottom: calc(var(--thumb-height) - var(--clip-top));
+	--clip-further: calc(100% + 1px);
+	--box-fill: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0 100vmax currentColor;
+	width: var(--thumb-width, var(--thumb-height));
+	background: linear-gradient(currentColor 0 0) scroll no-repeat left center / 50% calc(var(--track-height) + 1px);
+	background-color: currentColor;
+	box-shadow: var(--box-fill);
+	border-radius: 50%;
+	clip-path: polygon(100% -1px, var(--clip-edges) -1px, 0 var(--clip-top), -100vmax var(--clip-top), -100vmax var(--clip-bottom), 0 var(--clip-bottom), var(--clip-edges) 100%, var(--clip-further) var(--clip-further));
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+	background: linear-gradient(var(--track-color) 0 0) scroll no-repeat center / 100% calc(var(--track-height) + 1px);
+}
+
+/* Обводки активных элементов */
+.button-image-placeSwitcher:hover, .button-image-closePanel:hover {
+  border: 1px solid white;
+}
+
+.active, .button-image-big:hover, .button-text-usual:hover, .white-border-when-active .dropdown-toggle[aria-expanded="true"] {
+  border: 3px solid white;
+}
+
 /* Поля ввода */
 .textInput-usual {
   background-color: var(--background-element-gray);
@@ -264,6 +389,8 @@ section .container {
   width: 100%;
 }
 
+/*  */
+
 /* Повороты элементов */
 .rotate-left {
   transform: rotate(-90deg);
@@ -284,10 +411,6 @@ header {
 
 .logo img {
   height: 39px;
-}
-
-.active, .button-image-big:hover, .button-text-usual:hover, .white-border-when-active .dropdown-toggle[aria-expanded="true"] {
-  border: 3px solid white;
 }
 
 .signInUpContainer {
@@ -321,27 +444,45 @@ header {
 
 .canvasPanel {
   padding: 20px 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .objectCard-canvas {
   width: 280px;
 }
 
+.recentlyUsedContainer {
+  max-width: 270px;
+}
+
 /* Временные заглушки */
 .mapCardPlaceholder {
   width: 350px;
   height: 215px;
-  background-color: #FFCD9F;
+  background-color: var(--background-beige);
 }
 
 .mapCardBigPlaceholder {
   width: 1116px;
   height: 580px;
-  background-color: #FFCD9F;
+  background-color: var(--background-beige);
+}
+
+.colorPlaceholder {
+  width: 262px;
+  height: 84px;
+  background-color: var(--background-beige);
+}
+
+.recentColorPlaceholder {
+  width: 63px;
+  height: 35px;
+  background-color: var(--background-beige);
 }
 
 .smallObjectPlaceholder {
   width: 32px;
   height: 32px;
-  background-color: #FFCD9F;
+  background-color: var(--background-beige);
 }
