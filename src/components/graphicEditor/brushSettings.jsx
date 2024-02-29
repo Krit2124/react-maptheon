@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
-function BrushSettings() {
+import roundBrushImage from "../../assets/icons/RoundBrush.png"
+import rectangleBrushImage from "../../assets/icons/RectangleBrush.png"
+
+export default function BrushSettings() {
     const [thickness, setThickness] = useState(20);
     const [opacity, setOpacity] = useState(100);
     const [softness, setSoftness] = useState(100);
@@ -63,6 +66,20 @@ function BrushSettings() {
                     </div>
                 </div>
 
+                <div className="flex-row-sb-c size-full-horizontal-percent">
+                    <p>Форма кисти</p>
+
+                    <div className='flex-row-sb-c flex-gap-5'>
+                        <button className='button-image-medium active'>
+                            <img src={roundBrushImage} alt="Круглая"/>
+                        </button>
+
+                        <button className='button-image-medium'>
+                            <img src={rectangleBrushImage} alt="Квадратная"/>
+                        </button>
+                    </div>
+                </div>
+
                 <div className='flex-col-top-left flex-gap-10 size-full-horizontal-percent'>
                     <p>Прозрачность (%)</p>
 
@@ -84,5 +101,3 @@ function BrushSettings() {
         </div>
     );
 }
-
-export default BrushSettings;

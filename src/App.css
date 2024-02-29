@@ -213,11 +213,15 @@ button {
 
 .button-image-big {
   background-color: var(--background-element-gray);
-  border: 3px solid transparent;
+  border: none;
   border-radius: 10px;
   height: 50px;
   width: 50px;
   padding: 7px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button-image-big img {
@@ -225,12 +229,34 @@ button {
   max-width: 30px;
 }
 
+.button-image-medium {
+  background-color: var(--background-element-gray);
+  border: none;
+  border-radius: 10px;
+  height: 40px;
+  width: 40px;
+  padding: 8px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-image-medium img {
+  max-height: 24px;
+  max-width: 24px;
+}
+
 .button-image-closePanel {
   background-color: var(--background-element-gray);
-  border: 1px solid transparent;
+  border: none;
   border-radius: 5px;
   width: 25px;
   height: 25px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button-image-closePanel img {
@@ -243,6 +269,10 @@ button {
   border: 1px solid transparent;
   width: 20px;
   height: 16px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button-image-placeSwitcher img {
@@ -284,6 +314,15 @@ button {
   white-space: nowrap;
   background: none;
   border: none;
+}
+
+/* Обводки активных элементов */
+.button-image-placeSwitcher:hover, .button-image-closePanel:hover {
+  border: 1px solid white;
+}
+
+.active, .button-image-big:hover, .button-image-medium:hover, .button-text-usual:hover, .white-border-when-active .dropdown-toggle[aria-expanded="true"] {
+  border: 3px solid white;
 }
 
 /* Поля для ввода числа */
@@ -351,15 +390,6 @@ input[type="range"]::-webkit-slider-runnable-track {
 	background: linear-gradient(var(--track-color) 0 0) scroll no-repeat center / 100% calc(var(--track-height) + 1px);
 }
 
-/* Обводки активных элементов */
-.button-image-placeSwitcher:hover, .button-image-closePanel:hover {
-  border: 1px solid white;
-}
-
-.active, .button-image-big:hover, .button-text-usual:hover, .white-border-when-active .dropdown-toggle[aria-expanded="true"] {
-  border: 3px solid white;
-}
-
 /* Поля ввода */
 .textInput-usual {
   background-color: var(--background-element-gray);
@@ -388,8 +418,6 @@ input[type="range"]::-webkit-slider-runnable-track {
 .textInput-search {
   width: 100%;
 }
-
-/*  */
 
 /* Повороты элементов */
 .rotate-left {
@@ -473,6 +501,12 @@ header {
   width: 262px;
   height: 84px;
   background-color: var(--background-beige);
+}
+
+.fontColorPlaceholder {
+  width: 49px;
+  height: 19px;
+  background-color: white;
 }
 
 .recentColorPlaceholder {

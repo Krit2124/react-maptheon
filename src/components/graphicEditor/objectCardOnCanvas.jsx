@@ -1,7 +1,7 @@
 import React from 'react';
 
-import arrowUpImage from "../assets/icons/ArrowUp.png"
-import arrowDownImage from "../assets/icons/ArrowDown.png"
+import arrowUpImage from "../../assets/icons/ArrowUp.png"
+import arrowDownImage from "../../assets/icons/ArrowDown.png"
 
 function ObjectCardOnCanvas() {
     return (
@@ -12,11 +12,11 @@ function ObjectCardOnCanvas() {
             </div>
 
             <div className='flex-col-c-c'>
-                <button className='button-image-placeSwitcher flex-col-c-c'>
+                <button className='button-image-placeSwitcher'>
                     <img src={arrowUpImage} alt="Вверх"/>
                 </button>
 
-                <button className='button-image-placeSwitcher flex-col-c-c'>
+                <button className='button-image-placeSwitcher'>
                     <img src={arrowDownImage} alt="Вниз"/>
                 </button>
             </div>

@@ -1,12 +1,12 @@
 import React from 'react';
 
-import cursorImage from "../assets/icons/Cursor.png"
-import brushImage from "../assets/icons/Brush.png"
-import objectImage from "../assets/icons/Object.png"
-import textImage from "../assets/icons/Text.png"
-import canvasImage from "../assets/icons/Canvas.png"
-import downloadImage from "../assets/icons/Download.png"
-import saveImage from "../assets/icons/Save.png"
+import cursorImage from "../../assets/icons/Cursor.png"
+import brushImage from "../../assets/icons/Brush.png"
+import objectImage from "../../assets/icons/Object.png"
+import textImage from "../../assets/icons/Text.png"
+import canvasImage from "../../assets/icons/Canvas.png"
+import downloadImage from "../../assets/icons/Download.png"
+import saveImage from "../../assets/icons/Save.png"
 
 function GraphicEditorToolsPanel() {
     return (

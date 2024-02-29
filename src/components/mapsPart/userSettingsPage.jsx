@@ -1,6 +1,6 @@
 import React from 'react';
 
-import userWithoutAvatarImage from "../assets/UserWithoutAvatar.png"
+import userWithoutAvatarImage from "../../assets/UserWithoutAvatar.png"
 
 function UserSettingsPage() {
     return (
@@ -18,7 +18,7 @@ function UserSettingsPage() {
 
                     <div className='flex-col-sb-left flex-gap-10 size-full-horizontal-percent'>
                         <label htmlFor="userDescription">Описание профиля:</label>
-                        <input className="textInput-usual size-full-horizontal-percent size-full-horizontal-percent" type="text" id='userDescription'/>
+                        <input className="textInput-usual size-full-horizontal-percent" type="text" id='userDescription'/>
                     </div>
 
                     <div className='flex-row-sb-c size-full-horizontal-percent'>

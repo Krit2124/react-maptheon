@@ -1,9 +1,9 @@
 import React from 'react';
 
-import exitImage from "../assets/icons/Exit.png"
-import arrowBackImage from "../assets/icons/ArrowBack.png"
-import arrowForwardImage from "../assets/icons/ArrowForward.png"
-import showOrHideImage from "../assets/icons/ShowOrHide.png"
+import exitImage from "../../assets/icons/Exit.png"
+import arrowBackImage from "../../assets/icons/ArrowBack.png"
+import arrowForwardImage from "../../assets/icons/ArrowForward.png"
+import showOrHideImage from "../../assets/icons/ShowOrHide.png"
 
 function GraphicEditorHeader() {
     return (

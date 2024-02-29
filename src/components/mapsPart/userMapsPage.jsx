@@ -3,7 +3,7 @@ import React from 'react';
 import SearchField from "./searchField";
 import MapCardList from './mapCardList';
 
-import userWithoutAvatarImage from "../assets/UserWithoutAvatar.png"
+import userWithoutAvatarImage from "../../assets/UserWithoutAvatar.png"
 
 function UserMapsPage() {
     return (

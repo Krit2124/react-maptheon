@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import Authorization from "./authorization";
 import Registration from "./registration";
 
-import logoImage from "../assets/Logo.png";
+import logoImage from "../../assets/Logo.png";
 
 function SignInUpPage() {
     return (

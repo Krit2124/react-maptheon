@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import favouriteImage from "../assets/icons/Favourite.png";
-import notFavouriteImage from "../assets/icons/NotFavourite.png";
+import LikeCounter from './likeCounter';
 
 function SingleMapPage() {
-    const [isFavourite, setIsFavourite] = useState(false);
-
-    const switchToFavourite = () => {
-        setIsFavourite(!isFavourite);
-    };
-
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
             <div className="container">
@@ -21,10 +14,7 @@ function SingleMapPage() {
                         </div>
 
                         <div className='flex-col-sb-right flex-gap-10'>
-                            <div className="flex-row-sb-c flex-gap-10" onClick={switchToFavourite}>
-                                <p>34634</p>
-                                <img src={isFavourite ? favouriteImage : notFavouriteImage} alt="Избранное" className="size-image-small"/>
-                            </div>
+                            <LikeCounter likeAmount="34634" wasFavourite={false} />
                             <button className="button-text-usual">Клонировать</button>
                             <button className="button-text-usual">Скачать изображение</button>
                         </div>

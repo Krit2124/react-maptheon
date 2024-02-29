@@ -5,10 +5,9 @@ import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import { useState } from 'react'
-import { DropdownMenu } from 'react-bootstrap'
 
-import loupeImage from "../assets/icons/Loupe.png"
-import showOrHideImage from "../assets/icons/ShowOrHide.png"
+import loupeImage from "../../assets/icons/Loupe.png"
+import showOrHideImage from "../../assets/icons/ShowOrHide.png"
 
 function SearchField() {
     const [selectedSort, setSelectedSort] = useState('Недавние');
@@ -32,7 +31,7 @@ function SearchField() {
                 className='flex-row-left-c textInput-search-field'
             />
 
-            <DropdownButton className='flex-col-sb-right dropdown-text-toggle' id="input-dropdown" onToggle={handleDropdownToggle} align="end" title={
+            <DropdownButton className='flex-col-sb-right' id="input-dropdown" onToggle={handleDropdownToggle} align="end" title={
                 <span>
                     {selectedSort}
                     <img
