@@ -1,8 +1,8 @@
 import React from 'react';
 
-import GraphicEditorToolsPanel from './graphicEditorToolsPanel';
+import GraphicEditorToolsPanel from './tools/graphicEditorToolsPanel';
 import ObjectListOnCanvas from './objectListOnCanvas';
-import ToolSettingsPanel from './toolSettingsPanel';
+import ToolSettingsPanel from './tools/toolSettingsPanel';
 
 function GraphicEditorPage() {
     return (

@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 
-import showOrHideImage from "../../assets/icons/ShowOrHide.png"
-import boldFontImage from "../../assets/icons/BoldFont.png"
-import italicFontImage from "../../assets/icons/ItalicFont.png"
-import leftAlignmentImage from "../../assets/icons/LeftAlignment.png"
-import centerAlignmentImage from "../../assets/icons/CenterAlignment.png"
-import rightAlignmentImage from "../../assets/icons/RightAlignment.png"
-import mirroringImage from "../../assets/icons/Mirroring.png"
+import showOrHideImage from "../../../assets/icons/ShowOrHide.png"
+import boldFontImage from "../../../assets/icons/BoldFont.png"
+import italicFontImage from "../../../assets/icons/ItalicFont.png"
+import leftAlignmentImage from "../../../assets/icons/LeftAlignment.png"
+import centerAlignmentImage from "../../../assets/icons/CenterAlignment.png"
+import rightAlignmentImage from "../../../assets/icons/RightAlignment.png"
+import mirroringImage from "../../../assets/icons/Mirroring.png"
 
 export default function LabelSettings() {
     // Обработка изменения шрифта
@@ -55,7 +55,7 @@ export default function LabelSettings() {
             <div className="flex-row-sb-c size-full-horizontal-percent">
                 <p>Шрифт</p>
 
-                <DropdownButton className='flex-col-sb-right'  onToggle={handleDropdownToggle} align="end" title={
+                <DropdownButton className='flex-col-sb-right white-border-when-active'  onToggle={handleDropdownToggle} align="end" title={
                     <span className=' button-text-usual'>
                         {selectedFont}
                         <img
@@ -97,7 +97,7 @@ export default function LabelSettings() {
                     <div className='fontColorPlaceholder'></div>
                     <div className='flex-row-sb-c flex-gap-15'>
                         <div className='fontColorPlaceholder'></div>
-                        <input type="number" min="0" max="20" value={borderWidth} onChange={(e) => handleInputChange(parseFloat(e.target.value), setBorderWidth, 0, 20)}/>
+                        <input type="number" min="0" max="10" value={borderWidth} onChange={(e) => handleInputChange(parseFloat(e.target.value), setBorderWidth, 0, 10)}/>
                     </div>
                 </div>
             </div>

@@ -2,8 +2,9 @@ import React from 'react';
 
 import BrushSettings from './brushSettings';
 import LabelSettings from './labelSettings';
+import CanvasSettings from './canvasSettings';
 
-import closeImage from "../../assets/icons/Close.png"
+import closeImage from "../../../assets/icons/Close.png"
 
 function ToolSettingsPanel() {
     return (
@@ -15,7 +16,7 @@ function ToolSettingsPanel() {
                 </button>
             </div>
 
-            <LabelSettings />
+            <CanvasSettings />
         </div>
     );
 }

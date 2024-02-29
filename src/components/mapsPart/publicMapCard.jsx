@@ -6,7 +6,7 @@ import LikeCounter from './likeCounter';
 function PublicMapCard() {
     return (
         <div className="flex-col-sb-c background-gray-search flex-gap-15 publicMapCard">
-            <h2>Название карты</h2>
+            <h3>Название карты</h3>
             <div className="mapCardPlaceholder"></div>
             <div className="flex-row-sb-c mapCardContent">
                 <div className="flex-row-sb-c flex-gap-10">
