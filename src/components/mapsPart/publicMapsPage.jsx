@@ -3,7 +3,7 @@ import React from 'react';
 import SearchField from "../sharedElements/searchField";
 import MapCardList from './mapCardList';
 
-function PublicMapsPage() {
+export default function PublicMapsPage() {
     return (
         <section className="background-gray-default">
             <div className="container">
@@ -16,5 +16,3 @@ function PublicMapsPage() {
         </section>
     );
 }
-
-export default PublicMapsPage;

@@ -17,11 +17,11 @@ export default function Header() {
                         <img src={logoImage} alt="Логотип"/>
                     </Link>
                     
-                    <NavLink to="/personalMaps" className="button-image-big">
+                    <NavLink to="/maps/personal" className="button-image-big">
                         <img src={personalMapsImage} alt="Ваши карты" />
                     </NavLink>
 
-                    <NavLink to="/publicMaps" className="button-image-big">
+                    <NavLink to="/maps/public" className="button-image-big">
                         <img src={publicMapsImage} alt="Карты сообщества" />
                     </NavLink>
                 </div>
