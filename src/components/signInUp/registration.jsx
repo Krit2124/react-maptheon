@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Registration() {
+export default function Registration() {
     return (
         <div className="flex-col-sb-left flex-gap-30">
             <h1>Регистрация</h1>
@@ -20,5 +20,3 @@ function Registration() {
         </div>
     );
 }
-
-export default Registration;

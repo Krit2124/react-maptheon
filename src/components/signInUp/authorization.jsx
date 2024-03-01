@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Authorization() {
+export default function Authorization() {
     return (
         <div className="flex-col-sb-left flex-gap-30">
             <h1>Авторизация</h1>
@@ -19,5 +19,3 @@ function Authorization() {
         </div>
     );
 }
-
-export default Authorization;

@@ -1,7 +1,7 @@
 import React from 'react';
-import LikeCounter from './likeCounter';
+import LikeCounter from '../sharedElements/likeCounter';
 
-function UserMapCard() {
+export default function UserMapCard() {
     return (
         <div className="flex-col-sb-c background-gray-search flex-gap-15 personalMapCard">
             <div className="mapCardPlaceholder"></div>
@@ -13,5 +13,3 @@ function UserMapCard() {
         </div>
     );
 }
-
-export default UserMapCard;

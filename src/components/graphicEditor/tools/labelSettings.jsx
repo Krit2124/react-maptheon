@@ -28,7 +28,7 @@ export default function LabelSettings() {
     const [fontSize, setFontSize] = useState(20);
     const [letterSpacing, setLetterSpacing] = useState(0.5);
     const [lineSpacing, setLineSpacing] = useState(1);
-    const [rotation, setRotation] = useState(0);
+    const [labelRotation, setLabelRotation] = useState(0);
     const [borderWidth, setBorderWidth] = useState(0);
 
     const handleSliderChange = (value, setValue) => {
@@ -149,7 +149,7 @@ export default function LabelSettings() {
             <div className="flex-row-sb-c size-full-horizontal-percent">
                 <div className="flex-row-sb-c flex-gap-10">
                     <p>Поворот (°)</p>
-                    <input type="number" min="0" max="360" value={rotation} onChange={(e) => handleInputChange(parseInt(e.target.value), setRotation, 0, 360)}/>
+                    <input type="number" min="0" max="360" value={labelRotation} onChange={(e) => handleInputChange(parseInt(e.target.value), setLabelRotation, 0, 360)}/>
                 </div>
 
                 <div className="flex-row-sb-c flex-gap-10">

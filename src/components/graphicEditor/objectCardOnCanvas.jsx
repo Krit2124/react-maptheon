@@ -3,11 +3,11 @@ import React from 'react';
 import arrowUpImage from "../../assets/icons/ArrowUp.png"
 import arrowDownImage from "../../assets/icons/ArrowDown.png"
 
-function ObjectCardOnCanvas() {
+export default function ObjectCardOnCanvas() {
     return (
         <div className='objectCard-canvas flex-row-sb-c'>
             <div className='flex-row-sb-c flex-gap-15'>
-                <div className='smallObjectPlaceholder'></div>
+                <div className='tinyObjectPlaceholder'></div>
                 <p>Название объекта</p>
             </div>
 
@@ -23,5 +23,3 @@ function ObjectCardOnCanvas() {
         </div>
     );
 }
-
-export default ObjectCardOnCanvas;

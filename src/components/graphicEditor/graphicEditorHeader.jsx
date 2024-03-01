@@ -5,7 +5,7 @@ import arrowBackImage from "../../assets/icons/ArrowBack.png"
 import arrowForwardImage from "../../assets/icons/ArrowForward.png"
 import showOrHideImage from "../../assets/icons/ShowOrHide.png"
 
-function GraphicEditorHeader() {
+export default function GraphicEditorHeader() {
     return (
         <header className="border-black-bottom background-black">
             <div className="flex-row-sb-c">
@@ -31,5 +31,3 @@ function GraphicEditorHeader() {
         </header>
     );
 }
-
-export default GraphicEditorHeader;

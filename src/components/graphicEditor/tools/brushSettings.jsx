@@ -5,8 +5,8 @@ import rectangleBrushImage from "../../../assets/icons/RectangleBrush.png"
 
 export default function BrushSettings() {
     const [thickness, setThickness] = useState(20);
-    const [opacity, setOpacity] = useState(100);
-    const [softness, setSoftness] = useState(100);
+    const [brushOpacity, setBrushOpacity] = useState(1);
+    const [softness, setSoftness] = useState(1);
 
     const handleSliderChange = (value, setValue) => {
         setValue(value);
@@ -84,8 +84,8 @@ export default function BrushSettings() {
                     <p>Прозрачность</p>
 
                     <div className="flex-row-sb-c size-full-horizontal-percent">
-                        <input type="range" min="0" max="1" step={0.01} value={opacity} onChange={(e) => handleSliderChange(parseInt(e.target.value), setOpacity)}/>
-                        <input type="number" min="0" max="1" step={0.01} value={opacity} onChange={(e) => handleInputChange(parseInt(e.target.value), setOpacity, 0, 1)}/>
+                        <input type="range" min="0" max="1" step={0.01} value={brushOpacity} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setBrushOpacity)}/>
+                        <input type="number" min="0" max="1" step={0.01} value={brushOpacity} onChange={(e) => handleInputChange(parseFloat(e.target.value), setBrushOpacity, 0, 1)}/>
                     </div>
                 </div>
 
@@ -93,8 +93,8 @@ export default function BrushSettings() {
                     <p>Мягкость</p>
 
                     <div className="flex-row-sb-c size-full-horizontal-percent">
-                        <input type="range" min="0" max="1" step={0.01} value={softness} onChange={(e) => handleSliderChange(parseInt(e.target.value), setSoftness)}/>
-                        <input type="number" min="0" max="1" step={0.01} value={softness} onChange={(e) => handleInputChange(parseInt(e.target.value), setSoftness, 0, 1)}/>
+                        <input type="range" min="0" max="1" step={0.01} value={softness} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setSoftness)}/>
+                        <input type="number" min="0" max="1" step={0.01} value={softness} onChange={(e) => handleInputChange(parseFloat(e.target.value), setSoftness, 0, 1)}/>
                     </div>
                 </div>
             </div>

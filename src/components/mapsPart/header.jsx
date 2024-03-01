@@ -8,7 +8,7 @@ import personalMapsImage from "../../assets/icons/PersonalMaps.png"
 import publicMapsImage from "../../assets/icons/PublicMaps.png"
 import userImage from "../../assets/icons/User.png"
 
-function Header() {
+export default function Header() {
     return (
         <header className="border-black-bottom background-black">
             <div className="container flex-row-sb-c">
@@ -41,5 +41,3 @@ function Header() {
         </header>
     );
 }
-
-export default Header;

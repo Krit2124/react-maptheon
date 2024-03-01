@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SearchField from "./searchField";
+import SearchField from "../sharedElements/searchField";
 import MapCardList from './mapCardList';
 
 import userWithoutAvatarImage from "../../assets/UserWithoutAvatar.png"

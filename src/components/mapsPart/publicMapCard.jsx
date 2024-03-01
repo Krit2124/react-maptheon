@@ -1,9 +1,9 @@
 import React from 'react';
 
 import userImage from "../../assets/icons/User.png";
-import LikeCounter from './likeCounter';
+import LikeCounter from '../sharedElements/likeCounter';
 
-function PublicMapCard() {
+export default function PublicMapCard() {
     return (
         <div className="flex-col-sb-c background-gray-search flex-gap-15 publicMapCard">
             <h3>Название карты</h3>
@@ -19,5 +19,3 @@ function PublicMapCard() {
         </div>
     );
 }
-
-export default PublicMapCard;

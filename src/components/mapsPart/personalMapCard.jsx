@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PersonalMapCard() {
+export default function PersonalMapCard() {
     return (
         <div className="flex-col-sb-c background-gray-search flex-gap-15 personalMapCard">
             <div className="mapCardPlaceholder"></div>
@@ -12,5 +12,3 @@ function PersonalMapCard() {
         </div>
     );
 }
-
-export default PersonalMapCard;

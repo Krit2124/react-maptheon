@@ -10,16 +10,16 @@ import UserSettingsPage from 'components/mapsPart/userSettingsPage';
 import SingleMapPage from 'components/mapsPart/singleMapPage';
 import GraphicEditorHeader from 'components/graphicEditor/graphicEditorHeader';
 import GraphicEditorPage from 'components/graphicEditor/graphicEditorPage';
+import ObjectsLibraryHeader from 'components/objectsLibrary/objectsLibraryHeader';
 
-function App() {
+export default function App() {
   return (
     <div className="App">
       {/* <Header /> */}
-      <GraphicEditorHeader />
+      {/* <GraphicEditorHeader /> */}
+      <ObjectsLibraryHeader />
 
       <GraphicEditorPage />
     </div>
   );
 }
-
-export default App;

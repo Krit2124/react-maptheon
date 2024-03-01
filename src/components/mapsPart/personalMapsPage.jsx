@@ -1,9 +1,9 @@
 import React from 'react';
 
-import SearchField from "./searchField";
+import SearchField from "../sharedElements/searchField";
 import MapCardList from './mapCardList';
 
-function PersonalMapsPage() {
+export default function PersonalMapsPage() {
     return (
         <section className="background-gray-default">
             <div className="container">
@@ -23,5 +23,3 @@ function PersonalMapsPage() {
         </section>
     );
 }
-
-export default PersonalMapsPage;

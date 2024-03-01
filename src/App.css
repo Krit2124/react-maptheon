@@ -12,8 +12,8 @@
   box-sizing: border-box;
   color: white;
   font-size: 16px;
-  /* Кастомизация полосы прокрутки дял Firefox */
-  scrollbar-color: #888 #f1f1f1;
+  /* Кастомизация полосы прокрутки для Firefox */
+  scrollbar-color: var(--background-gray) none;
   scrollbar-width: thin;
 }
 
@@ -161,6 +161,14 @@ h3 {
 
 .flex-gap-10 {
   gap: 10px;
+}
+
+.flex-gap-8 {
+  gap: 8px;
+}
+
+.flex-gap-6 {
+  gap: 6px;
 }
 
 .flex-gap-5 {
@@ -337,11 +345,11 @@ button {
 }
 
 /* Обводки активных элементов */
-.button-image-placeSwitcher:hover, .button-image-closePanel:hover, .button-image-long:hover {
+.button-image-placeSwitcher:hover, .button-image-closePanel:hover {
   border: 1px solid white;
 }
 
-.active, .button-image-big:hover, .button-image-medium:hover, .button-text-usual:hover, .white-border-when-active .dropdown-toggle[aria-expanded="true"] {
+.active, .button-image-big:hover, .button-image-medium:hover, .button-image-long:hover, .button-text-usual:hover, .white-border-when-active .dropdown-toggle[aria-expanded="true"] {
   border: 3px solid white;
 }
 
@@ -535,7 +543,25 @@ header {
   background-color: var(--background-beige);
 }
 
+.bigObjectPlaceholder {
+  width: 100px;
+  height: 100px;
+  background-color: var(--background-beige);
+}
+
+.mediumObjectPlaceholder {
+  width: 60px;
+  height: 60px;
+  background-color: var(--background-beige);
+}
+
 .smallObjectPlaceholder {
+  width: 47px;
+  height: 47px;
+  background-color: var(--background-beige);
+}
+
+.tinyObjectPlaceholder {
   width: 32px;
   height: 32px;
   background-color: var(--background-beige);

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import LikeCounter from './likeCounter';
+import LikeCounter from '../sharedElements/likeCounter';
 
-function SingleMapPage() {
+export default function SingleMapPage() {
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
             <div className="container">
@@ -45,5 +45,3 @@ function SingleMapPage() {
         </section>
     );
 }
-
-export default SingleMapPage;

@@ -4,7 +4,7 @@ import GraphicEditorToolsPanel from './tools/graphicEditorToolsPanel';
 import ObjectListOnCanvas from './objectListOnCanvas';
 import ToolSettingsPanel from './tools/toolSettingsPanel';
 
-function GraphicEditorPage() {
+export default function GraphicEditorPage() {
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
             <div className='size-full-horizontal-percent flex-row-sb-c'>
@@ -19,5 +19,3 @@ function GraphicEditorPage() {
         </section>
     );
 }
-
-export default GraphicEditorPage;

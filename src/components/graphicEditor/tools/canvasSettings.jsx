@@ -99,7 +99,7 @@ export default function CanvasSettings() {
 
                 <div className='flex-row-sb-c size-full-horizontal-percent'>
                     <DropdownButton className='flex-col-sb-right white-border-when-active'  onToggle={handleDropdownToggle} align="end" title={
-                        <span className=' button-text-usual'>
+                        <span className='button-text-usual'>
                             {selectedFilter}
                             <img
                                 src={showOrHideImage}
@@ -120,7 +120,7 @@ export default function CanvasSettings() {
                         </div>
                     </DropdownButton>
 
-                    <button className='button-image-long'>
+                    <button className='button-image-long active'>
                         <img src={eyeImage} alt="Скрыть/показать"/>
                     </button>
                 </div>

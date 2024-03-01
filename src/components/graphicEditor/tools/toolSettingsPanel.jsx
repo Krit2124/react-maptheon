@@ -3,10 +3,11 @@ import React from 'react';
 import BrushSettings from './brushSettings';
 import LabelSettings from './labelSettings';
 import CanvasSettings from './canvasSettings';
+import ObjectSettings from './objectSettings';
 
 import closeImage from "../../../assets/icons/Close.png"
 
-function ToolSettingsPanel() {
+export default function ToolSettingsPanel() {
     return (
         <div className="border-black-right background-black canvasPanel size-full-vertical-pagePercent-withHeader flex-col-top-left flex-gap-25">
             <div className='flex-row-sb-c size-full-horizontal-percent'>
@@ -16,9 +17,7 @@ function ToolSettingsPanel() {
                 </button>
             </div>
 
-            <CanvasSettings />
+            <ObjectSettings />
         </div>
     );
 }
-
-export default ToolSettingsPanel;
