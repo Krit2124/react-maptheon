@@ -11,7 +11,7 @@ export default function PublicMapsPage() {
             </div>
 
             <div className="container">
-                <MapCardList />
+                <MapCardList reqCards="public"/>
             </div>
         </section>
     );

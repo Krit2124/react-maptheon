@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Link } from 'react-router-dom';
+
 export default function Registration() {
     return (
         <div className="flex-col-sb-left flex-gap-30">
@@ -14,7 +16,7 @@ export default function Registration() {
                 
                 <div className="flex-row-sb-c flex-gap-10">
                     <button type="submit" className="button-text-usual active">Зарегистрироваться</button>
-                    <button className="button-text-usual">Вход</button>
+                    <Link to="/sign/in" className="button-text-usual">Вход</Link>
                 </div>
             </form>
         </div>

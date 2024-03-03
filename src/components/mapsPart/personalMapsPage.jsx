@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { Link, NavLink, Outlet } from 'react-router-dom';
+
 import SearchField from "../sharedElements/searchField";
-import MapCardList from './mapCardList';
 
 export default function PersonalMapsPage() {
     return (
@@ -9,16 +10,19 @@ export default function PersonalMapsPage() {
             <div className="container">
                 <div className="flex-row-sb-c flex-gap-20">
                     <div className="flex-row-sb-c flex-gap-10">
-                        <button className="button-text-usual active">Ваши карты</button>
-                        <button className="button-text-usual">Избранное</button>
+                        <NavLink to="/maps/personal/yours" className="button-text-usual">Ваши карты</NavLink>
+
+                        <NavLink to="/maps/personal/favourite" className="button-text-usual">Избранное</NavLink>
                     </div>
+
                     <SearchField />
-                    <button className="button-text-usual">Создать карту</button>
+
+                    <Link to="/editor" className="button-text-usual">Создать карту</Link>
                 </div>
             </div>
 
             <div className="container">
-                <MapCardList />
+                <Outlet />
             </div>
         </section>
     );

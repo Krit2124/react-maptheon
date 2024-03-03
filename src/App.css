@@ -69,6 +69,14 @@ h3 {
   font-weight: 600;
 }
 
+a {
+  text-decoration: none;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
 /* Flex-позиционирование */
 .flex-row-sb-c {
   display: flex;
@@ -200,6 +208,12 @@ section .container {
 .container {
   max-width: 1116px;
   margin: 0 auto;
+}
+
+@media (max-width: 1150px) {
+  .container {
+    margin: 0 5vw;
+  }
 }
 
 /* Цвета фона */
@@ -521,6 +535,7 @@ header {
 
 .mapCardBigPlaceholder {
   width: 1116px;
+  max-width: 100%;
   height: 580px;
   background-color: var(--background-beige);
 }

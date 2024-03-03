@@ -13,11 +13,11 @@ export default function Header() {
         <header className="border-black-bottom background-black">
             <div className="container flex-row-sb-c">
                 <div className="flex-row-sb-c flex-gap-40">
-                    <Link to="/signIn" className="logo">
+                    <Link to="/maps/personal/yours" className="logo">
                         <img src={logoImage} alt="Логотип"/>
                     </Link>
                     
-                    <NavLink to="/maps/personal" className="button-image-big">
+                    <NavLink to="/maps/personal/yours" className="button-image-big">
                         <img src={personalMapsImage} alt="Ваши карты" />
                     </NavLink>
 
@@ -32,9 +32,17 @@ export default function Header() {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="flex-col-sb-right">
-                        <Dropdown.Item href="/settings">Настройки</Dropdown.Item>
-                        <Dropdown.Item href="/profile">Профиль</Dropdown.Item>
-                        <Dropdown.Item href="/logout">Выход</Dropdown.Item>
+                        <Dropdown.Item>
+                            <Link to="/maps/profileSettings">Настройки</Link>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item>
+                            <Link to="/maps/user">Профиль</Link>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item>
+                            <Link to="/sign/in">Выход</Link>
+                        </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </div>

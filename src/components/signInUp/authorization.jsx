@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Authorization() {
     return (
@@ -13,7 +14,7 @@ export default function Authorization() {
                 
                 <div className="flex-row-sb-c flex-gap-10">
                     <button type="submit" className="button-text-usual active">Войти</button>
-                    <button className="button-text-usual">Регистрация</button>
+                    <Link to="/sign/up" className="button-text-usual">Регистрация</Link>
                 </div>
             </form>
         </div>

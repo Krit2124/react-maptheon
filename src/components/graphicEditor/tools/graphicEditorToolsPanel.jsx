@@ -8,41 +8,48 @@ import canvasImage from "../../../assets/icons/Canvas.png"
 import downloadImage from "../../../assets/icons/Download.png"
 import saveImage from "../../../assets/icons/Save.png"
 
-function GraphicEditorToolsPanel() {
+export default function GraphicEditorToolsPanel({setCurrentToolSettingsPanel, setIsToolSettingsPanelVisible}) {
+    let handleCloseToolSettingsPanel = () => {
+        setIsToolSettingsPanelVisible(false)
+    }
+    
+    let handleSwitchToolSettingsPannel = (newPanel) => {
+        setIsToolSettingsPanelVisible(true)
+        setCurrentToolSettingsPanel(newPanel)
+    }
+
     return (
         <div className="border-black-right background-black flex-col-sb-c canvasPanel size-full-vertical-pagePercent-withHeader">
             <div className="flex-col-sb-c flex-gap-10">
-                <button className="button-image-big">
+                <button className="button-image-big" onClick={handleCloseToolSettingsPanel}>
                     <img src={cursorImage} alt="Курсор"/>
                 </button>
 
-                <button className="button-image-big">
+                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("BrushSettings")}>
                     <img src={brushImage} alt="Кисть"/>
                 </button>
 
-                <button className="button-image-big">
+                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("ObjectSettings")}>
                     <img src={objectImage} alt="Объект"/>
                 </button>
 
-                <button className="button-image-big">
+                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("LabelSettings")}>
                     <img src={textImage} alt="Подпись"/>
                 </button>
 
-                <button className="button-image-big">
+                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("CanvasSettings")}>
                     <img src={canvasImage} alt="Холст"/>
                 </button>
             </div>
 
             <div className="flex-col-sb-c flex-gap-10">
                 <button className="button-image-big">
-                    <img src={downloadImage} alt="Курсор"/>
+                    <img src={downloadImage} alt="Скачать"/>
                 </button>
                 <button className="button-image-big">
-                    <img src={saveImage} alt="Курсор"/>
+                    <img src={saveImage} alt="Сохранить"/>
                 </button>
             </div>
         </div>
     );
 }
-
-export default GraphicEditorToolsPanel;

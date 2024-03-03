@@ -24,7 +24,7 @@ function UserMapsPage() {
             </div>
 
             <div className="container">
-                <MapCardList />
+                <MapCardList reqCards="user"/>
             </div>
         </section>
     );

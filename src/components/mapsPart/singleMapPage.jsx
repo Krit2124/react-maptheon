@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import LikeCounter from '../sharedElements/likeCounter';
+
 
 export default function SingleMapPage() {
     return (
@@ -9,7 +11,13 @@ export default function SingleMapPage() {
                 <div className='flex-col-sb-c flex-gap-20'>                  
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
                         <div className='flex-col-sb-left flex-gap-20'>
-                            <h1>Название карты</h1>
+                            <div className='flex-row-left-c flex-gap-5'>
+                                <h1>Название карты от </h1>
+                                <Link to="/maps/user">
+                                    <h1 className='underline'>Имя пользователя</h1>
+                                </Link>
+                            </div>
+                            
                             <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloremque qui eum facere labore exercitationem excepturi quae aperiam veritatis molestiae dolorum, aliquam odio voluptatum harum provident odit ab molestias nulla cupiditate?</p>
                         </div>
 
