@@ -14,6 +14,7 @@ export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSe
         setIsToolSettingsPanelVisible(false)
     }
 
+    // Изменение заголовка панели в зависимости от нажатой кнопки
     useEffect(() => {
         if (currentToolSettingsPanel === "BrushSettings") {
             setPanelLabel("Свойства кисти");
@@ -36,6 +37,7 @@ export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSe
                 </button>
             </div>
 
+            {/* Изменение контента панели в зависимости от нажатой кнопки */}
             {currentToolSettingsPanel === "BrushSettings" ? <BrushSettings /> 
             : currentToolSettingsPanel === "ObjectSettings" ? <ObjectSettings /> 
             : currentToolSettingsPanel === "LabelSettings" ? <LabelSettings/> 

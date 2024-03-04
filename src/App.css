@@ -477,6 +477,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 /* Отдельные элементы */
 header {
   padding: 10px;
+  z-index: 10000;
 }
 
 .logo img {
@@ -516,6 +517,7 @@ header {
   padding: 20px 10px;
   overflow-y: auto;
   overflow-x: hidden;
+  z-index: 10000;
 }
 
 .objectCard-canvas {
@@ -524,6 +526,30 @@ header {
 
 .recentlyUsedContainer {
   max-width: 270px;
+}
+
+/* Canvas */
+.canvasContainer {
+  position: absolute;
+  width: 100vw;
+  height: calc(100vh - 72px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upper-canvas, .lower-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.upper-canvas {
+  z-index: 1;
+}
+
+.lower-canvas {
+  background-color: #f0f0f0;
 }
 
 /* Временные заглушки */

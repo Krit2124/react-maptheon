@@ -7,7 +7,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import './App.css';
 
-import App from './App';
 import PersonalMapsPage from './components/mapsPart/personalMapsPage';
 import PublicMapsPage from 'components/mapsPart/publicMapsPage';
 import SignInUpPage from './components/signInUp/signInUpPage';
@@ -19,11 +18,14 @@ import MapCardList from 'components/mapsPart/mapCardList';
 import Authorization from 'components/signInUp/authorization';
 import Registration from 'components/signInUp/registration';
 import MainGraphicEditor from 'components/graphicEditor/mainGraphicEditor';
+import ErrorPage from 'errorPage';
+import App from 'App';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+    errorElement: <ErrorPage />
   },
   {
     path: '/maps',
