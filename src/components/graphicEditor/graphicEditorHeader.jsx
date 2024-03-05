@@ -16,7 +16,7 @@ export default function GraphicEditorHeader({isObjectListVisible, setIsObjectLis
     }
 
     return (
-        <header className="border-black-bottom background-black">
+        <header className="border-black-bottom background-black header-graphicEditor">
             <div className="flex-row-sb-c">
                 <div className="flex-row-sb-c flex-gap-30">
                     <Link to="/maps/personal/yours" className="button-image-big">

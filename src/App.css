@@ -477,7 +477,6 @@ input[type="range"]::-webkit-slider-runnable-track {
 /* Отдельные элементы */
 header {
   padding: 10px;
-  z-index: 10000;
 }
 
 .logo img {
@@ -529,13 +528,21 @@ header {
 }
 
 /* Canvas */
+.header-graphicEditor {
+  position: relative;
+  width: 100%;
+  z-index: 10000;
+}
+
 .canvasContainer {
   position: absolute;
-  width: 100vw;
+  width: 100%;
   height: calc(100vh - 72px);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
+  overflow: hidden;
 }
 
 .upper-canvas, .lower-canvas {
@@ -549,6 +556,7 @@ header {
 }
 
 .lower-canvas {
+  z-index: 0;
   background-color: #f0f0f0;
 }
 
