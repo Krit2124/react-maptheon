@@ -32,59 +32,33 @@ export default function CanvasComponent({ canvasWidth, canvasHeight, filterInten
     // Обработка изменения холста колёсиком мыши
     const handleMouseWheel = (event) => {
       const delta = event.deltaY;
-      let scaleMultiplier = 1.1;
-
-      if (delta < 0) {
-        // Увеличение масштаба холста
-        const currentWidth = canvas.width;
-        const currentHeight = canvas.height;
-
-        canvas.setDimensions({
-          width: currentWidth * scaleMultiplier,
-          height: currentHeight * scaleMultiplier,
+      const scaleMultiplier = 1.1;
+      const direction = delta < 0 ? 1 : -1; // 1 для приближения, -1 для отдаления
+      const scale = Math.pow(scaleMultiplier, direction);
+    
+      const currentWidth = canvas.width;
+      const currentHeight = canvas.height;
+    
+      const newWidth = currentWidth * scale;
+      const newHeight = currentHeight * scale;
+    
+      canvas.setDimensions({
+        width: newWidth,
+        height: newHeight,
+      });
+    
+      canvas.forEachObject((obj) => {
+        const objScaleX = obj.scaleX || 1;
+        const objScaleY = obj.scaleY || 1;
+    
+        obj.set({
+          left: obj.left * scale,
+          top: obj.top * scale,
+          scaleX: objScaleX * scale,
+          scaleY: objScaleY * scale,
         });
-
-        // Масштабирование объектов
-        canvas.forEachObject((obj) => {
-          const objScaleX = obj.scaleX || 1;
-          const objScaleY = obj.scaleY || 1;
-
-          const newObjLeft = obj.left * scaleMultiplier;
-          const newObjTop = obj.top * scaleMultiplier;
-
-          obj.set({
-            left: newObjLeft,
-            top: newObjTop,
-            scaleX: objScaleX * scaleMultiplier,
-            scaleY: objScaleY * scaleMultiplier,
-          });
-        });
-      } else {
-        // Уменьшение масштаба
-        const currentWidth = canvas.width;
-        const currentHeight = canvas.height;
-
-        canvas.setDimensions({
-          width: currentWidth / scaleMultiplier,
-          height: currentHeight / scaleMultiplier,
-        });
-
-        canvas.forEachObject((obj) => {
-          const objScaleX = obj.scaleX || 1;
-          const objScaleY = obj.scaleY || 1;
-
-          const newObjLeft = obj.left / scaleMultiplier;
-          const newObjTop = obj.top / scaleMultiplier;
-
-          obj.set({
-            left: newObjLeft,
-            top: newObjTop,
-            scaleX: objScaleX / scaleMultiplier,
-            scaleY: objScaleY / scaleMultiplier,
-          });
-        });
-      }
-
+      });
+    
       event.preventDefault();
       event.stopPropagation();
       canvas.renderAll();

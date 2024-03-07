@@ -23,6 +23,11 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
         setValue(value);
     };
 
+    // Обработка сброса масштабирования
+    const handleZoomReset = () => {
+        setCanvasWidth(canvasWidth+0);
+    };
+
     // Обработка накладываемого фильтра
     const [selectedFilter, setSelectedFilter] = useState('Название фильтра 1');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -61,7 +66,7 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
                     </button>
                 </div>
 
-                <button className='button-text-usual'>Сбросить масштабирование</button>
+                <button className='button-text-usual' onClick={handleZoomReset}>Сбросить масштабирование</button>
             </div>
 
             <div className='flex-col-top-left flex-gap-10'>
