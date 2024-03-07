@@ -8,12 +8,8 @@ import reverseImage from "../../../assets/icons/Reverse.png"
 import showOrHideImage from "../../../assets/icons/ShowOrHide.png"
 import eyeImage from "../../../assets/icons/Eye.png"
 
-export default function CanvasSettings() {
+export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity}) {
     // Обработка размеров холста и интенсивности
-    const [canvasWidth, setCanvasWidth] = useState(1200);
-    const [canvasHeight, setCanvasHeight] = useState(800);
-    const [intensity, setIntensity] = useState(1);
-
     const handleSliderChange = (value, setValue) => {
         setValue(value);
     };
@@ -24,7 +20,6 @@ export default function CanvasSettings() {
         } else if (value < min) {
             value = min;
         }
-
         setValue(value);
     };
 
@@ -65,6 +60,8 @@ export default function CanvasSettings() {
                         <img src={reverseImage} alt="Развернуть"/>
                     </button>
                 </div>
+
+                <button className='button-text-usual'>Сбросить масштабирование</button>
             </div>
 
             <div className='flex-col-top-left flex-gap-10'>
@@ -129,8 +126,8 @@ export default function CanvasSettings() {
                     <p>Интенсивность</p>
 
                     <div className="flex-row-sb-c size-full-horizontal-percent">
-                        <input type="range" min="0" max="1" step={0.01} value={intensity} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setIntensity)}/>
-                        <input type="number" min="0" max="1" step={0.01} value={intensity} onChange={(e) => handleInputChange(parseFloat(e.target.value), setIntensity, 0, 1)}/>
+                        <input type="range" min="0" max="1" step={0.01} value={filterIntensity} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setFilterIntensity)}/>
+                        <input type="number" min="0" max="1" step={0.01} value={filterIntensity} onChange={(e) => handleInputChange(parseFloat(e.target.value), setFilterIntensity, 0, 1)}/>
                     </div>
                 </div>
             </div>

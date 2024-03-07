@@ -7,7 +7,7 @@ import CanvasSettings from './canvasSettings';
 
 import closeImage from "../../../assets/icons/Close.png"
 
-export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSettingsPanelVisible}) {
+export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSettingsPanelVisible, canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity}) {
     const [panelLabel, setPanelLabel] = useState("Свойства инструмента");
 
     let handleCloseToolSettingsPanel = () => {
@@ -41,7 +41,14 @@ export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSe
             {currentToolSettingsPanel === "BrushSettings" ? <BrushSettings /> 
             : currentToolSettingsPanel === "ObjectSettings" ? <ObjectSettings /> 
             : currentToolSettingsPanel === "LabelSettings" ? <LabelSettings/> 
-            : currentToolSettingsPanel === "CanvasSettings" ? <CanvasSettings />
+            : currentToolSettingsPanel === "CanvasSettings" ? <CanvasSettings 
+                canvasWidth={canvasWidth}
+                setCanvasWidth={setCanvasWidth}
+                canvasHeight={canvasHeight}
+                setCanvasHeight={setCanvasHeight}
+                filterIntensity={filterIntensity}
+                setFilterIntensity={setFilterIntensity}
+            />
             : null}
         </div>
     );

@@ -1,29 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 
-export default function CanvasComponent() {
-  useEffect(() => {
-    const upperContainer = document.getElementById('canvasContainer');
+export default function CanvasComponent({ canvasWidth, canvasHeight, filterIntensity }) {
+  const [mainCanvas, setMainCanvas] = useState(null);
 
-    const mainCanvas = new fabric.Canvas('mainCanvas', {
-      width: 800,
-      height: 600,
+  useEffect(() => {
+    const canvas = new fabric.Canvas('mainCanvas', {
+      width: canvasWidth,
+      height: canvasHeight,
       selection: true,
       renderOnAddRemove: true,
       preserveObjectStacking: true,
     });
 
-    const lowerContainer = document.querySelector('.canvas-container');
-
-    var rect = new fabric.Rect({
+    const rect = new fabric.Rect({
       left: 100,
       top: 100,
       fill: 'red',
       width: 20,
-      height: 20
+      height: 20,
     });
 
-    mainCanvas.add(rect);
+    canvas.add(rect);
+
+    const upperContainer = document.getElementById('canvasContainer');
+    const lowerContainer = document.querySelector('.canvas-container');
 
     let isPanning = false;
     let panStart = { x: 0, y: 0 };
@@ -34,17 +35,17 @@ export default function CanvasComponent() {
       let scaleMultiplier = 1.1;
 
       if (delta < 0) {
-        // увеличиваем масштаб при движении вверх
-        const currentWidth = mainCanvas.width;
-        const currentHeight = mainCanvas.height;
+        // Увеличение масштаба холста
+        const currentWidth = canvas.width;
+        const currentHeight = canvas.height;
 
-        mainCanvas.setDimensions({
+        canvas.setDimensions({
           width: currentWidth * scaleMultiplier,
           height: currentHeight * scaleMultiplier,
         });
 
-        // масштабирование объектов
-        mainCanvas.forEachObject((obj) => {
+        // Масштабирование объектов
+        canvas.forEachObject((obj) => {
           const objScaleX = obj.scaleX || 1;
           const objScaleY = obj.scaleY || 1;
 
@@ -59,17 +60,16 @@ export default function CanvasComponent() {
           });
         });
       } else {
-        // уменьшаем масштаб при движении вниз
-        const currentWidth = mainCanvas.width;
-        const currentHeight = mainCanvas.height;
+        // Уменьшение масштаба
+        const currentWidth = canvas.width;
+        const currentHeight = canvas.height;
 
-        mainCanvas.setDimensions({
+        canvas.setDimensions({
           width: currentWidth / scaleMultiplier,
           height: currentHeight / scaleMultiplier,
         });
 
-        // масштабирование объектов
-        mainCanvas.forEachObject((obj) => {
+        canvas.forEachObject((obj) => {
           const objScaleX = obj.scaleX || 1;
           const objScaleY = obj.scaleY || 1;
 
@@ -87,7 +87,7 @@ export default function CanvasComponent() {
 
       event.preventDefault();
       event.stopPropagation();
-      mainCanvas.renderAll();
+      canvas.renderAll();
     };
 
     // Перемещение холста при зажатом колёсике мыши
@@ -115,7 +115,7 @@ export default function CanvasComponent() {
         // @ts-ignore Ошибка здесь возникает из-за того, что .canvas-container создаётся автоматически fabric js
         lowerContainer.style.top = `${currentTop + deltaY}px`;
 
-        mainCanvas.renderAll(); // перерисовка холста
+        canvas.renderAll(); // перерисовка холста
       }
     };
 
@@ -129,14 +129,16 @@ export default function CanvasComponent() {
     upperContainer.addEventListener('mousemove', handleMouseMove);
     upperContainer.addEventListener('mouseup', handleMouseUp);
 
+    setMainCanvas(canvas);
+
     return () => {
       upperContainer.removeEventListener('wheel', handleMouseWheel);
       upperContainer.removeEventListener('mousedown', handleMouseDown);
       upperContainer.removeEventListener('mousemove', handleMouseMove);
       upperContainer.removeEventListener('mouseup', handleMouseUp);
-      mainCanvas.dispose();
+      canvas.dispose();
     };
-  }, []);
+  }, [canvasWidth, canvasHeight]);
 
   return (
     <div id="canvasContainer" className='canvasContainer'>
