@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 
-export default function CanvasComponent({ canvasWidth, canvasHeight, filterIntensity }) {
+export default function CanvasComponent({ canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired }) {
   const [mainCanvas, setMainCanvas] = useState(null);
 
   useEffect(() => {
@@ -103,6 +103,15 @@ export default function CanvasComponent({ canvasWidth, canvasHeight, filterInten
     upperContainer.addEventListener('mousemove', handleMouseMove);
     upperContainer.addEventListener('mouseup', handleMouseUp);
 
+    if (isResetRequired) {
+      canvas.setDimensions({
+        width: canvasWidth,
+        height: canvasHeight,
+      });
+
+      setIsResetRequired(false);
+    }
+
     setMainCanvas(canvas);
 
     return () => {
@@ -112,7 +121,7 @@ export default function CanvasComponent({ canvasWidth, canvasHeight, filterInten
       upperContainer.removeEventListener('mouseup', handleMouseUp);
       canvas.dispose();
     };
-  }, [canvasWidth, canvasHeight]);
+  }, [canvasWidth, canvasHeight, isResetRequired, setIsResetRequired]);
 
   return (
     <div id="canvasContainer" className='canvasContainer'>

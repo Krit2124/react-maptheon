@@ -8,7 +8,7 @@ import reverseImage from "../../../assets/icons/Reverse.png"
 import showOrHideImage from "../../../assets/icons/ShowOrHide.png"
 import eyeImage from "../../../assets/icons/Eye.png"
 
-export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity}) {
+export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired}) {
     // Обработка размеров холста и интенсивности
     const handleSliderChange = (value, setValue) => {
         setValue(value);
@@ -23,9 +23,34 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
         setValue(value);
     };
 
+    // Обработка изменения размеров холста с учётом сохранения пропорций
+    const [isAspectRatioLocked, setIsAspectRatioLocked] = useState(false);
+    const [aspectRatio, setAspectRatio] = useState(1);
+
+    const handleWidthChange = (value) => {
+        if (isAspectRatioLocked) {
+            const newHeight = Math.round(value / aspectRatio);
+            setCanvasHeight(newHeight);
+        }
+        setCanvasWidth(value);
+    };
+
+    const handleHeightChange = (value) => {
+        if (isAspectRatioLocked) {
+            const newWidth = Math.round(value * aspectRatio);
+            setCanvasWidth(newWidth);
+        }
+        setCanvasHeight(value);
+    };
+
+    const handleAspectRatioToggle = () => {
+        if (!isAspectRatioLocked) setAspectRatio(canvasWidth / canvasHeight);
+        setIsAspectRatioLocked(!isAspectRatioLocked);
+    };
+
     // Обработка сброса масштабирования
     const handleZoomReset = () => {
-        setCanvasWidth(canvasWidth+0);
+        setIsResetRequired(true)
     };
 
     // Обработка накладываемого фильтра
@@ -52,12 +77,12 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
                     </div>
 
                     <div className="flex-col-sb-left flex-gap-10">
-                        <input type="number" min="0" max="10000" value={canvasWidth} onChange={(e) => handleInputChange(parseInt(e.target.value), setCanvasWidth, 0, 10000)}/>
+                        <input type="number" min="0" max="10000" value={canvasWidth} onChange={(e) => handleWidthChange(parseInt(e.target.value))}/>
 
-                        <input type="number" min="0" max="10000" value={canvasHeight} onChange={(e) => handleInputChange(parseInt(e.target.value), setCanvasHeight, 0, 10000)}/>
+                        <input type="number" min="0" max="10000" value={canvasHeight} onChange={(e) => handleHeightChange(parseInt(e.target.value))}/>
                     </div>
 
-                    <button className='button-image-medium'>
+                    <button className={`button-image-medium ${isAspectRatioLocked ? 'active' : ''}`} onClick={handleAspectRatioToggle}>
                         <img src={chainImage} alt="Пропорции"/>
                     </button>
 
