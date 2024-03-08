@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import { ChromePicker } from 'react-color';
 
 import chainImage from "../../../assets/icons/Chain.png"
 import reverseImage from "../../../assets/icons/Reverse.png"
 import showOrHideImage from "../../../assets/icons/ShowOrHide.png"
 import eyeImage from "../../../assets/icons/Eye.png"
 
-export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired}) {
+export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, setCanvasBackgroundColor}) {
     // Обработка размеров холста и интенсивности
     const handleSliderChange = (value, setValue) => {
         setValue(value);
@@ -48,9 +49,21 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
         setIsAspectRatioLocked(!isAspectRatioLocked);
     };
 
+    // Обработка поворота холста
+    const handleRotateCanvas = () => {
+        const tempHeight = canvasWidth;
+        setCanvasWidth(canvasHeight);
+        setCanvasHeight(tempHeight);
+    };
+
     // Обработка сброса масштабирования
     const handleZoomReset = () => {
         setIsResetRequired(true)
+    };
+
+    // Обработка смены цвета фона
+    const handleChangeBackgroundColor = (color) => {
+        setCanvasBackgroundColor(color.hex);
     };
 
     // Обработка накладываемого фильтра
@@ -86,7 +99,7 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
                         <img src={chainImage} alt="Пропорции"/>
                     </button>
 
-                    <button className='button-image-medium'>
+                    <button className='button-image-medium' onClick={handleRotateCanvas}>
                         <img src={reverseImage} alt="Развернуть"/>
                     </button>
                 </div>
@@ -103,10 +116,12 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
                         <button className="button-text-usual active">Цвет</button>
                     </div>
 
-                    <div className='colorPlaceholder'></div>
+                    {/* Компонент выбора цвета */}
+                    <ChromePicker color={canvasBackgroundColor} onChange={handleChangeBackgroundColor}/>
                 </div>
 
-                <div className='flex-col-top-left flex-gap-10'>
+                {/* Показывать для текстур, скрыть для цвета */}
+                {/* <div className='flex-col-top-left flex-gap-10'>
                     <p>Недавно использованные</p>
                     <div className='flex-row-left-c flex-wrap flex-gap-5 recentlyUsedContainer'>
                         <div className='recentColorPlaceholder'></div>
@@ -118,7 +133,7 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
                         <div className='recentColorPlaceholder'></div>
                         <div className='recentColorPlaceholder'></div>
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <div className='flex-col-top-left flex-gap-10 size-full-horizontal-percent'>

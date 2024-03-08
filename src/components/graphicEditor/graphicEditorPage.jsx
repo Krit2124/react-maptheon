@@ -15,6 +15,7 @@ export default function GraphicEditorPage({isObjectListVisible}) {
     const [canvasHeight, setCanvasHeight] = useState(600);
     const [filterIntensity, setFilterIntensity] = useState(1);
     const [isResetRequired, setIsResetRequired] = useState(false)
+    const [canvasBackgroundColor, setCanvasBackgroundColor] = useState('#ffffff');
 
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
@@ -36,6 +37,8 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                         setFilterIntensity={setFilterIntensity}
                         isResetRequired = {isResetRequired}
                         setIsResetRequired={setIsResetRequired}
+                        canvasBackgroundColor={canvasBackgroundColor}
+                        setCanvasBackgroundColor={setCanvasBackgroundColor}
                     />}
                 </div>
 
@@ -45,6 +48,7 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                     filterIntensity={filterIntensity}
                     isResetRequired = {isResetRequired}
                     setIsResetRequired={setIsResetRequired}
+                    canvasBackgroundColor={canvasBackgroundColor}
                 />
 
                 {isObjectListVisible && <ObjectListOnCanvas/>}

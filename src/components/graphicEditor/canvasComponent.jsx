@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fabric } from 'fabric';
 
-export default function CanvasComponent({ canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired }) {
+export default function CanvasComponent({ canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor }) {
   const [mainCanvas, setMainCanvas] = useState(null);
 
   useEffect(() => {
@@ -11,6 +11,7 @@ export default function CanvasComponent({ canvasWidth, canvasHeight, filterInten
       selection: true,
       renderOnAddRemove: true,
       preserveObjectStacking: true,
+      backgroundColor: canvasBackgroundColor,
     });
 
     const rect = new fabric.Rect({
@@ -29,7 +30,7 @@ export default function CanvasComponent({ canvasWidth, canvasHeight, filterInten
     let isPanning = false;
     let panStart = { x: 0, y: 0 };
 
-    // Обработка изменения холста колёсиком мыши
+    // Обработка изменения масштаба холста колёсиком мыши
     const handleMouseWheel = (event) => {
       const delta = event.deltaY;
       const scaleMultiplier = 1.1;
@@ -121,7 +122,7 @@ export default function CanvasComponent({ canvasWidth, canvasHeight, filterInten
       upperContainer.removeEventListener('mouseup', handleMouseUp);
       canvas.dispose();
     };
-  }, [canvasWidth, canvasHeight, isResetRequired, setIsResetRequired]);
+  }, [canvasWidth, canvasHeight, isResetRequired, setIsResetRequired, canvasBackgroundColor]);
 
   return (
     <div id="canvasContainer" className='canvasContainer'>
