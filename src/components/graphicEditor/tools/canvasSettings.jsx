@@ -7,9 +7,8 @@ import { ChromePicker } from 'react-color';
 import chainImage from "../../../assets/icons/Chain.png"
 import reverseImage from "../../../assets/icons/Reverse.png"
 import showOrHideImage from "../../../assets/icons/ShowOrHide.png"
-import eyeImage from "../../../assets/icons/Eye.png"
 
-export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, setCanvasBackgroundColor}) {
+export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
     // Обработка размеров холста и интенсивности
     const handleSliderChange = (value, setValue) => {
         setValue(value);
@@ -67,10 +66,9 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
     };
 
     // Обработка накладываемого фильтра
-    const [selectedFilter, setSelectedFilter] = useState('Название фильтра 1');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const handleFontSelect = (filterOption) => {
+    const handleFilterSelect = (filterOption) => {
         setSelectedFilter(filterOption);
     };
 
@@ -142,7 +140,7 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
                 <div className='flex-row-sb-c size-full-horizontal-percent'>
                     <DropdownButton className='flex-col-sb-right white-border-when-active'  onToggle={handleDropdownToggle} align="end" title={
                         <span className='button-text-usual'>
-                            {selectedFilter}
+                            {selectedFilter.name}
                             <img
                                 src={showOrHideImage}
                                 alt="Показать или скрыть"
@@ -156,15 +154,13 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
                         </span>
                     }>
                         <div className='flex-col-sb-right'>
-                            <Dropdown.Item onClick={() => handleFontSelect('Название фильтра 1')}>Название фильтра 1</Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleFontSelect('Название фильтра 2')}>Название фильтра 2</Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleFontSelect('Название фильтра 3')}>Название фильтра 3</Dropdown.Item>
+                            {filtersList.map((filterOption) => (
+                            <Dropdown.Item key={filterOption.name} onClick={() => handleFilterSelect(filterOption)}>
+                                {filterOption.name}
+                            </Dropdown.Item>
+                            ))}
                         </div>
                     </DropdownButton>
-
-                    <button className='button-image-long active'>
-                        <img src={eyeImage} alt="Скрыть/показать"/>
-                    </button>
                 </div>
                 
                 <div className='flex-col-top-left flex-gap-10 size-full-horizontal-percent'>

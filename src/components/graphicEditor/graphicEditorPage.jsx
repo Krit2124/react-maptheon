@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { fabric } from 'fabric';
 
 import GraphicEditorToolsPanel from './tools/graphicEditorToolsPanel';
 import ObjectListOnCanvas from './objectListOnCanvas';
@@ -13,9 +14,16 @@ export default function GraphicEditorPage({isObjectListVisible}) {
     // Настройки холста
     const [canvasWidth, setCanvasWidth] = useState(800);
     const [canvasHeight, setCanvasHeight] = useState(600);
-    const [filterIntensity, setFilterIntensity] = useState(1);
+    
     const [isResetRequired, setIsResetRequired] = useState(false)
     const [canvasBackgroundColor, setCanvasBackgroundColor] = useState('#ffffff');
+    const filtersList = [
+        { name: 'Без фильтра', filter: null },
+        { name: 'Черно-белый', filter: new fabric.Image.filters.Grayscale() },
+        { name: 'Сепия', filter: new fabric.Image.filters.Sepia() },
+    ];
+    const [selectedFilter, setSelectedFilter] = useState(filtersList[0]);
+    const [filterIntensity, setFilterIntensity] = useState(1);
 
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
@@ -39,6 +47,9 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                         setIsResetRequired={setIsResetRequired}
                         canvasBackgroundColor={canvasBackgroundColor}
                         setCanvasBackgroundColor={setCanvasBackgroundColor}
+                        selectedFilter={selectedFilter}
+                        setSelectedFilter={setSelectedFilter}
+                        filtersList={filtersList}
                     />}
                 </div>
 
@@ -49,6 +60,7 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                     isResetRequired = {isResetRequired}
                     setIsResetRequired={setIsResetRequired}
                     canvasBackgroundColor={canvasBackgroundColor}
+                    selectedFilter={selectedFilter}
                 />
 
                 {isObjectListVisible && <ObjectListOnCanvas/>}
