@@ -16,13 +16,13 @@ export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSe
 
     // Изменение заголовка панели в зависимости от нажатой кнопки
     useEffect(() => {
-        if (currentToolSettingsPanel === "BrushSettings") {
+        if (currentToolSettingsPanel === "Brush") {
             setPanelLabel("Свойства кисти");
-        } else if (currentToolSettingsPanel === "ObjectSettings") {
+        } else if (currentToolSettingsPanel === "Object") {
             setPanelLabel("Свойства объекта");
-        } else if (currentToolSettingsPanel === "LabelSettings") {
+        } else if (currentToolSettingsPanel === "Label") {
             setPanelLabel("Свойства подписи");
-        } else if (currentToolSettingsPanel === "CanvasSettings") {
+        } else if (currentToolSettingsPanel === "Canvas") {
             setPanelLabel("Свойства холста");
         }
     }, [currentToolSettingsPanel]);
@@ -38,10 +38,10 @@ export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSe
             </div>
 
             {/* Изменение контента панели в зависимости от нажатой кнопки */}
-            {currentToolSettingsPanel === "BrushSettings" ? <BrushSettings /> 
-            : currentToolSettingsPanel === "ObjectSettings" ? <ObjectSettings /> 
-            : currentToolSettingsPanel === "LabelSettings" ? <LabelSettings/> 
-            : currentToolSettingsPanel === "CanvasSettings" ? <CanvasSettings 
+            {currentToolSettingsPanel === "Brush" ? <BrushSettings /> 
+            : currentToolSettingsPanel === "Object" ? <ObjectSettings /> 
+            : currentToolSettingsPanel === "Label" ? <LabelSettings/> 
+            : currentToolSettingsPanel === "Canvas" ? <CanvasSettings 
                 canvasWidth={canvasWidth}
                 setCanvasWidth={setCanvasWidth}
                 canvasHeight={canvasHeight}

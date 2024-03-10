@@ -9,7 +9,7 @@ import CanvasComponent from './canvasComponent';
 export default function GraphicEditorPage({isObjectListVisible}) {
     // Настройка отображения панелей с настройками инструментов
     const [isToolSettingsPanelVisible, setIsToolSettingsPanelVisible] = useState(false)
-    const [currentToolSettingsPanel, setCurrentToolSettingsPanel] = useState(null);
+    const [currentTool, setCurrentTool] = useState(null);
     
     // Настройки холста
     const [canvasWidth, setCanvasWidth] = useState(800);
@@ -30,12 +30,12 @@ export default function GraphicEditorPage({isObjectListVisible}) {
             <div className='size-full-horizontal-percent flex-row-sb-c'>
                 <div className='flex-row-left-c'>
                     <GraphicEditorToolsPanel 
-                        setCurrentToolSettingsPanel={setCurrentToolSettingsPanel} 
+                        setCurrentToolSettingsPanel={setCurrentTool} 
                         setIsToolSettingsPanelVisible={setIsToolSettingsPanelVisible}
                     />
 
                     {isToolSettingsPanelVisible && <ToolSettingsPanel 
-                        currentToolSettingsPanel={currentToolSettingsPanel} 
+                        currentToolSettingsPanel={currentTool} 
                         setIsToolSettingsPanelVisible={setIsToolSettingsPanelVisible}
                         canvasWidth={canvasWidth}
                         setCanvasWidth={setCanvasWidth}
@@ -54,6 +54,7 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                 </div>
 
                 <CanvasComponent
+                    currentTool={currentTool}
                     canvasWidth={canvasWidth}
                     canvasHeight={canvasHeight}
                     filterIntensity={filterIntensity}

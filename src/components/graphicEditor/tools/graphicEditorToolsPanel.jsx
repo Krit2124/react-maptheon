@@ -25,19 +25,19 @@ export default function GraphicEditorToolsPanel({setCurrentToolSettingsPanel, se
                     <img src={cursorImage} alt="Курсор"/>
                 </button>
 
-                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("BrushSettings")}>
+                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("Brush")}>
                     <img src={brushImage} alt="Кисть"/>
                 </button>
 
-                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("ObjectSettings")}>
+                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("Object")}>
                     <img src={objectImage} alt="Объект"/>
                 </button>
 
-                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("LabelSettings")}>
+                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("Label")}>
                     <img src={textImage} alt="Подпись"/>
                 </button>
 
-                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("CanvasSettings")}>
+                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("Canvas")}>
                     <img src={canvasImage} alt="Холст"/>
                 </button>
             </div>
