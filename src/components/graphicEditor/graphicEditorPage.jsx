@@ -25,6 +25,10 @@ export default function GraphicEditorPage({isObjectListVisible}) {
     const [selectedFilter, setSelectedFilter] = useState(filtersList[0]);
     const [filterIntensity, setFilterIntensity] = useState(1);
 
+    // Настройки кисти
+    const [brushColor, setBrushColor] = useState('#000000');
+    const [currentBrushLayer, setCurrentBrushLayer] = useState('lower')
+
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
             <div className='size-full-horizontal-percent flex-row-sb-c'>
@@ -37,6 +41,10 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                     {isToolSettingsPanelVisible && <ToolSettingsPanel 
                         currentToolSettingsPanel={currentTool} 
                         setIsToolSettingsPanelVisible={setIsToolSettingsPanelVisible}
+                        brushColor={brushColor}
+                        setBrushColor={setBrushColor}
+                        currentBrushLayer={currentBrushLayer}
+                        setCurrentBrushLayer={setCurrentBrushLayer}
                         canvasWidth={canvasWidth}
                         setCanvasWidth={setCanvasWidth}
                         canvasHeight={canvasHeight}
@@ -55,6 +63,8 @@ export default function GraphicEditorPage({isObjectListVisible}) {
 
                 <CanvasComponent
                     currentTool={currentTool}
+                    brushColor={brushColor}
+                    currentBrushLayer={currentBrushLayer}
                     canvasWidth={canvasWidth}
                     canvasHeight={canvasHeight}
                     filterIntensity={filterIntensity}

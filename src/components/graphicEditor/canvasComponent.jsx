@@ -1,75 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric';
 
-export default function CanvasComponent({ currentTool, canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, selectedFilter }) {
+export default function CanvasComponent({ currentTool, brushColor, currentBrushLayer, canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, selectedFilter }) {
   // Состояния для перемещения и масштабирования холста
   const isPanningRef = useRef(false);
   const panStartRef = useRef({ x: 0, y: 0 });
   const scaleRef = useRef(1);
 
-  // Состояния для рисования
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [path, setPath] = useState(null);
-  const pencilToolRef = useRef(null);
-
   const canvasRef = useRef(null);
-
-  const initializeBrushDrawing = () => {
-    const canvas = canvasRef.current;
-
-    // Убедимся, что предыдущий инструмент Pencil удален
-    if (pencilToolRef.current) {
-      canvas.remove(pencilToolRef.current);
-      pencilToolRef.current = null;
-    }
-
-    // Создаем новый инструмент Pencil
-    pencilToolRef.current = new fabric.PencilBrush(canvas);
-
-    // Устанавливаем параметры для инструмента Pencil
-    pencilToolRef.current.color = 'black';
-    pencilToolRef.current.width = 5;
-
-    // Включаем режим рисования
-    canvas.isDrawingMode = true;
-    canvas.freeDrawingBrush = pencilToolRef.current;
-  };
 
   useEffect(() => {
     const handleMouseDown = (event) => {
       if (currentTool !== "Brush") return;
 
-      setIsDrawing(true);
-
-      const pointer = canvasRef.current.getPointer(event.e);
-      const newPath = new fabric.Path(`M ${pointer.x} ${pointer.y}`, {
-        fill: 'transparent',
-        stroke: 'black',
-        strokeWidth: 5,
-        strokeLineCap: 'round',
-        strokeLineJoin: 'round',
-      });
-
-      setPath(newPath);
-      canvasRef.current.add(newPath);
+      canvasRef.current.isDrawingMode = true;
+      canvasRef.current.freeDrawingBrush.onMouseDown(event);
     };
 
     const handleMouseMove = (event) => {
-      if (!isDrawing || currentTool !== "Brush") return;
+      if (currentTool !== "Brush") return;
 
-      const pointer = canvasRef.current.getPointer(event.e);
-      const pathData = `${path.path[0][1]} ${path.path[0][2]} L ${pointer.x} ${pointer.y}`;
-      path.set({ path: new fabric.Path(pathData).path });
-      canvasRef.current.renderAll();
+      canvasRef.current.freeDrawingBrush.onMouseMove(event);
     };
 
     const handleMouseUp = () => {
       if (currentTool !== "Brush") return;
 
-      setIsDrawing(false);
+      canvasRef.current.isDrawingMode = false;
+      canvasRef.current.freeDrawingBrush.onMouseUp();
     };
 
-    // Инициализация холста, если его ещё нет
+   // Инициализация холста, если его ещё нет
     if (canvasRef.current == null) {
       const canvas = new fabric.Canvas('mainCanvas', {
         width: canvasWidth,
@@ -95,11 +56,16 @@ export default function CanvasComponent({ currentTool, canvasWidth, canvasHeight
       canvasRef.current.on('mouse:down', handleMouseDown);
       canvasRef.current.on('mouse:move', handleMouseMove);
       canvasRef.current.on('mouse:up', handleMouseUp);
+
+      // Обработчик для отмены выделения
+      canvasRef.current.on('before:selection:added', (e) => {
+        e.preventDefault();
+      });
     } else {
       // Обновление свойств canvas при изменении
-      canvasRef.current.setWidth(canvasWidth, canvasRef.current.renderAll.bind(canvasRef.current))
-      canvasRef.current.setHeight(canvasHeight, canvasRef.current.renderAll.bind(canvasRef.current))
-      canvasRef.current.setBackgroundColor(canvasBackgroundColor, canvasRef.current.renderAll.bind(canvasRef.current));
+      canvasRef.current.setWidth(canvasWidth);
+      canvasRef.current.setHeight(canvasHeight);
+      canvasRef.current.setBackgroundColor(canvasBackgroundColor);
     }
 
     let upperContainer = document.getElementById('canvasContainer');
@@ -112,8 +78,7 @@ export default function CanvasComponent({ currentTool, canvasWidth, canvasHeight
 
       // Обновляем коэффициент масштабирования
       scaleRef.current *= Math.pow(scaleMultiplier, direction);
-
-      applyScale(); // Применяем масштабирование
+      applyScale();
     };
 
     // Применение масштабирования ко всем объектам на холсте
@@ -145,13 +110,13 @@ export default function CanvasComponent({ currentTool, canvasWidth, canvasHeight
 
       canvasRef.current.renderAll();
     };
-    
+
     // Перемещение холста при зажатом колесике мыши
     const handleWheelDown = (event) => {
       if (event.button === 1) {
         isPanningRef.current = true;
         panStartRef.current = { x: event.clientX, y: event.clientY };
-        upperContainer.style.cursor = 'grabbing'; // изменение курсора при перемещении
+        upperContainer.style.cursor = 'grabbing';
       }
     };
 
@@ -181,7 +146,7 @@ export default function CanvasComponent({ currentTool, canvasWidth, canvasHeight
     // Завершение перемещения холста
     const handleWheelUp = () => {
       isPanningRef.current = false;
-      upperContainer.style.cursor = 'grab'; // возврат курсора к исходному состоянию
+      upperContainer.style.cursor = 'grab';
     };
 
     // Добавляем обработчики событий
@@ -193,16 +158,41 @@ export default function CanvasComponent({ currentTool, canvasWidth, canvasHeight
     // Сброс масштабирования
     if (isResetRequired) {
       scaleRef.current = 1;
-      applyScale(); // Применяем масштабирование
+      applyScale();
       setIsResetRequired(false);
+    }
+
+    // Изменение свойст нарисованных объектов, чтобы их нельзя было выделять
+    const disableBrushObjectsSelection = () => {
+      const allObjects = canvasRef.current.getObjects();
+
+      // Фильтруем объекты, чтобы оставить только те, которые нарисованы кистью
+      allObjects.forEach((obj) => {
+        if (
+          obj instanceof fabric.Path &&
+          obj.get('path') &&
+          obj.get('path').length > 1
+        ) {
+          obj.selectable = false;
+          obj.hoverCursor = 'default';
+        };
+      });
     }
 
     // Установка обработчиков рисования кистью при смене инструмента
     if (currentTool === "Brush") {
-      initializeBrushDrawing();
+      canvasRef.current.isDrawingMode = true;
+      canvasRef.current.freeDrawingBrush = new fabric.PencilBrush(canvasRef.current);
+      canvasRef.current.freeDrawingBrush.color = brushColor;
+      canvasRef.current.freeDrawingBrush.width = 5;
+
+      // Устанавливаем слой рисования в зависимости от выбора пользователя
+      canvasRef.current.freeDrawingBrush.target = currentBrushLayer === 'upper' ? 'upper-canvas' : 'lower-canvas';
     } else {
       // Выключение режима рисования при смене инструмента
       canvasRef.current.isDrawingMode = false;
+
+      disableBrushObjectsSelection();
     }
 
     // Очистка ресурсов и удаление обработчиков событий при размонтировании
@@ -215,9 +205,8 @@ export default function CanvasComponent({ currentTool, canvasWidth, canvasHeight
       canvasRef.current.off('mouse:down', handleMouseDown);
       canvasRef.current.off('mouse:move', handleMouseMove);
       canvasRef.current.off('mouse:up', handleMouseUp);
-      // canvasRef.current.dispose();
     };
-  }, [currentTool, canvasWidth, canvasHeight, isResetRequired, setIsResetRequired, canvasBackgroundColor]);
+  }, [currentTool, canvasWidth, canvasHeight, isResetRequired, setIsResetRequired, canvasBackgroundColor, brushColor, currentBrushLayer]);
 
   return (
     <div id="canvasContainer" className='canvasContainer'>

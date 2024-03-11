@@ -11,6 +11,7 @@ import saveImage from "../../../assets/icons/Save.png"
 export default function GraphicEditorToolsPanel({setCurrentToolSettingsPanel, setIsToolSettingsPanelVisible}) {
     let handleCloseToolSettingsPanel = () => {
         setIsToolSettingsPanelVisible(false)
+        setCurrentToolSettingsPanel(null)
     }
     
     let handleSwitchToolSettingsPannel = (newPanel) => {

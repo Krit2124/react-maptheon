@@ -7,7 +7,7 @@ import CanvasSettings from './canvasSettings';
 
 import closeImage from "../../../assets/icons/Close.png"
 
-export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSettingsPanelVisible, canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
+export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSettingsPanelVisible, brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
     const [panelLabel, setPanelLabel] = useState("Свойства инструмента");
 
     let handleCloseToolSettingsPanel = () => {
@@ -38,7 +38,12 @@ export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSe
             </div>
 
             {/* Изменение контента панели в зависимости от нажатой кнопки */}
-            {currentToolSettingsPanel === "Brush" ? <BrushSettings /> 
+            {currentToolSettingsPanel === "Brush" ? <BrushSettings 
+                brushColor={brushColor}
+                setBrushColor={setBrushColor}
+                currentBrushLayer={currentBrushLayer}
+                setCurrentBrushLayer={setCurrentBrushLayer}
+            /> 
             : currentToolSettingsPanel === "Object" ? <ObjectSettings /> 
             : currentToolSettingsPanel === "Label" ? <LabelSettings/> 
             : currentToolSettingsPanel === "Canvas" ? <CanvasSettings 

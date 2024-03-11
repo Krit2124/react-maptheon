@@ -114,7 +114,6 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
                         <button className="button-text-usual active">Цвет</button>
                     </div>
 
-                    {/* Компонент выбора цвета */}
                     <ChromePicker color={canvasBackgroundColor} onChange={handleChangeBackgroundColor}/>
                 </div>
 

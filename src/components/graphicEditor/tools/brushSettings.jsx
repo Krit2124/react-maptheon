@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 import roundBrushImage from "../../../assets/icons/RoundBrush.png"
 import rectangleBrushImage from "../../../assets/icons/RectangleBrush.png"
+import { ChromePicker } from 'react-color';
 
-export default function BrushSettings() {
+export default function BrushSettings({ brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer }) {
     const [thickness, setThickness] = useState(20);
     const [brushOpacity, setBrushOpacity] = useState(1);
     const [softness, setSoftness] = useState(1);
@@ -22,6 +23,16 @@ export default function BrushSettings() {
         setValue(value);
     };
 
+    // Обработка смены цвета кисти
+    const handleChangeBackgroundColor = (color) => {
+        setBrushColor(color.hex);
+    };
+
+    // Обработка смены слоя кисти
+    const handleLayerButtonClick = (layer) => {
+        setCurrentBrushLayer(layer);
+    };
+
     return (
         <div className='flex-col-top-left flex-gap-25 size-full-horizontal-percent'>
             <div className='flex-col-top-left flex-gap-15'>
@@ -31,10 +42,11 @@ export default function BrushSettings() {
                         <button className="button-text-usual active">Цвет</button>
                     </div>
 
-                    <div className='colorPlaceholder'></div>
+                    <ChromePicker color={brushColor} onChange={handleChangeBackgroundColor}/>
                 </div>
 
-                <div className='flex-col-top-left flex-gap-10'>
+                {/* Показывать для текстур, скрыть для цвета */}
+                {/* <div className='flex-col-top-left flex-gap-10'>
                     <p>Недавно использованные</p>
                     <div className='flex-row-left-c flex-wrap flex-gap-5 recentlyUsedContainer'>
                         <div className='recentColorPlaceholder'></div>
@@ -46,14 +58,25 @@ export default function BrushSettings() {
                         <div className='recentColorPlaceholder'></div>
                         <div className='recentColorPlaceholder'></div>
                     </div>
-                </div>
+                </div> */}
 
                 <div className='flex-col-top-left flex-gap-10'>
                     <p>Изменяемый слой</p>
 
                     <div className="flex-row-left-c flex-gap-10">
-                        <button className="button-text-usual">Фон</button>
-                        <button className="button-text-usual active">Верхний слой</button>
+                    <button
+                        className={`button-text-usual ${currentBrushLayer === 'lower' ? 'active' : ''}`}
+                        onClick={() => handleLayerButtonClick('lower')}
+                    >
+                        Фон
+                    </button>
+
+                    <button
+                        className={`button-text-usual ${currentBrushLayer === 'upper' ? 'active' : ''}`}
+                        onClick={() => handleLayerButtonClick('upper')}
+                    >
+                        Верхний слой
+                    </button>
                     </div>
                 </div>
 
