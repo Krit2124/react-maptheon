@@ -7,7 +7,11 @@ import CanvasSettings from './canvasSettings';
 
 import closeImage from "../../../assets/icons/Close.png"
 
-export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSettingsPanelVisible, brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
+export default function ToolSettingsPanel({
+    currentToolSettingsPanel, setIsToolSettingsPanelVisible, 
+    brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness,
+    canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
+
     const [panelLabel, setPanelLabel] = useState("Свойства инструмента");
 
     let handleCloseToolSettingsPanel = () => {
@@ -43,6 +47,12 @@ export default function ToolSettingsPanel({currentToolSettingsPanel, setIsToolSe
                 setBrushColor={setBrushColor}
                 currentBrushLayer={currentBrushLayer}
                 setCurrentBrushLayer={setCurrentBrushLayer}
+                brushThickness={brushThickness}
+                setBrushThickness={setBrushThickness}
+                brushOpacity={brushOpacity}
+                setBrushOpacity={setBrushOpacity}
+                brushSoftness={brushSoftness}
+                setBrushtSoftness={setBrushtSoftness}
             /> 
             : currentToolSettingsPanel === "Object" ? <ObjectSettings /> 
             : currentToolSettingsPanel === "Label" ? <LabelSettings/> 

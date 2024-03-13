@@ -4,10 +4,7 @@ import roundBrushImage from "../../../assets/icons/RoundBrush.png"
 import rectangleBrushImage from "../../../assets/icons/RectangleBrush.png"
 import { ChromePicker } from 'react-color';
 
-export default function BrushSettings({ brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer }) {
-    const [thickness, setThickness] = useState(20);
-    const [brushOpacity, setBrushOpacity] = useState(1);
-    const [softness, setSoftness] = useState(1);
+export default function BrushSettings({ brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness, }) {
 
     const handleSliderChange = (value, setValue) => {
         setValue(value);
@@ -84,8 +81,8 @@ export default function BrushSettings({ brushColor, setBrushColor, currentBrushL
                     <p>Толщина кисти</p>
 
                     <div className="flex-row-sb-c size-full-horizontal-percent">
-                        <input type="range" min="1" max="250" value={thickness} onChange={(e) => handleSliderChange(parseInt(e.target.value), setThickness)}/>
-                        <input type="number" min="1" max="250" value={thickness} onChange={(e) => handleInputChange(parseInt(e.target.value), setThickness, 1, 250)}/>
+                        <input type="range" min="1" max="200" value={brushThickness} onChange={(e) => handleSliderChange(parseInt(e.target.value), setBrushThickness)}/>
+                        <input type="number" min="1" max="200" value={brushThickness} onChange={(e) => handleInputChange(parseInt(e.target.value), setBrushThickness, 1, 200)}/>
                     </div>
                 </div>
 
@@ -116,8 +113,8 @@ export default function BrushSettings({ brushColor, setBrushColor, currentBrushL
                     <p>Мягкость</p>
 
                     <div className="flex-row-sb-c size-full-horizontal-percent">
-                        <input type="range" min="0" max="1" step={0.01} value={softness} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setSoftness)}/>
-                        <input type="number" min="0" max="1" step={0.01} value={softness} onChange={(e) => handleInputChange(parseFloat(e.target.value), setSoftness, 0, 1)}/>
+                        <input type="range" min="0" max="1" step={0.01} value={brushSoftness} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setBrushtSoftness)}/>
+                        <input type="number" min="0" max="1" step={0.01} value={brushSoftness} onChange={(e) => handleInputChange(parseFloat(e.target.value), setBrushtSoftness, 0, 1)}/>
                     </div>
                 </div>
             </div>

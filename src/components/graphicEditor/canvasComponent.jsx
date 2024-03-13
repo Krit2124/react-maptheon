@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric';
 
-export default function CanvasComponent({ currentTool, brushColor, currentBrushLayer, canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, selectedFilter }) {
+export default function CanvasComponent({ currentTool, 
+  brushColor, currentBrushLayer, brushThickness, brushOpacity, brushSoftness,
+  canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, selectedFilter }) {
   // Состояния для перемещения и масштабирования холста
   const isPanningRef = useRef(false);
   const panStartRef = useRef({ x: 0, y: 0 });
@@ -56,11 +58,6 @@ export default function CanvasComponent({ currentTool, brushColor, currentBrushL
       canvasRef.current.on('mouse:down', handleMouseDown);
       canvasRef.current.on('mouse:move', handleMouseMove);
       canvasRef.current.on('mouse:up', handleMouseUp);
-
-      // Обработчик для отмены выделения
-      canvasRef.current.on('before:selection:added', (e) => {
-        e.preventDefault();
-      });
     } else {
       // Обновление свойств canvas при изменении
       canvasRef.current.setWidth(canvasWidth);
@@ -162,7 +159,7 @@ export default function CanvasComponent({ currentTool, brushColor, currentBrushL
       setIsResetRequired(false);
     }
 
-    // Изменение свойст нарисованных объектов, чтобы их нельзя было выделять
+    // Изменение свойств нарисованных объектов, чтобы их нельзя было выделять
     const disableBrushObjectsSelection = () => {
       const allObjects = canvasRef.current.getObjects();
 
@@ -184,10 +181,8 @@ export default function CanvasComponent({ currentTool, brushColor, currentBrushL
       canvasRef.current.isDrawingMode = true;
       canvasRef.current.freeDrawingBrush = new fabric.PencilBrush(canvasRef.current);
       canvasRef.current.freeDrawingBrush.color = brushColor;
-      canvasRef.current.freeDrawingBrush.width = 5;
-
-      // Устанавливаем слой рисования в зависимости от выбора пользователя
-      canvasRef.current.freeDrawingBrush.target = currentBrushLayer === 'upper' ? 'upper-canvas' : 'lower-canvas';
+      canvasRef.current.freeDrawingBrush.width = brushThickness;
+      canvasRef.current.freeDrawingBrush.transparent = brushOpacity;
     } else {
       // Выключение режима рисования при смене инструмента
       canvasRef.current.isDrawingMode = false;
@@ -206,7 +201,7 @@ export default function CanvasComponent({ currentTool, brushColor, currentBrushL
       canvasRef.current.off('mouse:move', handleMouseMove);
       canvasRef.current.off('mouse:up', handleMouseUp);
     };
-  }, [currentTool, canvasWidth, canvasHeight, isResetRequired, setIsResetRequired, canvasBackgroundColor, brushColor, currentBrushLayer]);
+  }, [currentTool, canvasWidth, canvasHeight, isResetRequired, setIsResetRequired, canvasBackgroundColor, brushColor, currentBrushLayer, brushThickness]);
 
   return (
     <div id="canvasContainer" className='canvasContainer'>

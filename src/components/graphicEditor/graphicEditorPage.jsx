@@ -4,7 +4,8 @@ import { fabric } from 'fabric';
 import GraphicEditorToolsPanel from './tools/graphicEditorToolsPanel';
 import ObjectListOnCanvas from './objectListOnCanvas';
 import ToolSettingsPanel from './tools/toolSettingsPanel';
-import CanvasComponent from './canvasComponent';
+// import CanvasComponent from './canvasComponent';
+import CanvasComponentTest from './canvasComponentTest';
 
 export default function GraphicEditorPage({isObjectListVisible}) {
     // Настройка отображения панелей с настройками инструментов
@@ -28,6 +29,9 @@ export default function GraphicEditorPage({isObjectListVisible}) {
     // Настройки кисти
     const [brushColor, setBrushColor] = useState('#000000');
     const [currentBrushLayer, setCurrentBrushLayer] = useState('lower')
+    const [brushThickness, setBrushThickness] = useState(20);
+    const [brushOpacity, setBrushOpacity] = useState(1);
+    const [brushSoftness, setBrushtSoftness] = useState(1);
 
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
@@ -41,10 +45,18 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                     {isToolSettingsPanelVisible && <ToolSettingsPanel 
                         currentToolSettingsPanel={currentTool} 
                         setIsToolSettingsPanelVisible={setIsToolSettingsPanelVisible}
+
                         brushColor={brushColor}
                         setBrushColor={setBrushColor}
                         currentBrushLayer={currentBrushLayer}
                         setCurrentBrushLayer={setCurrentBrushLayer}
+                        brushThickness={brushThickness}
+                        setBrushThickness={setBrushThickness}
+                        brushOpacity={brushOpacity}
+                        setBrushOpacity={setBrushOpacity}
+                        brushSoftness={brushSoftness}
+                        setBrushtSoftness={setBrushtSoftness}
+
                         canvasWidth={canvasWidth}
                         setCanvasWidth={setCanvasWidth}
                         canvasHeight={canvasHeight}
@@ -61,10 +73,33 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                     />}
                 </div>
 
-                <CanvasComponent
+                {/* <CanvasComponent
                     currentTool={currentTool}
+
                     brushColor={brushColor}
                     currentBrushLayer={currentBrushLayer}
+                    brushThickness={brushThickness}
+                    brushOpacity={brushOpacity}
+                    brushSoftness={brushSoftness}
+
+                    canvasWidth={canvasWidth}
+                    canvasHeight={canvasHeight}
+                    filterIntensity={filterIntensity}
+                    isResetRequired = {isResetRequired}
+                    setIsResetRequired={setIsResetRequired}
+                    canvasBackgroundColor={canvasBackgroundColor}
+                    selectedFilter={selectedFilter}
+                /> */}
+
+                <CanvasComponentTest
+                    currentTool={currentTool}
+
+                    brushColor={brushColor}
+                    currentBrushLayer={currentBrushLayer}
+                    brushThickness={brushThickness}
+                    brushOpacity={brushOpacity}
+                    brushSoftness={brushSoftness}
+
                     canvasWidth={canvasWidth}
                     canvasHeight={canvasHeight}
                     filterIntensity={filterIntensity}
