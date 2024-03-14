@@ -13,23 +13,23 @@ export default function CanvasComponent({ currentTool,
 
   useEffect(() => {
     const handleMouseDown = (event) => {
-      if (currentTool !== "Brush") return;
-
-      canvasRef.current.isDrawingMode = true;
-      canvasRef.current.freeDrawingBrush.onMouseDown(event);
+      if (currentTool === "Brush") {
+        canvasRef.current.isDrawingMode = true;
+        canvasRef.current.freeDrawingBrush.onMouseDown(event);
+      }
     };
 
     const handleMouseMove = (event) => {
-      if (currentTool !== "Brush") return;
-
-      canvasRef.current.freeDrawingBrush.onMouseMove(event);
+      if (currentTool === "Brush") {
+        canvasRef.current.freeDrawingBrush.onMouseMove(event);
+      }
     };
 
     const handleMouseUp = () => {
-      if (currentTool !== "Brush") return;
-
-      canvasRef.current.isDrawingMode = false;
-      canvasRef.current.freeDrawingBrush.onMouseUp();
+      if (currentTool === "Brush") {
+        canvasRef.current.isDrawingMode = false;
+        canvasRef.current.freeDrawingBrush.onMouseUp();
+      }
     };
 
    // Инициализация холста, если его ещё нет

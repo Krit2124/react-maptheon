@@ -7,85 +7,126 @@ export default function CanvasComponentTest({ currentTool,
     const lowerCanvasRef = useRef(null);
     const middleCanvasRef = useRef(null);
     const upperCanvasRef = useRef(null);
+    const workingAreaRef = useRef(null)
   
     useEffect(() => {
       // Создание нижнего холста
-      const lowerCanvas = new fabric.Canvas(lowerCanvasRef.current, {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        backgroundColor: '#252525',
-        containerClass: 'canvas-lower-container'
-      });
-  
+      if (lowerCanvasRef.current == null) {
+        const lowerCanvas = new fabric.Canvas('lowerCanvas', {
+          width: window.innerWidth,
+          height: window.innerHeight,
+          backgroundColor: '#252525',
+          containerClass: 'canvas-lower-container'
+        });
+
+        // Создание рабочей области
+        const workingArea = new fabric.Rect({
+          left: (lowerCanvas.width - canvasWidth) / 2,
+          top: (lowerCanvas.height - canvasHeight) / 2,
+          width: canvasWidth,
+          height: canvasHeight,
+          fill: canvasBackgroundColor,
+          selectable: false,
+          evented: false,
+        });
+        workingAreaRef.current = workingArea;
+
+        lowerCanvas.add(workingArea);
+
+        let lowerContainer = document.querySelector('.canvas-lower-container');
+        // @ts-ignore
+        lowerContainer.style.position = 'absolute';
+        // @ts-ignore
+        lowerContainer.style.width = '100%';
+        // @ts-ignore
+        lowerContainer.style.height = '100%';
+
+        lowerCanvasRef.current = lowerCanvas;
+      } else {
+        workingAreaRef.current.set({
+          left: (lowerCanvasRef.current.width - canvasWidth) / 2,
+          top: (lowerCanvasRef.current.height - canvasHeight) / 2,
+          width: canvasWidth,
+          height: canvasHeight,
+          fill: canvasBackgroundColor
+        });
+
+        lowerCanvasRef.current.set({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+
+        lowerCanvasRef.current.renderAll();
+      }
+
       // Создание среднего холста
-      const middleCanvas = new fabric.Canvas(middleCanvasRef.current, {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        containerClass: 'canvas-middle-container'
-      });
+      if (middleCanvasRef.current == null) {
+        
+        const middleCanvas = new fabric.Canvas('middleCanvas', {
+          width: window.innerWidth,
+          height: window.innerHeight,
+          containerClass: 'canvas-middle-container'
+        });
+
+        let middleContainer = document.querySelector('.canvas-middle-container');
+        // @ts-ignore
+        middleContainer.style.width = '100%';
+        // @ts-ignore
+        middleContainer.style.height = '100%';
+        // @ts-ignore
+        middleContainer.style.position = 'absolute';
+
+        middleCanvasRef.current = middleCanvas;
+      } else {
+        middleCanvasRef.current.set({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+
+        middleCanvasRef.current.renderAll();
+      }
   
       // Создание верхнего холста
-      const upperCanvas = new fabric.Canvas(upperCanvasRef.current, {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        containerClass: 'canvas-upper-container'
-      });
+      if (upperCanvasRef.current == null) {
+        const upperCanvas = new fabric.Canvas('upperCanvas', {
+          width: window.innerWidth,
+          height: window.innerHeight,
+          containerClass: 'canvas-upper-container'
+        });
 
-      const workingArea = new fabric.Rect({
-        left: (lowerCanvas.width - canvasWidth) / 2,
-        top: (lowerCanvas.height - canvasHeight) / 2,
-        width: canvasWidth,
-        height: canvasHeight,
-        fill: '#ffffff',
-        selectable: false,
-        evented: false,
-      });
+        let upperContainer = document.querySelector('.canvas-upper-container');
+        // @ts-ignore
+        upperContainer.style.position = 'absolute';
+        // @ts-ignore
+        upperContainer.style.width = '100%';
+        // @ts-ignore
+        upperContainer.style.height = '100%';
 
-      lowerCanvas.add(workingArea);
+        upperCanvasRef.current = upperCanvas;
+      } else {
+        upperCanvasRef.current.set({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
 
-      // Настройка наслаивания холстов друг на друга
-      let lowerContainer = document.querySelector('.canvas-lower-container');
-      // @ts-ignore
-      lowerContainer.style.position = 'absolute';
-      // @ts-ignore
-      lowerContainer.style.width = '100%';
-      // @ts-ignore
-      lowerContainer.style.height = '100%';
+        upperCanvasRef.current.renderAll();
+      }
 
-      let middleContainer = document.querySelector('.canvas-middle-container');
-      // @ts-ignore
-      middleContainer.style.width = '100%';
-      // @ts-ignore
-      middleContainer.style.height = '100%';
-      // @ts-ignore
-      middleContainer.style.position = 'absolute';
-
-      let upperContainer = document.querySelector('.canvas-upper-container');
-      // @ts-ignore
-      upperContainer.style.position = 'absolute';
-      // @ts-ignore
-      upperContainer.style.width = '100%';
-      // @ts-ignore
-      upperContainer.style.height = '100%';
+      const mainContainer = document.getElementById('canvasContainer');
 
       // Обработчики событий для масштабирования и перемещения
-      const mainContainer = document.getElementById('canvasContainer');
-      mainContainer.addEventListener('wheel', handleMouseWheel);
-      mainContainer.addEventListener('mousedown', handleMouseDown);
-      mainContainer.addEventListener('mousemove', handleMouseMove);
-      mainContainer.addEventListener('mouseup', handleMouseUp);
-
+      // Масштабирование прокруткой колёсика
       function handleMouseWheel(event) {
         const delta = event.deltaY;
-        const zoom = lowerCanvas.getZoom();
+        const zoom = lowerCanvasRef.current.getZoom();
         const zoomFactor = 0.999 ** delta;
         const newZoom = zoom * zoomFactor;
         if (newZoom > 20) return;
         if (newZoom < 0.01) return;
         
-        lowerCanvas.zoomToPoint({ x: event.offsetX, y: event.offsetY }, newZoom);
-        middleCanvas.zoomToPoint({ x: event.offsetX, y: event.offsetY }, newZoom);
-        upperCanvas.zoomToPoint({ x: event.offsetX, y: event.offsetY }, newZoom);
+        lowerCanvasRef.current.zoomToPoint({ x: event.offsetX, y: event.offsetY }, newZoom);
+        middleCanvasRef.current.zoomToPoint({ x: event.offsetX, y: event.offsetY }, newZoom);
+        upperCanvasRef.current.zoomToPoint({ x: event.offsetX, y: event.offsetY }, newZoom);
 
         event.preventDefault();
       }
@@ -94,59 +135,146 @@ export default function CanvasComponentTest({ currentTool,
       let lastPosX = 0;
       let lastPosY = 0;
 
-      function handleMouseDown(event) {
+      // Перемещение холста колёсиком (нажатие)
+      function handleWheelDown(event) {
         if (event.button === 1) {
           isDragging = true;
-          lowerCanvas.selection = false;
+          lowerCanvasRef.current.selection = false;
           lastPosX = event.clientX;
           lastPosY = event.clientY;
         }
       }
 
-      function handleMouseMove(event) {
+      // Перемещение холста колёсиком (перемещение)
+      function handleWheelMove(event) {
         if (isDragging) {
+          
           const e = event;
-          const vpt = lowerCanvas.viewportTransform;
+          const vpt = lowerCanvasRef.current.viewportTransform;
           vpt[4] += e.clientX - lastPosX;
           vpt[5] += e.clientY - lastPosY;
 
-          lowerCanvas.requestRenderAll();
-          middleCanvas.requestRenderAll();
-          upperCanvas.requestRenderAll();
+          lowerCanvasRef.current.requestRenderAll();
+          middleCanvasRef.current.requestRenderAll();
+          upperCanvasRef.current.requestRenderAll();
 
           lastPosX = e.clientX;
           lastPosY = e.clientY;
         }
       }
 
-      function handleMouseUp(event) {
-        lowerCanvas.setViewportTransform(lowerCanvas.viewportTransform);
-        middleCanvas.setViewportTransform(middleCanvas.viewportTransform);
-        upperCanvas.setViewportTransform(upperCanvas.viewportTransform);
+      // Перемещение холста колёсиком (отпускание)
+      function handleWheelUp(event) {
+        lowerCanvasRef.current.setViewportTransform(lowerCanvasRef.current.viewportTransform);
+        middleCanvasRef.current.setViewportTransform(middleCanvasRef.current.viewportTransform);
+        upperCanvasRef.current.setViewportTransform(upperCanvasRef.current.viewportTransform);
 
         isDragging = false;
-        lowerCanvas.selection = true;
+        lowerCanvasRef.current.selection = true;
+        mainContainer.style.cursor = 'grab';
       }
+
+      // Сброс масштабирования
+      if (isResetRequired) {
+        lowerCanvasRef.current.setZoom(1);
+        middleCanvasRef.current.setZoom(1);
+        upperCanvasRef.current.setZoom(1);
+
+        setIsResetRequired(false);
+      }
+
+      const handleMouseDown = (event) => {
+        if (currentTool === "Brush") {
+          if (currentBrushLayer === 'lower') {
+            lowerCanvasRef.current.isDrawingMode = true;
+            lowerCanvasRef.current.freeDrawingBrush.onMouseDown(event);
+          } else if (currentBrushLayer === 'upper') {
+            upperCanvasRef.current.isDrawingMode = true;
+            upperCanvasRef.current.freeDrawingBrush.onMouseDown(event);
+          }
+        }
+      };
   
+      const handleMouseMove = (event) => {
+        if (currentTool === "Brush") {
+          if (currentBrushLayer === 'lower') {
+            lowerCanvasRef.current.freeDrawingBrush.onMouseMove(event);
+          } else if (currentBrushLayer === 'upper') {
+            upperCanvasRef.current.freeDrawingBrush.onMouseMove(event);
+          }
+        }
+      };
+  
+      const handleMouseUp = () => {
+        if (currentTool === "Brush") {
+          if (currentBrushLayer === 'lower') {
+            lowerCanvasRef.current.isDrawingMode = false;
+            lowerCanvasRef.current.freeDrawingBrush.onMouseUp();
+          } else if (currentBrushLayer === 'upper') {
+            upperCanvasRef.current.isDrawingMode = false;
+            upperCanvasRef.current.freeDrawingBrush.onMouseUp();
+          }
+        }
+      };
+
+      // Изменение свойств нарисованных объектов, чтобы их нельзя было выделять
+      const disableBrushObjectsSelection = () => {
+        const allObjects = lowerCanvasRef.current.getObjects().concat(upperCanvasRef.current.getObjects());
+
+        // Фильтруем объекты, чтобы оставить только те, которые нарисованы кистью
+        allObjects.forEach((obj) => {
+          if (
+            obj instanceof fabric.Path &&
+            obj.get('path') &&
+            obj.get('path').length > 1
+          ) {
+            obj.selectable = false;
+            obj.hoverCursor = 'default';
+          };
+        });
+      }
+
+      // Установка обработчиков рисования кистью при смене инструмента
+      if (currentTool === "Brush") {
+        upperCanvasRef.current.isDrawingMode = true;
+        upperCanvasRef.current.freeDrawingBrush = new fabric.PencilBrush(upperCanvasRef.current);
+        upperCanvasRef.current.freeDrawingBrush.color = brushColor;
+        upperCanvasRef.current.freeDrawingBrush.width = brushThickness;
+        upperCanvasRef.current.freeDrawingBrush.transparent = brushOpacity;
+      } else {
+        // Выключение режима рисования при смене инструмента
+        upperCanvasRef.current.isDrawingMode = false;
+
+        disableBrushObjectsSelection();
+      }
+
+      // Обработчики для рисования
+      upperCanvasRef.current.on('mouse:down', handleMouseDown);
+      upperCanvasRef.current.on('mouse:move', handleMouseMove);
+      upperCanvasRef.current.on('mouse:up', handleMouseUp);
+
+      mainContainer.addEventListener('wheel', handleMouseWheel);
+      mainContainer.addEventListener('mousedown', handleWheelDown);
+      mainContainer.addEventListener('mousemove', handleWheelMove);
+      mainContainer.addEventListener('mouseup', handleWheelUp);
+
       return () => {
         // Удаление обработчиков событий при размонтировании компонента
         mainContainer.removeEventListener('wheel', handleMouseWheel);
-        mainContainer.removeEventListener('mousedown', handleMouseDown);
-        mainContainer.removeEventListener('mousemove', handleMouseMove);
-        mainContainer.removeEventListener('mouseup', handleMouseUp);
+        mainContainer.removeEventListener('mousedown', handleWheelDown);
+        mainContainer.removeEventListener('mousemove', handleWheelMove);
+        mainContainer.removeEventListener('mouseup', handleWheelUp);
       };
-    }, [canvasWidth, canvasHeight]);
+    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool]);
 
-    
-  
     return (
       <div id="canvasContainer" className="canvasContainer">
         {/* Нижний холст */}
-        <canvas ref={lowerCanvasRef} className="canvas-lower" />
+        <canvas id='lowerCanvas' className="canvas-lower" />
         {/* Средний холст */}
-        <canvas ref={middleCanvasRef} className="canvas-middle" />
+        <canvas id='middleCanvas' className="canvas-middle" />
         {/* Верхний холст */}
-        <canvas ref={upperCanvasRef} className="canvas-upper" />
+        <canvas id='upperCanvas' className="canvas-upper" />
       </div>
     );
   }
