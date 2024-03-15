@@ -9,7 +9,35 @@ export default function CanvasComponentTest({ currentTool,
     const upperCanvasRef = useRef(null);
     const workingAreaRef = useRef(null)
   
+    // Нужно для корректной работы рисования на разных холстах
+    const currentBrushLayerRef = useRef(currentBrushLayer);
+
     useEffect(() => {
+      // Рисование при выборе кисти
+      const handleMouseDown = (event) => {
+          if (event.button === 0) {
+              if (currentTool === "Brush") {
+                  upperCanvasRef.current.isDrawingMode = true;
+                  upperCanvasRef.current.freeDrawingBrush.onMouseDown(event);
+              }
+          }
+      };
+
+      const handleMouseMove = (event) => {
+          if (event.button === 0) {
+              if (currentTool === "Brush") {
+                  upperCanvasRef.current.freeDrawingBrush.onMouseMove(event);
+              }
+          }
+      };
+
+      const handleMouseUp = () => {
+          if (currentTool === "Brush") {
+            upperCanvasRef.current.isDrawingMode = false;
+            upperCanvasRef.current.freeDrawingBrush.onMouseUp();
+          }
+      };
+      
       // Создание нижнего холста
       if (lowerCanvasRef.current == null) {
         const lowerCanvas = new fabric.Canvas('lowerCanvas', {
@@ -21,8 +49,8 @@ export default function CanvasComponentTest({ currentTool,
 
         // Создание рабочей области
         const workingArea = new fabric.Rect({
-          left: (lowerCanvas.width - canvasWidth) / 2,
-          top: (lowerCanvas.height - canvasHeight) / 2,
+          left: (window.innerWidth - canvasWidth) / 2,
+          top: (window.innerHeight - canvasHeight) / 2,
           width: canvasWidth,
           height: canvasHeight,
           fill: canvasBackgroundColor,
@@ -44,8 +72,6 @@ export default function CanvasComponentTest({ currentTool,
         lowerCanvasRef.current = lowerCanvas;
       } else {
         workingAreaRef.current.set({
-          left: (lowerCanvasRef.current.width - canvasWidth) / 2,
-          top: (lowerCanvasRef.current.height - canvasHeight) / 2,
           width: canvasWidth,
           height: canvasHeight,
           fill: canvasBackgroundColor
@@ -85,7 +111,10 @@ export default function CanvasComponentTest({ currentTool,
 
         middleCanvasRef.current.renderAll();
       }
-  
+
+      // Обновление currentBrushLayerRef
+      currentBrushLayerRef.current = currentBrushLayer;
+
       // Создание верхнего холста
       if (upperCanvasRef.current == null) {
         const upperCanvas = new fabric.Canvas('upperCanvas', {
@@ -103,6 +132,20 @@ export default function CanvasComponentTest({ currentTool,
         upperContainer.style.height = '100%';
 
         upperCanvasRef.current = upperCanvas;
+
+        // Присваивание событий для рисования
+        upperCanvasRef.current.on('mouse:down', handleMouseDown);
+        upperCanvasRef.current.on('mouse:move', handleMouseMove);
+        upperCanvasRef.current.on('mouse:up', () => {
+          handleMouseUp();
+          if (currentBrushLayerRef.current === 'lower') {
+            let lastDrawnObject = upperCanvasRef.current.getObjects().pop();
+            // Перемещаем последний нарисованный объект на нижний холст
+            lowerCanvasRef.current.add(lastDrawnObject);
+            // Удаляем его с верхнего холста
+            upperCanvasRef.current.remove(lastDrawnObject);
+          }
+        });
       } else {
         upperCanvasRef.current.set({
           width: window.innerWidth,
@@ -140,6 +183,8 @@ export default function CanvasComponentTest({ currentTool,
         if (event.button === 1) {
           isDragging = true;
           lowerCanvasRef.current.selection = false;
+          middleCanvasRef.current.selection = false;
+          upperCanvasRef.current.selection = false;
           lastPosX = event.clientX;
           lastPosY = event.clientY;
         }
@@ -148,80 +193,51 @@ export default function CanvasComponentTest({ currentTool,
       // Перемещение холста колёсиком (перемещение)
       function handleWheelMove(event) {
         if (isDragging) {
-          
-          const e = event;
-          const vpt = lowerCanvasRef.current.viewportTransform;
-          vpt[4] += e.clientX - lastPosX;
-          vpt[5] += e.clientY - lastPosY;
-
-          lowerCanvasRef.current.requestRenderAll();
-          middleCanvasRef.current.requestRenderAll();
-          upperCanvasRef.current.requestRenderAll();
-
-          lastPosX = e.clientX;
-          lastPosY = e.clientY;
+            const e = event;
+            const deltaX = e.clientX - lastPosX;
+            const deltaY = e.clientY - lastPosY;
+    
+            [lowerCanvasRef, middleCanvasRef, upperCanvasRef].forEach(canvasRef => {
+                const vpt = canvasRef.current.viewportTransform;
+                vpt[4] += deltaX;
+                vpt[5] += deltaY;
+                canvasRef.current.requestRenderAll();
+            });
+    
+            lastPosX = e.clientX;
+            lastPosY = e.clientY;
         }
       }
 
       // Перемещение холста колёсиком (отпускание)
       function handleWheelUp(event) {
-        lowerCanvasRef.current.setViewportTransform(lowerCanvasRef.current.viewportTransform);
-        middleCanvasRef.current.setViewportTransform(middleCanvasRef.current.viewportTransform);
-        upperCanvasRef.current.setViewportTransform(upperCanvasRef.current.viewportTransform);
-
+        [lowerCanvasRef, middleCanvasRef, upperCanvasRef].forEach(canvasRef => {
+            const canvas = canvasRef.current;
+            canvas.setViewportTransform(canvas.viewportTransform);
+            canvas.selection = true;
+        });
+    
         isDragging = false;
-        lowerCanvasRef.current.selection = true;
-        mainContainer.style.cursor = 'grab';
       }
 
-      // Сброс масштабирования
+      // Сброс масштабирования (функционал скрыт)
       if (isResetRequired) {
-        lowerCanvasRef.current.setZoom(1);
-        middleCanvasRef.current.setZoom(1);
-        upperCanvasRef.current.setZoom(1);
+        const centerX = canvasWidth / 2;
+        const centerY = canvasHeight / 2;
+
+        lowerCanvasRef.current.zoomToPoint({ x: centerX, y: centerY }, 1);
+        middleCanvasRef.current.zoomToPoint({ x: centerX, y: centerY }, 1);
+        upperCanvasRef.current.zoomToPoint({ x: centerX, y: centerY }, 1);
+
+        lowerCanvasRef.current.centerObject(workingAreaRef.current);
 
         setIsResetRequired(false);
       }
-
-      const handleMouseDown = (event) => {
-        if (currentTool === "Brush") {
-          if (currentBrushLayer === 'lower') {
-            lowerCanvasRef.current.isDrawingMode = true;
-            lowerCanvasRef.current.freeDrawingBrush.onMouseDown(event);
-          } else if (currentBrushLayer === 'upper') {
-            upperCanvasRef.current.isDrawingMode = true;
-            upperCanvasRef.current.freeDrawingBrush.onMouseDown(event);
-          }
-        }
-      };
-  
-      const handleMouseMove = (event) => {
-        if (currentTool === "Brush") {
-          if (currentBrushLayer === 'lower') {
-            lowerCanvasRef.current.freeDrawingBrush.onMouseMove(event);
-          } else if (currentBrushLayer === 'upper') {
-            upperCanvasRef.current.freeDrawingBrush.onMouseMove(event);
-          }
-        }
-      };
-  
-      const handleMouseUp = () => {
-        if (currentTool === "Brush") {
-          if (currentBrushLayer === 'lower') {
-            lowerCanvasRef.current.isDrawingMode = false;
-            lowerCanvasRef.current.freeDrawingBrush.onMouseUp();
-          } else if (currentBrushLayer === 'upper') {
-            upperCanvasRef.current.isDrawingMode = false;
-            upperCanvasRef.current.freeDrawingBrush.onMouseUp();
-          }
-        }
-      };
 
       // Изменение свойств нарисованных объектов, чтобы их нельзя было выделять
       const disableBrushObjectsSelection = () => {
         const allObjects = lowerCanvasRef.current.getObjects().concat(upperCanvasRef.current.getObjects());
 
-        // Фильтруем объекты, чтобы оставить только те, которые нарисованы кистью
         allObjects.forEach((obj) => {
           if (
             obj instanceof fabric.Path &&
@@ -234,13 +250,15 @@ export default function CanvasComponentTest({ currentTool,
         });
       }
 
+      // Создание кисти для холста
+      const upperBrush = new fabric.PencilBrush(upperCanvasRef.current);
+      upperBrush.color = brushColor;
+      upperBrush.width = brushThickness;
+      upperCanvasRef.current.freeDrawingBrush = upperBrush;
+
       // Установка обработчиков рисования кистью при смене инструмента
       if (currentTool === "Brush") {
         upperCanvasRef.current.isDrawingMode = true;
-        upperCanvasRef.current.freeDrawingBrush = new fabric.PencilBrush(upperCanvasRef.current);
-        upperCanvasRef.current.freeDrawingBrush.color = brushColor;
-        upperCanvasRef.current.freeDrawingBrush.width = brushThickness;
-        upperCanvasRef.current.freeDrawingBrush.transparent = brushOpacity;
       } else {
         // Выключение режима рисования при смене инструмента
         upperCanvasRef.current.isDrawingMode = false;
@@ -248,11 +266,7 @@ export default function CanvasComponentTest({ currentTool,
         disableBrushObjectsSelection();
       }
 
-      // Обработчики для рисования
-      upperCanvasRef.current.on('mouse:down', handleMouseDown);
-      upperCanvasRef.current.on('mouse:move', handleMouseMove);
-      upperCanvasRef.current.on('mouse:up', handleMouseUp);
-
+      // Присваивание событий для масштабирования и перемещения
       mainContainer.addEventListener('wheel', handleMouseWheel);
       mainContainer.addEventListener('mousedown', handleWheelDown);
       mainContainer.addEventListener('mousemove', handleWheelMove);
@@ -264,6 +278,10 @@ export default function CanvasComponentTest({ currentTool,
         mainContainer.removeEventListener('mousedown', handleWheelDown);
         mainContainer.removeEventListener('mousemove', handleWheelMove);
         mainContainer.removeEventListener('mouseup', handleWheelUp);
+
+        upperCanvasRef.current.off('mouse:down', handleMouseDown);
+        upperCanvasRef.current.off('mouse:move', handleMouseMove);
+        upperCanvasRef.current.off('mouse:up', handleMouseUp);
       };
     }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool]);
 

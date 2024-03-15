@@ -4,7 +4,7 @@ import { fabric } from 'fabric';
 import GraphicEditorToolsPanel from './tools/graphicEditorToolsPanel';
 import ObjectListOnCanvas from './objectListOnCanvas';
 import ToolSettingsPanel from './tools/toolSettingsPanel';
-// import CanvasComponent from './canvasComponent';
+import CanvasComponent from './canvasComponent';
 import CanvasComponentTest from './canvasComponentTest';
 
 export default function GraphicEditorPage({isObjectListVisible}) {
@@ -28,7 +28,7 @@ export default function GraphicEditorPage({isObjectListVisible}) {
 
     // Настройки кисти
     const [brushColor, setBrushColor] = useState('#000000');
-    const [currentBrushLayer, setCurrentBrushLayer] = useState('lower')
+    const [currentBrushLayer, setCurrentBrushLayer] = useState('lower');
     const [brushThickness, setBrushThickness] = useState(20);
     const [brushOpacity, setBrushOpacity] = useState(1);
     const [brushSoftness, setBrushtSoftness] = useState(1);

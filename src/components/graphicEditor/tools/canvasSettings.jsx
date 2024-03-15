@@ -102,7 +102,7 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
                     </button>
                 </div>
 
-                <button className='button-text-usual' onClick={handleZoomReset}>Сбросить масштабирование</button>
+                {/* <button className='button-text-usual' onClick={handleZoomReset}>Сбросить масштабирование</button> */}
             </div>
 
             <div className='flex-col-top-left flex-gap-10'>
