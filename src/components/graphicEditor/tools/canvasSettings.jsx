@@ -8,7 +8,10 @@ import chainImage from "../../../assets/icons/Chain.png"
 import reverseImage from "../../../assets/icons/Reverse.png"
 import showOrHideImage from "../../../assets/icons/ShowOrHide.png"
 
-export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
+export default function CanvasSettings({
+    recentlyUsedTextures, setRecentlyUsedTextures,
+
+    canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, setBackgroundColorMode, currentBackgroundTexture, setCurrentBackgroundTexture, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
     // Обработка размеров холста и интенсивности
     const handleSliderChange = (value, setValue) => {
         setValue(value);
@@ -60,6 +63,29 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
         setIsResetRequired(true)
     };
 
+    // Обработка переключения текстуры и цвета
+    const handleToggleMode = (value) => {
+        setBackgroundColorMode(value);
+    };
+
+    // Обработка смены текстуры
+    const handleTextureClick = (texture) => {
+        setCurrentBackgroundTexture(texture);
+        updateRecentlyUsedTextures(texture);
+    };
+
+    const updateRecentlyUsedTextures = (texture) => {
+        // Проверка, была ли выбрана эта текстура ранее
+        if (!recentlyUsedTextures.includes(texture)) {
+            // Если текстура новая, добавляем её в начало списка
+            setRecentlyUsedTextures([texture, ...recentlyUsedTextures]);
+        } else {
+            // Если текстура уже была выбрана, перемещаем её в начало списка
+            const updatedTextures = recentlyUsedTextures.filter((item) => item !== texture);
+            setRecentlyUsedTextures([texture, ...updatedTextures]);
+        }
+    };
+
     // Обработка смены цвета фона
     const handleChangeBackgroundColor = (color) => {
         setCanvasBackgroundColor(color.hex);
@@ -108,29 +134,27 @@ export default function CanvasSettings({canvasWidth, setCanvasWidth, canvasHeigh
             <div className='flex-col-top-left flex-gap-10'>
                 <h2>Фон</h2>
 
-                <div className='flex-col-top-left flex-gap-10'>
-                    <div className="flex-row-left-c flex-gap-10">
-                        <button className="button-text-usual">Текстура</button>
-                        <button className="button-text-usual active">Цвет</button>
-                    </div>
-
-                    <ChromePicker color={canvasBackgroundColor} onChange={handleChangeBackgroundColor}/>
+                <div className="flex-row-left-c flex-gap-10">
+                    <button className={`button-text-usual ${!backgroundColorMode ? 'active' : ''}`} onClick={() => handleToggleMode(false)}>Текстура</button>
+                    <button className={`button-text-usual ${backgroundColorMode ? 'active' : ''}`} onClick={() => handleToggleMode(true)}>Цвет</button>
                 </div>
 
-                {/* Показывать для текстур, скрыть для цвета */}
-                {/* <div className='flex-col-top-left flex-gap-10'>
-                    <p>Недавно использованные</p>
-                    <div className='flex-row-left-c flex-wrap flex-gap-5 recentlyUsedContainer'>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
+                {backgroundColorMode ? (
+                    <ChromePicker color={canvasBackgroundColor} onChange={handleChangeBackgroundColor}/>
+                ) : (
+                    <div className='flex-col-top-left flex-gap-10'>
+                        <div className='currentTexture' style={{ backgroundImage: currentBackgroundTexture ? `url(${currentBackgroundTexture})` : 'none' }}>
+                            {currentBackgroundTexture && <div className="overlay"></div>}
+                        </div>
+
+                        <p>Недавно использованные</p>
+                        <div className='flex-row-left-c flex-wrap flex-gap-5 recentlyUsedContainer'>
+                            {recentlyUsedTextures.map((texture, index) => (
+                                <div key={index} className='recentTexture' style={{ backgroundImage: `url(${texture})` }} onClick={() => handleTextureClick(texture)} />
+                            ))}
+                        </div>
                     </div>
-                </div> */}
+                )}
             </div>
 
             <div className='flex-col-top-left flex-gap-10 size-full-horizontal-percent'>

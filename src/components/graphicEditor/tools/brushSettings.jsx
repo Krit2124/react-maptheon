@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-
-import roundBrushImage from "../../../assets/icons/RoundBrush.png"
-import rectangleBrushImage from "../../../assets/icons/RectangleBrush.png"
 import { ChromePicker } from 'react-color';
 
-export default function BrushSettings({ brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness, }) {
+import roundBrushImage from "../../../assets/icons/RoundBrush.png";
+import rectangleBrushImage from "../../../assets/icons/RectangleBrush.png";
 
+export default function BrushSettings({ 
+    recentlyUsedTextures, setRecentlyUsedTextures,
+
+    brushColorMode, setBrushColorMode, currentBrushTexture, setCurrentBrushTexture, brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness, }) {
+    // Обработка ползунков
     const handleSliderChange = (value, setValue) => {
         setValue(value);
     };
@@ -20,6 +23,29 @@ export default function BrushSettings({ brushColor, setBrushColor, currentBrushL
         setValue(value);
     };
 
+    // Обработка переключения текстуры и цвета
+    const handleToggleMode = (value) => {
+        setBrushColorMode(value);
+    };
+
+    // Обработка смены текстуры
+    const handleTextureClick = (texture) => {
+        setCurrentBrushTexture(texture);
+        updateRecentlyUsedTextures(texture);
+    };
+
+    const updateRecentlyUsedTextures = (texture) => {
+        // Проверка, была ли выбрана эта текстура ранее
+        if (!recentlyUsedTextures.includes(texture)) {
+            // Если текстура новая, добавляем её в начало списка
+            setRecentlyUsedTextures([texture, ...recentlyUsedTextures]);
+        } else {
+            // Если текстура уже была выбрана, перемещаем её в начало списка
+            const updatedTextures = recentlyUsedTextures.filter((item) => item !== texture);
+            setRecentlyUsedTextures([texture, ...updatedTextures]);
+        }
+    };
+    
     // Обработка смены цвета кисти
     const handleChangeBackgroundColor = (color) => {
         setBrushColor(color.hex);
@@ -35,27 +61,27 @@ export default function BrushSettings({ brushColor, setBrushColor, currentBrushL
             <div className='flex-col-top-left flex-gap-15'>
                 <div className='flex-col-top-left flex-gap-10'>
                     <div className="flex-row-left-c flex-gap-10">
-                        <button className="button-text-usual">Текстура</button>
-                        <button className="button-text-usual active">Цвет</button>
+                        <button className={`button-text-usual ${!brushColorMode ? 'active' : ''}`} onClick={() => handleToggleMode(false)}>Текстура</button>
+                        <button className={`button-text-usual ${brushColorMode ? 'active' : ''}`} onClick={() => handleToggleMode(true)}>Цвет</button>
                     </div>
 
-                    <ChromePicker color={brushColor} onChange={handleChangeBackgroundColor}/>
+                    {brushColorMode ? (
+                        <ChromePicker color={brushColor} onChange={handleChangeBackgroundColor} />
+                    ) : (
+                        <div className='flex-col-top-left flex-gap-10'>
+                            <div className='currentTexture' style={{ backgroundImage: currentBrushTexture ? `url(${currentBrushTexture})` : 'none' }}>
+                                {currentBrushTexture && <div className="overlay"></div>}
+                            </div>
+
+                            <p>Недавно использованные</p>
+                            <div className='flex-row-left-c flex-wrap flex-gap-5 recentlyUsedContainer'>
+                                {recentlyUsedTextures.map((texture, index) => (
+                                    <div key={index} className='recentTexture' style={{ backgroundImage: `url(${texture})` }} onClick={() => handleTextureClick(texture)} />
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
-
-                {/* Показывать для текстур, скрыть для цвета */}
-                {/* <div className='flex-col-top-left flex-gap-10'>
-                    <p>Недавно использованные</p>
-                    <div className='flex-row-left-c flex-wrap flex-gap-5 recentlyUsedContainer'>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                        <div className='recentColorPlaceholder'></div>
-                    </div>
-                </div> */}
 
                 <div className='flex-col-top-left flex-gap-10'>
                     <p>Изменяемый слой</p>
@@ -86,7 +112,7 @@ export default function BrushSettings({ brushColor, setBrushColor, currentBrushL
                     </div>
                 </div>
 
-                <div className="flex-row-sb-c size-full-horizontal-percent">
+                {/* <div className="flex-row-sb-c size-full-horizontal-percent">
                     <p>Форма кисти</p>
 
                     <div className='flex-row-sb-c flex-gap-5'>
@@ -98,7 +124,7 @@ export default function BrushSettings({ brushColor, setBrushColor, currentBrushL
                             <img src={rectangleBrushImage} alt="Квадратная"/>
                         </button>
                     </div>
-                </div>
+                </div> */}
 
                 <div className='flex-col-top-left flex-gap-10 size-full-horizontal-percent'>
                     <p>Прозрачность</p>

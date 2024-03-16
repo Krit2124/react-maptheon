@@ -8,7 +8,7 @@ import canvasImage from "../../../assets/icons/Canvas.png"
 import downloadImage from "../../../assets/icons/Download.png"
 import saveImage from "../../../assets/icons/Save.png"
 
-export default function GraphicEditorToolsPanel({setCurrentToolSettingsPanel, setIsToolSettingsPanelVisible}) {
+export default function GraphicEditorToolsPanel({currentToolSettingsPanel, setCurrentToolSettingsPanel, isToolSettingsPanelVisible, setIsToolSettingsPanelVisible}) {
     let handleCloseToolSettingsPanel = () => {
         setIsToolSettingsPanelVisible(false)
         setCurrentToolSettingsPanel(null)
@@ -22,23 +22,23 @@ export default function GraphicEditorToolsPanel({setCurrentToolSettingsPanel, se
     return (
         <div className="border-black-right background-black flex-col-sb-c canvasPanel size-full-vertical-pagePercent-withHeader">
             <div className="flex-col-sb-c flex-gap-10">
-                <button className="button-image-big" onClick={handleCloseToolSettingsPanel}>
+                <button className={`button-image-big ${currentToolSettingsPanel === null ? 'active' : ''}`} onClick={handleCloseToolSettingsPanel}>
                     <img src={cursorImage} alt="Курсор"/>
                 </button>
 
-                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("Brush")}>
+                <button className={`button-image-big ${currentToolSettingsPanel === "Brush" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Brush")}>
                     <img src={brushImage} alt="Кисть"/>
                 </button>
 
-                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("Object")}>
+                <button className={`button-image-big ${currentToolSettingsPanel === "Object" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Object")}>
                     <img src={objectImage} alt="Объект"/>
                 </button>
 
-                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("Label")}>
+                <button className={`button-image-big ${currentToolSettingsPanel === "Label" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Label")}>
                     <img src={textImage} alt="Подпись"/>
                 </button>
 
-                <button className="button-image-big" onClick={() => handleSwitchToolSettingsPannel("Canvas")}>
+                <button className={`button-image-big ${currentToolSettingsPanel === "Canvas" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Canvas")}>
                     <img src={canvasImage} alt="Холст"/>
                 </button>
             </div>

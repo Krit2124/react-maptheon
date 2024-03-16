@@ -531,6 +531,16 @@ header {
   background: var(--background-element-gray);
 }
 
+.currentTexture {
+  width: 262px;
+  height: 84px;
+}
+
+.recentTexture {
+  width: 63px;
+  height: 35px;
+}
+
 /* Canvas */
 .header-graphicEditor {
   position: relative;
@@ -587,22 +597,10 @@ header {
   background-color: var(--background-beige);
 }
 
-.colorPlaceholder {
-  width: 262px;
-  height: 84px;
-  background-color: var(--background-beige);
-}
-
 .fontColorPlaceholder {
   width: 49px;
   height: 19px;
   background-color: white;
-}
-
-.recentColorPlaceholder {
-  width: 63px;
-  height: 35px;
-  background-color: var(--background-beige);
 }
 
 .bigObjectPlaceholder {

@@ -9,8 +9,12 @@ import closeImage from "../../../assets/icons/Close.png"
 
 export default function ToolSettingsPanel({
     currentToolSettingsPanel, setIsToolSettingsPanelVisible, 
-    brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness,
-    canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
+
+    recentlyUsedTextures, setRecentlyUsedTextures,
+
+    brushColorMode, setBrushColorMode, currentBrushTexture, setCurrentBrushTexture, brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness,
+
+    canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, setBackgroundColorMode, currentBackgroundTexture, setCurrentBackgroundTexture, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
 
     const [panelLabel, setPanelLabel] = useState("Свойства инструмента");
 
@@ -43,6 +47,13 @@ export default function ToolSettingsPanel({
 
             {/* Изменение контента панели в зависимости от нажатой кнопки */}
             {currentToolSettingsPanel === "Brush" ? <BrushSettings 
+                recentlyUsedTextures={recentlyUsedTextures}
+                setRecentlyUsedTextures={setRecentlyUsedTextures}
+
+                brushColorMode={brushColorMode}
+                setBrushColorMode={setBrushColorMode}
+                currentBrushTexture={currentBrushTexture}
+                setCurrentBrushTexture={setCurrentBrushTexture}
                 brushColor={brushColor}
                 setBrushColor={setBrushColor}
                 currentBrushLayer={currentBrushLayer}
@@ -57,6 +68,9 @@ export default function ToolSettingsPanel({
             : currentToolSettingsPanel === "Object" ? <ObjectSettings /> 
             : currentToolSettingsPanel === "Label" ? <LabelSettings/> 
             : currentToolSettingsPanel === "Canvas" ? <CanvasSettings 
+                recentlyUsedTextures={recentlyUsedTextures}
+                setRecentlyUsedTextures={setRecentlyUsedTextures}
+
                 canvasWidth={canvasWidth}
                 setCanvasWidth={setCanvasWidth}
                 canvasHeight={canvasHeight}
@@ -65,6 +79,10 @@ export default function ToolSettingsPanel({
                 setFilterIntensity={setFilterIntensity}
                 isResetRequired = {isResetRequired}
                 setIsResetRequired={setIsResetRequired}
+                backgroundColorMode={backgroundColorMode}
+                setBackgroundColorMode={setBackgroundColorMode}
+                currentBackgroundTexture={currentBackgroundTexture}
+                setCurrentBackgroundTexture={setCurrentBackgroundTexture}
                 canvasBackgroundColor={canvasBackgroundColor}
                 setCanvasBackgroundColor={setCanvasBackgroundColor}
                 selectedFilter={selectedFilter}

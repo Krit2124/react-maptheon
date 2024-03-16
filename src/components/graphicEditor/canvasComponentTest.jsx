@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 
-export default function CanvasComponentTest({ currentTool, 
-  brushColor, currentBrushLayer, brushThickness, brushOpacity, brushSoftness,
-  canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, canvasBackgroundColor, selectedFilter }) {
+export default function CanvasComponentTest({ 
+  currentTool, 
+  recentlyUsedTextures,
+  brushColorMode, currentBrushTexture, brushColor, currentBrushLayer, brushThickness, brushOpacity, brushSoftness,
+  canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, currentBackgroundTexture, canvasBackgroundColor, selectedFilter }) {
     const lowerCanvasRef = useRef(null);
     const middleCanvasRef = useRef(null);
     const upperCanvasRef = useRef(null);
@@ -15,27 +17,27 @@ export default function CanvasComponentTest({ currentTool,
     useEffect(() => {
       // Рисование при выборе кисти
       const handleMouseDown = (event) => {
-          if (event.button === 0) {
-              if (currentTool === "Brush") {
-                  upperCanvasRef.current.isDrawingMode = true;
-                  upperCanvasRef.current.freeDrawingBrush.onMouseDown(event);
-              }
+        if (event.button === 0) {
+          if (currentTool === "Brush") {
+            upperCanvasRef.current.isDrawingMode = true;
+            upperCanvasRef.current.freeDrawingBrush.onMouseDown(event);
           }
+        }
       };
 
       const handleMouseMove = (event) => {
-          if (event.button === 0) {
-              if (currentTool === "Brush") {
-                  upperCanvasRef.current.freeDrawingBrush.onMouseMove(event);
-              }
-          }
+        if (event.button === 0) {
+            if (currentTool === "Brush") {
+                upperCanvasRef.current.freeDrawingBrush.onMouseMove(event);
+            }
+        }
       };
 
       const handleMouseUp = () => {
-          if (currentTool === "Brush") {
-            upperCanvasRef.current.isDrawingMode = false;
-            upperCanvasRef.current.freeDrawingBrush.onMouseUp();
-          }
+        if (currentTool === "Brush") {
+          upperCanvasRef.current.isDrawingMode = false;
+          upperCanvasRef.current.freeDrawingBrush.onMouseUp();
+        }
       };
       
       // Создание нижнего холста
@@ -71,16 +73,30 @@ export default function CanvasComponentTest({ currentTool,
 
         lowerCanvasRef.current = lowerCanvas;
       } else {
-        workingAreaRef.current.set({
-          width: canvasWidth,
-          height: canvasHeight,
-          fill: canvasBackgroundColor
-        });
-
         lowerCanvasRef.current.set({
           width: window.innerWidth,
           height: window.innerHeight,
         });
+
+        workingAreaRef.current.set({
+          width: canvasWidth,
+          height: canvasHeight,
+        });
+
+        // Установка цвета фона или текстуры фона для рабочей области
+        if (backgroundColorMode) {
+          workingAreaRef.current.set('fill', canvasBackgroundColor);
+        } else {
+          fabric.util.loadImage(currentBackgroundTexture, function(img) {
+            const texture = new fabric.Pattern({
+              source: img,
+              repeat: 'repeat'
+            });
+            workingAreaRef.current.set('fill', texture);
+            workingAreaRef.current.dirty = true;
+            workingAreaRef.current.canvas.renderAll();
+          });
+        }
 
         lowerCanvasRef.current.renderAll();
       }
@@ -139,11 +155,14 @@ export default function CanvasComponentTest({ currentTool,
         upperCanvasRef.current.on('mouse:up', () => {
           handleMouseUp();
           if (currentBrushLayerRef.current === 'lower') {
-            let lastDrawnObject = upperCanvasRef.current.getObjects().pop();
-            // Перемещаем последний нарисованный объект на нижний холст
-            lowerCanvasRef.current.add(lastDrawnObject);
-            // Удаляем его с верхнего холста
-            upperCanvasRef.current.remove(lastDrawnObject);
+            let objects = upperCanvasRef.current.getObjects();
+            if (objects.length > 0) {
+                let lastDrawnObject = objects.pop();
+                // Перемещаем последний нарисованный объект на нижний холст
+                lowerCanvasRef.current.add(lastDrawnObject);
+                // Удаляем его с верхнего холста
+                upperCanvasRef.current.remove(lastDrawnObject);
+            }
           }
         });
       } else {
@@ -251,10 +270,30 @@ export default function CanvasComponentTest({ currentTool,
       }
 
       // Создание кисти для холста
-      const upperBrush = new fabric.PencilBrush(upperCanvasRef.current);
-      upperBrush.color = brushColor;
-      upperBrush.width = brushThickness;
-      upperCanvasRef.current.freeDrawingBrush = upperBrush;
+      const createBrush = () => {
+        if (brushColorMode) {
+          // Создание обычной кисти
+          const upperBrush = new fabric.PencilBrush(upperCanvasRef.current);
+          upperBrush.color = `rgba(${parseInt(brushColor.slice(1, 3), 16)}, ${parseInt(brushColor.slice(3, 5), 16)}, ${parseInt(brushColor.slice(5, 7), 16)}, ${brushOpacity})`;
+          upperBrush.width = brushThickness;
+          upperCanvasRef.current.freeDrawingBrush = upperBrush;
+        } else {
+          // Создание кисти с текстурой
+          const textureImage = new Image();
+          textureImage.onload = function () {
+              const textureBrush = new fabric.PatternBrush(upperCanvasRef.current);
+              // @ts-ignore Помечается как ошибка, но без этого не работает
+              textureBrush.source = this;
+              textureBrush.color = brushColor;
+              textureBrush.width = brushThickness;
+              upperCanvasRef.current.freeDrawingBrush = textureBrush;
+          };
+          textureImage.src = currentBrushTexture;
+        }
+      };
+
+      // Обновление кисти при изменении параметров
+      createBrush();
 
       // Установка обработчиков рисования кистью при смене инструмента
       if (currentTool === "Brush") {
@@ -283,7 +322,7 @@ export default function CanvasComponentTest({ currentTool,
         upperCanvasRef.current.off('mouse:move', handleMouseMove);
         upperCanvasRef.current.off('mouse:up', handleMouseUp);
       };
-    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool]);
+    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture]);
 
     return (
       <div id="canvasContainer" className="canvasContainer">
