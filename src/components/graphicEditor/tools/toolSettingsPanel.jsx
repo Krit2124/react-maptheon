@@ -12,7 +12,7 @@ export default function ToolSettingsPanel({
 
     recentlyUsedTextures, setRecentlyUsedTextures,
 
-    brushColorMode, setBrushColorMode, currentBrushTexture, setCurrentBrushTexture, brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness,
+    brushColorMode, setBrushColorMode, currentBrushTexture, setCurrentBrushTexture, brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushShape, setBrushShape, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness,
 
     canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, setBackgroundColorMode, currentBackgroundTexture, setCurrentBackgroundTexture, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
 
@@ -60,6 +60,8 @@ export default function ToolSettingsPanel({
                 setCurrentBrushLayer={setCurrentBrushLayer}
                 brushThickness={brushThickness}
                 setBrushThickness={setBrushThickness}
+                brushShape={brushShape}
+                setBrushShape={setBrushShape}
                 brushOpacity={brushOpacity}
                 setBrushOpacity={setBrushOpacity}
                 brushSoftness={brushSoftness}

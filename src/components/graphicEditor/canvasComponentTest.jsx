@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { fabric } from 'fabric';
+import { fabric } from 'fabric-all-modules';
 
 export default function CanvasComponentTest({ 
   currentTool, 
   recentlyUsedTextures,
-  brushColorMode, currentBrushTexture, brushColor, currentBrushLayer, brushThickness, brushOpacity, brushSoftness,
+  brushColorMode, currentBrushTexture, brushColor, currentBrushLayer, brushThickness, brushShape, brushOpacity, brushSoftness,
   canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, currentBackgroundTexture, canvasBackgroundColor, selectedFilter }) {
     const lowerCanvasRef = useRef(null);
     const middleCanvasRef = useRef(null);
@@ -271,13 +271,14 @@ export default function CanvasComponentTest({
 
       // Создание кисти для холста
       const createBrush = () => {
-        if (brushColorMode) {
+        if (brushColorMode === 'color') {
           // Создание обычной кисти
           const upperBrush = new fabric.PencilBrush(upperCanvasRef.current);
           upperBrush.color = `rgba(${parseInt(brushColor.slice(1, 3), 16)}, ${parseInt(brushColor.slice(3, 5), 16)}, ${parseInt(brushColor.slice(5, 7), 16)}, ${brushOpacity})`;
           upperBrush.width = brushThickness;
+          upperBrush.strokeLineCap = brushShape;
           upperCanvasRef.current.freeDrawingBrush = upperBrush;
-        } else {
+        } else if (brushColorMode === 'texture') {
           // Создание кисти с текстурой
           const textureImage = new Image();
           textureImage.onload = function () {
@@ -286,9 +287,14 @@ export default function CanvasComponentTest({
               textureBrush.source = this;
               textureBrush.color = brushColor;
               textureBrush.width = brushThickness;
+              textureBrush.strokeLineCap = brushShape;
               upperCanvasRef.current.freeDrawingBrush = textureBrush;
           };
           textureImage.src = currentBrushTexture;
+        } else if (brushColorMode === 'eraser') {
+          const eraserBrush = new fabric.EraserBrush(upperCanvasRef.current);
+          eraserBrush.width = brushThickness;
+          upperCanvasRef.current.freeDrawingBrush = eraserBrush;
         }
       };
 
@@ -322,7 +328,7 @@ export default function CanvasComponentTest({
         upperCanvasRef.current.off('mouse:move', handleMouseMove);
         upperCanvasRef.current.off('mouse:up', handleMouseUp);
       };
-    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture]);
+    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape]);
 
     return (
       <div id="canvasContainer" className="canvasContainer">

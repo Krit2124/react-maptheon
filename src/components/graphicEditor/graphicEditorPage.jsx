@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { fabric } from 'fabric';
+import { fabric } from 'fabric-all-modules';
 
 import GraphicEditorToolsPanel from './tools/graphicEditorToolsPanel';
 import ObjectListOnCanvas from './objectListOnCanvas';
 import ToolSettingsPanel from './tools/toolSettingsPanel';
-import CanvasComponent from './canvasComponent';
 import CanvasComponentTest from './canvasComponentTest';
 
 import grassImage from "../../assets/textures/grass.jpg";
@@ -43,11 +42,12 @@ export default function GraphicEditorPage({isObjectListVisible}) {
     const [filterIntensity, setFilterIntensity] = useState(1); // интенсивность фильтра
 
     // Настройки кисти
-    const [brushColorMode, setBrushColorMode] = useState(true); // true - режим выбора цвета, false - режим выбора текстуры
+    const [brushColorMode, setBrushColorMode] = useState('color'); // режим рисования
     const [currentBrushTexture, setCurrentBrushTexture] = useState(recentlyUsedTextures[0]); // текущая выбранная текстура
     const [brushColor, setBrushColor] = useState('#000000'); // цвет кисти
     const [currentBrushLayer, setCurrentBrushLayer] = useState('lower'); // выбранный слой для рисования
     const [brushThickness, setBrushThickness] = useState(20); // толщина кисти
+    const [brushShape, setBrushShape] = useState('round'); // форма кисти
     const [brushOpacity, setBrushOpacity] = useState(1); // прозрачность кисти
     const [brushSoftness, setBrushtSoftness] = useState(1); // мягкость кисти
 
@@ -78,6 +78,8 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                         currentBrushLayer={currentBrushLayer}
                         setCurrentBrushLayer={setCurrentBrushLayer}
                         brushThickness={brushThickness}
+                        brushShape={brushShape}
+                        setBrushShape={setBrushShape}
                         setBrushThickness={setBrushThickness}
                         brushOpacity={brushOpacity}
                         setBrushOpacity={setBrushOpacity}
@@ -104,24 +106,6 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                     />}
                 </div>
 
-                {/* <CanvasComponent
-                    currentTool={currentTool}
-
-                    brushColor={brushColor}
-                    currentBrushLayer={currentBrushLayer}
-                    brushThickness={brushThickness}
-                    brushOpacity={brushOpacity}
-                    brushSoftness={brushSoftness}
-
-                    canvasWidth={canvasWidth}
-                    canvasHeight={canvasHeight}
-                    filterIntensity={filterIntensity}
-                    isResetRequired = {isResetRequired}
-                    setIsResetRequired={setIsResetRequired}
-                    canvasBackgroundColor={canvasBackgroundColor}
-                    selectedFilter={selectedFilter}
-                /> */}
-
                 <CanvasComponentTest
                     currentTool={currentTool}
 
@@ -132,6 +116,7 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                     brushColor={brushColor}
                     currentBrushLayer={currentBrushLayer}
                     brushThickness={brushThickness}
+                    brushShape={brushShape}
                     brushOpacity={brushOpacity}
                     brushSoftness={brushSoftness}
 
