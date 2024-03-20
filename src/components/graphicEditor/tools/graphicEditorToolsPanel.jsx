@@ -8,12 +8,16 @@ import canvasImage from "../../../assets/icons/Canvas.png"
 import downloadImage from "../../../assets/icons/Download.png"
 import saveImage from "../../../assets/icons/Save.png"
 
-export default function GraphicEditorToolsPanel({currentToolSettingsPanel, setCurrentToolSettingsPanel, isToolSettingsPanelVisible, setIsToolSettingsPanelVisible}) {
+export default function GraphicEditorToolsPanel({
+    currentToolSettingsPanel, setCurrentToolSettingsPanel, isToolSettingsPanelVisible, setIsToolSettingsPanelVisible,
+    setIsExportRequired}) {
+    // Обработка закрытия панели с настройками
     let handleCloseToolSettingsPanel = () => {
         setIsToolSettingsPanelVisible(false)
         setCurrentToolSettingsPanel(null)
     }
     
+    // Обработка смены панели настроек
     let handleSwitchToolSettingsPannel = (newPanel) => {
         setIsToolSettingsPanelVisible(true)
         setCurrentToolSettingsPanel(newPanel)
@@ -44,7 +48,7 @@ export default function GraphicEditorToolsPanel({currentToolSettingsPanel, setCu
             </div>
 
             <div className="flex-col-sb-c flex-gap-10">
-                <button className="button-image-big">
+                <button className="button-image-big" onClick={() => setIsExportRequired(true)}>
                     <img src={downloadImage} alt="Скачать"/>
                 </button>
                 <button className="button-image-big">

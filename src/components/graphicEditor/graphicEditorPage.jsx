@@ -16,6 +16,9 @@ export default function GraphicEditorPage({isObjectListVisible}) {
     // Настройка отображения панелей с настройками инструментов
     const [isToolSettingsPanelVisible, setIsToolSettingsPanelVisible] = useState(false)
     const [currentTool, setCurrentTool] = useState(null);
+
+    // Действия с графическим редактором
+    const [isExportRequired, setIsExportRequired] = useState(false)
     
     // Список недавно использованных текстур
     const [recentlyUsedTextures, setRecentlyUsedTextures] = useState([
@@ -60,6 +63,8 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                         setCurrentToolSettingsPanel={setCurrentTool} 
                         isToolSettingsPanelVisible={isToolSettingsPanelVisible}
                         setIsToolSettingsPanelVisible={setIsToolSettingsPanelVisible}
+
+                        setIsExportRequired={setIsExportRequired}
                     />
 
                     {isToolSettingsPanelVisible && <ToolSettingsPanel 
@@ -108,6 +113,8 @@ export default function GraphicEditorPage({isObjectListVisible}) {
 
                 <CanvasComponentTest
                     currentTool={currentTool}
+                    isExportRequired={isExportRequired}
+                    setIsExportRequired={setIsExportRequired}
 
                     recentlyUsedTextures={recentlyUsedTextures}
 

@@ -5,7 +5,8 @@ export default function CanvasComponentTest({
   currentTool, 
   recentlyUsedTextures,
   brushColorMode, currentBrushTexture, brushColor, currentBrushLayer, brushThickness, brushShape, brushOpacity, brushSoftness,
-  canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, currentBackgroundTexture, canvasBackgroundColor, selectedFilter }) {
+  canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, currentBackgroundTexture, canvasBackgroundColor, selectedFilter, 
+  isExportRequired, setIsExportRequired}) {
     const lowerCanvasRef = useRef(null);
     const middleCanvasRef = useRef(null);
     const upperCanvasRef = useRef(null);
@@ -15,28 +16,40 @@ export default function CanvasComponentTest({
     const currentBrushLayerRef = useRef(currentBrushLayer);
 
     useEffect(() => {
+      currentBrushLayerRef.current = currentBrushLayer;
+
       // Рисование при выборе кисти
       const handleMouseDown = (event) => {
         if (event.button === 0) {
           if (currentTool === "Brush") {
-            upperCanvasRef.current.isDrawingMode = true;
-            upperCanvasRef.current.freeDrawingBrush.onMouseDown(event);
+            if (currentBrushLayerRef.current === 'upper') {
+              upperCanvasRef.current.isDrawingMode = true;
+              upperCanvasRef.current.freeDrawingBrush.onMouseDown(event);
+            } else if (currentBrushLayerRef.current === 'lower') {
+              lowerCanvasRef.current.isDrawingMode = true;
+              lowerCanvasRef.current.freeDrawingBrush.onMouseDown(event);
+            }
           }
         }
       };
-
+    
       const handleMouseMove = (event) => {
         if (event.button === 0) {
-            if (currentTool === "Brush") {
-                upperCanvasRef.current.freeDrawingBrush.onMouseMove(event);
-            }
+          if (currentTool === "Brush") {
+            (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush.onMouseMove(event);
+          }
         }
       };
-
+      
       const handleMouseUp = () => {
         if (currentTool === "Brush") {
-          upperCanvasRef.current.isDrawingMode = false;
-          upperCanvasRef.current.freeDrawingBrush.onMouseUp();
+          if (currentBrushLayerRef.current === 'upper') {
+            upperCanvasRef.current.isDrawingMode = false;
+            upperCanvasRef.current.freeDrawingBrush.onMouseUp();
+          } else if (currentBrushLayerRef.current === 'lower') {
+            lowerCanvasRef.current.isDrawingMode = false;
+            lowerCanvasRef.current.freeDrawingBrush.onMouseUp();
+          }
         }
       };
       
@@ -45,7 +58,6 @@ export default function CanvasComponentTest({
         const lowerCanvas = new fabric.Canvas('lowerCanvas', {
           width: window.innerWidth,
           height: window.innerHeight,
-          backgroundColor: '#252525',
           containerClass: 'canvas-lower-container'
         });
 
@@ -58,6 +70,7 @@ export default function CanvasComponentTest({
           fill: canvasBackgroundColor,
           selectable: false,
           evented: false,
+          erasable: false,
         });
         workingAreaRef.current = workingArea;
 
@@ -72,6 +85,11 @@ export default function CanvasComponentTest({
         lowerContainer.style.height = '100%';
 
         lowerCanvasRef.current = lowerCanvas;
+
+        // Присваивание событий для рисования
+        lowerCanvasRef.current.on('mouse:down', handleMouseDown);
+        lowerCanvasRef.current.on('mouse:move', handleMouseMove);
+        lowerCanvasRef.current.on('mouse:up', handleMouseUp);
       } else {
         lowerCanvasRef.current.set({
           width: window.innerWidth,
@@ -81,6 +99,8 @@ export default function CanvasComponentTest({
         workingAreaRef.current.set({
           width: canvasWidth,
           height: canvasHeight,
+          left: (window.innerWidth - canvasWidth) / 2,
+          top: (window.innerHeight - canvasHeight) / 2,
         });
 
         // Установка цвета фона или текстуры фона для рабочей области
@@ -110,6 +130,16 @@ export default function CanvasComponentTest({
           containerClass: 'canvas-middle-container'
         });
 
+        const rect = new fabric.Rect({
+          left: (window.innerWidth - canvasWidth) / 2,
+          top: (window.innerHeight - canvasHeight) / 2,
+          fill: 'red',
+          width: 100,
+          height: 100,
+        });
+  
+        middleCanvas.add(rect);
+
         let middleContainer = document.querySelector('.canvas-middle-container');
         // @ts-ignore
         middleContainer.style.width = '100%';
@@ -127,9 +157,6 @@ export default function CanvasComponentTest({
 
         middleCanvasRef.current.renderAll();
       }
-
-      // Обновление currentBrushLayerRef
-      currentBrushLayerRef.current = currentBrushLayer;
 
       // Создание верхнего холста
       if (upperCanvasRef.current == null) {
@@ -152,19 +179,7 @@ export default function CanvasComponentTest({
         // Присваивание событий для рисования
         upperCanvasRef.current.on('mouse:down', handleMouseDown);
         upperCanvasRef.current.on('mouse:move', handleMouseMove);
-        upperCanvasRef.current.on('mouse:up', () => {
-          handleMouseUp();
-          if (currentBrushLayerRef.current === 'lower') {
-            let objects = upperCanvasRef.current.getObjects();
-            if (objects.length > 0) {
-                let lastDrawnObject = objects.pop();
-                // Перемещаем последний нарисованный объект на нижний холст
-                lowerCanvasRef.current.add(lastDrawnObject);
-                // Удаляем его с верхнего холста
-                upperCanvasRef.current.remove(lastDrawnObject);
-            }
-          }
-        });
+        upperCanvasRef.current.on('mouse:up', handleMouseUp);
       } else {
         upperCanvasRef.current.set({
           width: window.innerWidth,
@@ -271,30 +286,49 @@ export default function CanvasComponentTest({
 
       // Создание кисти для холста
       const createBrush = () => {
+        if (currentBrushLayerRef.current === 'upper') {
+          // Возврат событий на верхние слои
+          let upperContainer = document.querySelector('.canvas-upper-container');
+          // @ts-ignore
+          upperContainer.style.pointerEvents = 'auto';
+          let middleContainer = document.querySelector('.canvas-middle-container');
+          // @ts-ignore
+          middleContainer.style.pointerEvents = 'auto';
+        } else if (currentBrushLayerRef.current === 'lower') {
+          // Отключение событий с верхних слоёв
+          let upperContainer = document.querySelector('.canvas-upper-container');
+          // @ts-ignore
+          upperContainer.style.pointerEvents = 'none';
+          let middleContainer = document.querySelector('.canvas-middle-container');
+          // @ts-ignore
+          middleContainer.style.pointerEvents = 'none';
+        }
         if (brushColorMode === 'color') {
           // Создание обычной кисти
-          const upperBrush = new fabric.PencilBrush(upperCanvasRef.current);
-          upperBrush.color = `rgba(${parseInt(brushColor.slice(1, 3), 16)}, ${parseInt(brushColor.slice(3, 5), 16)}, ${parseInt(brushColor.slice(5, 7), 16)}, ${brushOpacity})`;
-          upperBrush.width = brushThickness;
-          upperBrush.strokeLineCap = brushShape;
-          upperCanvasRef.current.freeDrawingBrush = upperBrush;
+          const colorBrush = new fabric.PencilBrush((currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current));
+          colorBrush.color = `rgba(${parseInt(brushColor.slice(1, 3), 16)}, ${parseInt(brushColor.slice(3, 5), 16)}, ${parseInt(brushColor.slice(5, 7), 16)}, ${brushOpacity})`;
+          colorBrush.width = brushThickness;
+          colorBrush.strokeLineCap = brushShape;
+          (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush = colorBrush;
         } else if (brushColorMode === 'texture') {
           // Создание кисти с текстурой
           const textureImage = new Image();
           textureImage.onload = function () {
-              const textureBrush = new fabric.PatternBrush(upperCanvasRef.current);
-              // @ts-ignore Помечается как ошибка, но без этого не работает
-              textureBrush.source = this;
-              textureBrush.color = brushColor;
-              textureBrush.width = brushThickness;
-              textureBrush.strokeLineCap = brushShape;
-              upperCanvasRef.current.freeDrawingBrush = textureBrush;
+            const textureBrush = new fabric.PatternBrush((currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current));
+            // @ts-ignore Помечается как ошибка, но без этого не работает
+            textureBrush.source = this;
+            textureBrush.color = brushColor;
+            textureBrush.width = brushThickness;
+            textureBrush.strokeLineCap = brushShape;
+            (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush = textureBrush;
           };
           textureImage.src = currentBrushTexture;
         } else if (brushColorMode === 'eraser') {
-          const eraserBrush = new fabric.EraserBrush(upperCanvasRef.current);
+          // Создание ластика
+          const eraserBrush = new fabric.EraserBrush((currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current));
           eraserBrush.width = brushThickness;
-          upperCanvasRef.current.freeDrawingBrush = eraserBrush;
+          eraserBrush.strokeLineCap = brushShape;
+          (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush = eraserBrush;
         }
       };
 
@@ -303,10 +337,10 @@ export default function CanvasComponentTest({
 
       // Установка обработчиков рисования кистью при смене инструмента
       if (currentTool === "Brush") {
-        upperCanvasRef.current.isDrawingMode = true;
+        (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).isDrawingMode = true;
       } else {
         // Выключение режима рисования при смене инструмента
-        upperCanvasRef.current.isDrawingMode = false;
+        (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).isDrawingMode = false;
 
         disableBrushObjectsSelection();
       }
@@ -327,8 +361,69 @@ export default function CanvasComponentTest({
         upperCanvasRef.current.off('mouse:down', handleMouseDown);
         upperCanvasRef.current.off('mouse:move', handleMouseMove);
         upperCanvasRef.current.off('mouse:up', handleMouseUp);
+
+        lowerCanvasRef.current.off('mouse:down', handleMouseDown);
+        lowerCanvasRef.current.off('mouse:move', handleMouseMove);
+        lowerCanvasRef.current.off('mouse:up', handleMouseUp);
       };
     }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape]);
+
+    useEffect(() => {
+      // Проверяем, требуется ли экспорт изображения
+      if (isExportRequired) {
+        // Определяем центр рабочей области
+        const centerX = (window.innerWidth - canvasWidth) / 2;
+        const centerY = (window.innerHeight - canvasHeight) / 2;
+    
+        // Создаем временный холст для сбора всего содержимого
+        const tempCanvas = new fabric.StaticCanvas(null, {
+          width: canvasWidth,
+          height: canvasHeight
+        });
+    
+        // Устанавливаем координаты временного холста так, чтобы его центр совпадал с центром рабочей области
+        tempCanvas.absolutePan({
+          x: centerX,
+          y: centerY
+        });
+    
+        // Создаем копии объектов с каждого холста и добавляем их на временный холст
+        lowerCanvasRef.current.getObjects().forEach(obj => {
+          const cloneObj = fabric.util.object.clone(obj);
+          tempCanvas.add(cloneObj);
+        });
+    
+        middleCanvasRef.current.getObjects().forEach(obj => {
+          const cloneObj = fabric.util.object.clone(obj);
+          tempCanvas.add(cloneObj);
+        });
+    
+        upperCanvasRef.current.getObjects().forEach(obj => {
+          const cloneObj = fabric.util.object.clone(obj);
+          tempCanvas.add(cloneObj);
+        });
+    
+        // Преобразуем содержимое в URL данных
+        const dataURL = tempCanvas.toDataURL({
+          format: 'jpeg',
+          quality: 1 // качество изображения
+        });
+    
+        // Создаем ссылку для загрузки
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = 'canvas_export.jpg'; // имя файла
+        document.body.appendChild(link);
+    
+        // Кликаем по ссылке для скачивания изображения
+        link.click();
+    
+        // Удаляем ссылку из DOM
+        document.body.removeChild(link);
+        // Сбрасываем флаг экспорта
+        setIsExportRequired(false);
+      }
+    }, [isExportRequired, setIsExportRequired, canvasWidth, canvasHeight]);
 
     return (
       <div id="canvasContainer" className="canvasContainer">

@@ -549,6 +549,7 @@ header {
 }
 
 .canvasContainer {
+  background-color: var(--background-gray);
   position:fixed;
   width: 100%;
   height: calc(100vh - 72px);
@@ -582,6 +583,10 @@ header {
 .canvas-upper {
   z-index: 2;
 }
+
+/* .canvas-upper-container, .canvas-middle-container {
+  pointer-events: none;
+} */
 
 /* Временные заглушки */
 .mapCardPlaceholder {
