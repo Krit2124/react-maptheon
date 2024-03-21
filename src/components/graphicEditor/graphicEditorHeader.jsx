@@ -6,7 +6,7 @@ import arrowBackImage from "../../assets/icons/ArrowBack.png"
 import arrowForwardImage from "../../assets/icons/ArrowForward.png"
 import showOrHideImage from "../../assets/icons/ShowOrHide.png"
 
-export default function GraphicEditorHeader({isObjectListVisible, setIsObjectListVisible}) {
+export default function GraphicEditorHeader({isObjectListVisible, setIsObjectListVisible, setIsUndoRequired, setIsRedoRequired}) {
     const [rotationClass, setRotationClass] = useState('rotate-right');
 
     let handleObjectListVisibility = () => {
@@ -24,10 +24,10 @@ export default function GraphicEditorHeader({isObjectListVisible, setIsObjectLis
                     </Link>
 
                     <div className='flex-row-sb-c flex-gap-10'>
-                        <button className="button-image-big">
+                        <button className="button-image-big" onClick={() => setIsUndoRequired(true)}>
                             <img src={arrowBackImage} alt="Отменить"/>
                         </button>
-                        <button className="button-image-big">
+                        <button className="button-image-big" onClick={() => setIsRedoRequired(true)}>
                             <img src={arrowForwardImage} alt="Вернуть"/>
                         </button>
                     </div>

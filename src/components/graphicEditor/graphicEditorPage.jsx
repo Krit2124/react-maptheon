@@ -4,7 +4,7 @@ import { fabric } from 'fabric-all-modules';
 import GraphicEditorToolsPanel from './tools/graphicEditorToolsPanel';
 import ObjectListOnCanvas from './objectListOnCanvas';
 import ToolSettingsPanel from './tools/toolSettingsPanel';
-import CanvasComponentTest from './canvasComponentTest';
+import CanvasComponent from './canvasComponent';
 
 import grassImage from "../../assets/textures/grass.jpg";
 import iceImage from "../../assets/textures/ice.jpg";
@@ -12,7 +12,7 @@ import sandImage from "../../assets/textures/sand.jpg";
 import snowImage from "../../assets/textures/snow.jpg";
 import stoneTileImage from "../../assets/textures/stoneTile.jpg";
 
-export default function GraphicEditorPage({isObjectListVisible}) {
+export default function GraphicEditorPage({isObjectListVisible, isUndoRequired, setIsUndoRequired, isRedoRequired, setIsRedoRequired}) {
     // Настройка отображения панелей с настройками инструментов
     const [isToolSettingsPanelVisible, setIsToolSettingsPanelVisible] = useState(false)
     const [currentTool, setCurrentTool] = useState(null);
@@ -111,12 +111,14 @@ export default function GraphicEditorPage({isObjectListVisible}) {
                     />}
                 </div>
 
-                <CanvasComponentTest
+                <CanvasComponent
                     currentTool={currentTool}
                     isExportRequired={isExportRequired}
                     setIsExportRequired={setIsExportRequired}
-
-                    recentlyUsedTextures={recentlyUsedTextures}
+                    isUndoRequired={isUndoRequired}
+                    setIsUndoRequired={setIsUndoRequired}
+                    isRedoRequired={isRedoRequired}
+                    setIsRedoRequired={setIsRedoRequired}
 
                     brushColorMode={brushColorMode}
                     currentBrushTexture={currentBrushTexture}
