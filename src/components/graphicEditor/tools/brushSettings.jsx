@@ -127,7 +127,7 @@ export default function BrushSettings({
                     </div>
                 </div>
 
-                {brushColorMode === 'color' &&
+                {brushColorMode !== 'eraser' &&
                     <div className='flex-col-top-left flex-gap-10 size-full-horizontal-percent'>
                         <p>Прозрачность</p>
 

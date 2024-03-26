@@ -11,8 +11,10 @@ export default function CanvasComponent({
     const upperCanvasRef = useRef(null);
     const workingAreaRef = useRef(null);
   
-    // Нужно для корректной работы рисования на разных холстах
+    // Нужно для корректной работы событий холстов
     const currentBrushLayerRef = useRef(currentBrushLayer);
+    const brushOpacityRef = useRef(brushOpacity);
+    const brushColorModeRef = useRef(brushColorMode);
 
     useEffect(() => {
       currentBrushLayerRef.current = currentBrushLayer;
@@ -88,7 +90,14 @@ export default function CanvasComponent({
         // Присваивание событий для рисования
         lowerCanvasRef.current.on('mouse:down', handleMouseDown);
         lowerCanvasRef.current.on('mouse:move', handleMouseMove);
-        lowerCanvasRef.current.on('mouse:up', handleMouseUp);
+        lowerCanvasRef.current.on('mouse:up', () => {
+          handleMouseUp();
+          // Добавление прозрачности текстурной кисти
+          if (brushColorModeRef.current === 'texture') {
+            let lastDrawnObject = lowerCanvasRef.current.getObjects().pop();
+            lastDrawnObject.set('opacity', brushOpacityRef.current);
+          }
+        });
       } else {
         lowerCanvasRef.current.set({
           width: window.innerWidth,
@@ -155,9 +164,11 @@ export default function CanvasComponent({
         });
 
         middleCanvasRef.current.renderAll();
-      }
+      } 
 
       // Создание верхнего холста
+      brushOpacityRef.current = brushOpacity;
+      brushColorModeRef.current = brushColorMode;
       if (upperCanvasRef.current == null) {
         const upperCanvas = new fabric.Canvas('upperCanvas', {
           width: window.innerWidth,
@@ -178,7 +189,14 @@ export default function CanvasComponent({
         // Присваивание событий для рисования
         upperCanvasRef.current.on('mouse:down', handleMouseDown);
         upperCanvasRef.current.on('mouse:move', handleMouseMove);
-        upperCanvasRef.current.on('mouse:up', handleMouseUp);
+        upperCanvasRef.current.on('mouse:up', () => {
+          handleMouseUp();
+          // Добавление прозрачности текстурной кисти
+          if (brushColorModeRef.current === 'texture') {
+            let lastDrawnObject = upperCanvasRef.current.getObjects().pop();
+            lastDrawnObject.set('opacity', brushOpacityRef.current);
+          }
+        });
       } else {
         upperCanvasRef.current.set({
           width: window.innerWidth,
