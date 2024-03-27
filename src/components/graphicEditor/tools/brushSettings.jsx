@@ -3,11 +3,33 @@ import { ChromePicker } from 'react-color';
 
 import roundBrushImage from "../../../assets/icons/RoundBrush.png";
 import rectangleBrushImage from "../../../assets/icons/RectangleBrush.png";
+import { useBrushSettingsStore, useTextureStore } from 'store/store';
 
-export default function BrushSettings({ 
-    recentlyUsedTextures, setRecentlyUsedTextures,
+export default function BrushSettings() {
+    const {
+        recentlyUsedTextures,
+        setRecentlyUsedTextures,
+    } = useTextureStore();
 
-    brushColorMode, setBrushColorMode, currentBrushTexture, setCurrentBrushTexture, brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushShape, setBrushShape, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness, }) {
+    const {
+        brushColorMode,
+        setBrushColorMode,
+        currentBrushTexture,
+        setCurrentBrushTexture,
+        brushColor,
+        setBrushColor,
+        currentBrushLayer,
+        setCurrentBrushLayer,
+        brushThickness,
+        setBrushThickness,
+        brushShape,
+        setBrushShape,
+        brushOpacity,
+        setBrushOpacity,
+        brushSoftness,
+        setBrushtSoftness,
+    } = useBrushSettingsStore();
+    
     // Обработка ползунков
     const handleSliderChange = (value, setValue) => {
         setValue(value);

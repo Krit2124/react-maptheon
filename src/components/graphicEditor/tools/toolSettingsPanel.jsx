@@ -4,17 +4,15 @@ import BrushSettings from './brushSettings';
 import ObjectSettings from './objectSettings';
 import LabelSettings from './labelSettings';
 import CanvasSettings from './canvasSettings';
+import { useGeneralGraphicEditorStore } from 'store/store';
 
 import closeImage from "../../../assets/icons/Close.png"
 
-export default function ToolSettingsPanel({
-    currentToolSettingsPanel, setIsToolSettingsPanelVisible, 
-
-    recentlyUsedTextures, setRecentlyUsedTextures,
-
-    brushColorMode, setBrushColorMode, currentBrushTexture, setCurrentBrushTexture, brushColor, setBrushColor, currentBrushLayer, setCurrentBrushLayer, brushThickness, setBrushThickness, brushShape, setBrushShape, brushOpacity, setBrushOpacity, brushSoftness, setBrushtSoftness,
-
-    canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, setBackgroundColorMode, currentBackgroundTexture, setCurrentBackgroundTexture, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
+export default function ToolSettingsPanel() {
+    const {
+        currentTool,
+        setIsToolSettingsPanelVisible,
+    } = useGeneralGraphicEditorStore();
 
     const [panelLabel, setPanelLabel] = useState("Свойства инструмента");
 
@@ -24,16 +22,16 @@ export default function ToolSettingsPanel({
 
     // Изменение заголовка панели в зависимости от нажатой кнопки
     useEffect(() => {
-        if (currentToolSettingsPanel === "Brush") {
+        if (currentTool === "Brush") {
             setPanelLabel("Свойства кисти");
-        } else if (currentToolSettingsPanel === "Object") {
+        } else if (currentTool === "Object") {
             setPanelLabel("Свойства объекта");
-        } else if (currentToolSettingsPanel === "Label") {
+        } else if (currentTool === "Label") {
             setPanelLabel("Свойства подписи");
-        } else if (currentToolSettingsPanel === "Canvas") {
+        } else if (currentTool === "Canvas") {
             setPanelLabel("Свойства холста");
         }
-    }, [currentToolSettingsPanel]);
+    }, [currentTool]);
 
     return (
         <div className="border-black-right background-black canvasPanel size-full-vertical-pagePercent-withHeader flex-col-top-left flex-gap-25">
@@ -46,51 +44,10 @@ export default function ToolSettingsPanel({
             </div>
 
             {/* Изменение контента панели в зависимости от нажатой кнопки */}
-            {currentToolSettingsPanel === "Brush" ? <BrushSettings 
-                recentlyUsedTextures={recentlyUsedTextures}
-                setRecentlyUsedTextures={setRecentlyUsedTextures}
-
-                brushColorMode={brushColorMode}
-                setBrushColorMode={setBrushColorMode}
-                currentBrushTexture={currentBrushTexture}
-                setCurrentBrushTexture={setCurrentBrushTexture}
-                brushColor={brushColor}
-                setBrushColor={setBrushColor}
-                currentBrushLayer={currentBrushLayer}
-                setCurrentBrushLayer={setCurrentBrushLayer}
-                brushThickness={brushThickness}
-                setBrushThickness={setBrushThickness}
-                brushShape={brushShape}
-                setBrushShape={setBrushShape}
-                brushOpacity={brushOpacity}
-                setBrushOpacity={setBrushOpacity}
-                brushSoftness={brushSoftness}
-                setBrushtSoftness={setBrushtSoftness}
-            /> 
-            : currentToolSettingsPanel === "Object" ? <ObjectSettings /> 
-            : currentToolSettingsPanel === "Label" ? <LabelSettings/> 
-            : currentToolSettingsPanel === "Canvas" ? <CanvasSettings 
-                recentlyUsedTextures={recentlyUsedTextures}
-                setRecentlyUsedTextures={setRecentlyUsedTextures}
-
-                canvasWidth={canvasWidth}
-                setCanvasWidth={setCanvasWidth}
-                canvasHeight={canvasHeight}
-                setCanvasHeight={setCanvasHeight}
-                filterIntensity={filterIntensity}
-                setFilterIntensity={setFilterIntensity}
-                isResetRequired = {isResetRequired}
-                setIsResetRequired={setIsResetRequired}
-                backgroundColorMode={backgroundColorMode}
-                setBackgroundColorMode={setBackgroundColorMode}
-                currentBackgroundTexture={currentBackgroundTexture}
-                setCurrentBackgroundTexture={setCurrentBackgroundTexture}
-                canvasBackgroundColor={canvasBackgroundColor}
-                setCanvasBackgroundColor={setCanvasBackgroundColor}
-                selectedFilter={selectedFilter}
-                setSelectedFilter={setSelectedFilter}
-                filtersList={filtersList}
-            />
+            {currentTool === "Brush" ? <BrushSettings/> 
+            : currentTool === "Object" ? <ObjectSettings/> 
+            : currentTool === "Label" ? <LabelSettings/> 
+            : currentTool === "Canvas" ? <CanvasSettings/>
             : null}
         </div>
     );

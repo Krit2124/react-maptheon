@@ -3,15 +3,38 @@ import React, { useState } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import { ChromePicker } from 'react-color';
+import { useCanvasSettingsStore, useTextureStore } from 'store/store';
 
 import chainImage from "../../../assets/icons/Chain.png"
 import reverseImage from "../../../assets/icons/Reverse.png"
 import showOrHideImage from "../../../assets/icons/ShowOrHide.png"
 
-export default function CanvasSettings({
-    recentlyUsedTextures, setRecentlyUsedTextures,
+export default function CanvasSettings() {
+    const {
+        recentlyUsedTextures,
+        setRecentlyUsedTextures,
+    } = useTextureStore();
 
-    canvasWidth, setCanvasWidth, canvasHeight, setCanvasHeight, filterIntensity, setFilterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, setBackgroundColorMode, currentBackgroundTexture, setCurrentBackgroundTexture, canvasBackgroundColor, setCanvasBackgroundColor, selectedFilter, setSelectedFilter, filtersList}) {
+    const {
+        canvasWidth,
+        setCanvasWidth,
+        canvasHeight,
+        setCanvasHeight,
+        filterIntensity,
+        setFilterIntensity,
+        isResetRequired,
+        setIsResetRequired,
+        backgroundColorMode,
+        setBackgroundColorMode,
+        currentBackgroundTexture,
+        setCurrentBackgroundTexture,
+        canvasBackgroundColor,
+        setCanvasBackgroundColor,
+        selectedFilter,
+        setSelectedFilter,
+        filtersList
+    } = useCanvasSettingsStore();
+    
     // Обработка размеров холста и интенсивности
     const handleSliderChange = (value, setValue) => {
         setValue(value);

@@ -1,10 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric-all-modules';
+import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore } from 'store/store';
 
-export default function CanvasComponent({ 
-  currentTool, isExportRequired, setIsExportRequired, isUndoRequired, setIsUndoRequired, isRedoRequired, setIsRedoRequired,
-  brushColorMode, currentBrushTexture, brushColor, currentBrushLayer, brushThickness, brushShape, brushOpacity, brushSoftness,
-  canvasWidth, canvasHeight, filterIntensity, isResetRequired, setIsResetRequired, backgroundColorMode, currentBackgroundTexture, canvasBackgroundColor, selectedFilter, }) {
+export default function CanvasComponent() {
+    const {
+      currentTool,
+      isExportRequired,
+      setIsExportRequired,
+      isUndoRequired,
+      setIsUndoRequired,
+      isRedoRequired,
+      setIsRedoRequired,
+    } = useGeneralGraphicEditorStore();
+    
+    const {
+        brushColorMode,
+        currentBrushTexture,
+        brushColor,
+        currentBrushLayer,
+        brushThickness,
+        brushShape,
+        brushOpacity,
+        brushSoftness,
+    } = useBrushSettingsStore();
+
+    const {
+      canvasWidth,
+      canvasHeight,
+      filterIntensity,
+      isResetRequired,
+      setIsResetRequired,
+      backgroundColorMode,
+      currentBackgroundTexture,
+      canvasBackgroundColor,
+      selectedFilter,
+  } = useCanvasSettingsStore();
+
     // Холсты и рабочая область
     const lowerCanvasRef = useRef(null);
     const middleCanvasRef = useRef(null);

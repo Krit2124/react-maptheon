@@ -5,8 +5,16 @@ import exitImage from "../../assets/icons/Exit.png"
 import arrowBackImage from "../../assets/icons/ArrowBack.png"
 import arrowForwardImage from "../../assets/icons/ArrowForward.png"
 import showOrHideImage from "../../assets/icons/ShowOrHide.png"
+import { useGeneralGraphicEditorStore } from 'store/store';
 
-export default function GraphicEditorHeader({isObjectListVisible, setIsObjectListVisible, setIsUndoRequired, setIsRedoRequired}) {
+export default function GraphicEditorHeader() {
+    const {
+        isObjectListVisible,
+        setIsObjectListVisible,
+        setIsUndoRequired,
+        setIsRedoRequired,
+    } = useGeneralGraphicEditorStore();
+
     const [rotationClass, setRotationClass] = useState('rotate-right');
 
     let handleObjectListVisibility = () => {
