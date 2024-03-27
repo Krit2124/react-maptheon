@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
+import { useLabelSettingsState } from 'store/store';
 
 import showOrHideImage from "../../../assets/icons/ShowOrHide.png"
 import boldFontImage from "../../../assets/icons/BoldFont.png"
@@ -11,9 +12,19 @@ import centerAlignmentImage from "../../../assets/icons/CenterAlignment.png"
 import rightAlignmentImage from "../../../assets/icons/RightAlignment.png"
 import mirroringImage from "../../../assets/icons/Mirroring.png"
 
+
 export default function LabelSettings() {
+    const {
+        currentLabelValue, setCurrentLabelValue,
+        fontSize, setFontSize,
+        letterSpacing, setLetterSpacing,
+        lineSpacing, setLineSpacing,
+        labelRotation, setLabelRotation,
+        borderWidth, setBorderWidth,
+        selectedFont, setSelectedFont,
+    } = useLabelSettingsState();
+    
     // Обработка изменения шрифта
-    const [selectedFont, setSelectedFont] = useState('Название шрифта 1');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const handleFontSelect = (fontOption) => {
@@ -25,12 +36,6 @@ export default function LabelSettings() {
     };
 
     // Обработка изменения свойств шрифта
-    const [fontSize, setFontSize] = useState(20);
-    const [letterSpacing, setLetterSpacing] = useState(0.5);
-    const [lineSpacing, setLineSpacing] = useState(1);
-    const [labelRotation, setLabelRotation] = useState(0);
-    const [borderWidth, setBorderWidth] = useState(0);
-
     const handleSliderChange = (value, setValue) => {
         setValue(value);
     };
@@ -49,13 +54,13 @@ export default function LabelSettings() {
         <div className='flex-col-top-left flex-gap-25 size-full-horizontal-percent'>
             <div className='flex-col-sb-left flex-gap-10 size-full-horizontal-percent'>
                 <p>Текст</p>
-                <input type="text" className="textInput-usual size-full-horizontal-percent"/>
+                <input type="text" className="textInput-usual size-full-horizontal-percent" onChange={(e) => setCurrentLabelValue(e.target.value)}/>
             </div>
 
             <div className="flex-row-sb-c size-full-horizontal-percent">
                 <p>Шрифт</p>
 
-                <DropdownButton className='flex-col-sb-right white-border-when-active'  onToggle={handleDropdownToggle} align="end" title={
+                <DropdownButton className='flex-col-sb-right white-border-when-active' onToggle={handleDropdownToggle} align="end" title={
                     <span className=' button-text-usual'>
                         {selectedFont}
                         <img

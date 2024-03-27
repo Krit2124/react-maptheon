@@ -1,16 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric-all-modules';
-import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore } from 'store/store';
+import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState } from 'store/store';
 
 export default function CanvasComponent() {
     const {
       currentTool,
-      isExportRequired,
-      setIsExportRequired,
-      isUndoRequired,
-      setIsUndoRequired,
-      isRedoRequired,
-      setIsRedoRequired,
+      isExportRequired, setIsExportRequired,
+      isUndoRequired, setIsUndoRequired,
+      isRedoRequired, setIsRedoRequired,
     } = useGeneralGraphicEditorStore();
     
     const {
@@ -28,13 +25,22 @@ export default function CanvasComponent() {
       canvasWidth,
       canvasHeight,
       filterIntensity,
-      isResetRequired,
-      setIsResetRequired,
+      isResetRequired, setIsResetRequired,
       backgroundColorMode,
       currentBackgroundTexture,
       canvasBackgroundColor,
       selectedFilter,
-  } = useCanvasSettingsStore();
+    } = useCanvasSettingsStore();
+
+    const {
+      currentLabelValue, setCurrentLabelValue,
+      fontSize, setFontSize,
+      letterSpacing, setLetterSpacing,
+      lineSpacing, setLineSpacing,
+      labelRotation, setLabelRotation,
+      borderWidth, setBorderWidth,
+      selectedFont, setSelectedFont,
+    } = useLabelSettingsState();
 
     // Холсты и рабочая область
     const lowerCanvasRef = useRef(null);
@@ -160,9 +166,28 @@ export default function CanvasComponent() {
         lowerCanvasRef.current.renderAll();
       }
 
+      // Обработка добавления подписи на холст
+      const handleCanvasClick = (event) => {
+        if (currentTool === 'Label' && currentLabelValue !== '') {
+          // Создание нового текстового объекта
+          const text = new fabric.Text(currentLabelValue, {
+            left: event.pointer.x,
+            top: event.pointer.y,
+            fontSize: fontSize,
+            letterSpacing: letterSpacing,
+            lineSpacing: lineSpacing,
+            rotation: labelRotation,
+            borderWidth: borderWidth,
+            fontFamily: selectedFont,
+          });
+
+          // Добавление текстового объекта на холст
+          middleCanvasRef.current.add(text);
+        }
+      };
+
       // Создание среднего холста
       if (middleCanvasRef.current == null) {
-        
         const middleCanvas = new fabric.Canvas('middleCanvas', {
           width: window.innerWidth,
           height: window.innerHeight,
@@ -188,6 +213,8 @@ export default function CanvasComponent() {
         middleContainer.style.position = 'absolute';
 
         middleCanvasRef.current = middleCanvas;
+
+        middleCanvasRef.current.on('mouse:down', handleCanvasClick);
       } else {
         middleCanvasRef.current.set({
           width: window.innerWidth,
@@ -346,7 +373,6 @@ export default function CanvasComponent() {
           // Отключение событий со среднего слоя
           // @ts-ignore
           middleContainer.style.pointerEvents = 'none';
-
         }
       }
 
@@ -423,15 +449,17 @@ export default function CanvasComponent() {
         mainContainer.removeEventListener('mousemove', handleWheelMove);
         mainContainer.removeEventListener('mouseup', handleWheelUp);
 
-        upperCanvasRef.current.off('mouse:down', handleMouseDown);
-        upperCanvasRef.current.off('mouse:move', handleMouseMove);
-        upperCanvasRef.current.off('mouse:up', handleMouseUp);
-
         lowerCanvasRef.current.off('mouse:down', handleMouseDown);
         lowerCanvasRef.current.off('mouse:move', handleMouseMove);
         lowerCanvasRef.current.off('mouse:up', handleMouseUp);
+
+        middleCanvasRef.current.off('mouse:down', handleCanvasClick);
+
+        upperCanvasRef.current.off('mouse:down', handleMouseDown);
+        upperCanvasRef.current.off('mouse:move', handleMouseMove);
+        upperCanvasRef.current.off('mouse:up', handleMouseUp);
       };
-    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape]);
+    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue]);
 
     // Экспорт изображения карты
     useEffect(() => {

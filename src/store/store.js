@@ -26,7 +26,7 @@ export const useGeneralGraphicEditorStore = create((set)=> ({
     setIsToolSettingsPanelVisible: (value) => set({ isToolSettingsPanelVisible: value }),
   
     currentTool: null,
-    setCurrentTool: (tool) => set({ currentTool: tool }),
+    setCurrentTool: (value) => set({ currentTool: value }),
 }))
 
 export const useTextureStore = create((set)=> ({
@@ -38,28 +38,28 @@ export const useTextureStore = create((set)=> ({
         snowImage,
         stoneTileImage
       ],
-      setRecentlyUsedTextures: (textures) => set({ recentlyUsedTextures: textures }),
+      setRecentlyUsedTextures: (value) => set({ recentlyUsedTextures: value }),
 }))
 
 export const useCanvasSettingsStore = create((set)=> ({
     // Настройки холста
     canvasWidth: 800,
-    setCanvasWidth: (width) => set({ canvasWidth: width }),
+    setCanvasWidth: (value) => set({ canvasWidth: value }),
   
     canvasHeight: 600,
-    setCanvasHeight: (height) => set({ canvasHeight: height }),
+    setCanvasHeight: (value) => set({ canvasHeight: value }),
   
     isResetRequired: false,
     setIsResetRequired: (value) => set({ isResetRequired: value }),
   
     backgroundColorMode: true,
-    setBackgroundColorMode: (mode) => set({ backgroundColorMode: mode }),
+    setBackgroundColorMode: (value) => set({ backgroundColorMode: value }),
   
     canvasBackgroundColor: '#ffffff',
-    setCanvasBackgroundColor: (color) => set({ canvasBackgroundColor: color }),
+    setCanvasBackgroundColor: (value) => set({ canvasBackgroundColor: value }),
   
     currentBackgroundTexture: grassImage,
-    setCurrentBackgroundTexture: (texture) => set({ currentBackgroundTexture: texture }),
+    setCurrentBackgroundTexture: (value) => set({ currentBackgroundTexture: value }),
   
     filtersList: [
       { name: 'Без фильтра', filter: null },
@@ -68,35 +68,59 @@ export const useCanvasSettingsStore = create((set)=> ({
     ],
   
     selectedFilter: { name: 'Без фильтра', filter: null },
-    setSelectedFilter: (filter) => set({ selectedFilter: filter }),
+    setSelectedFilter: (value) => set({ selectedFilter: value }),
   
     filterIntensity: 1,
-    setFilterIntensity: (intensity) => set({ filterIntensity: intensity }),
+    setFilterIntensity: (value) => set({ filterIntensity: value }),
 }))
 
 export const useBrushSettingsStore = create((set)=> ({
     // Настройки кисти
     brushColorMode: 'color',
-    setBrushColorMode: (mode) => set({ brushColorMode: mode }),
+    setBrushColorMode: (value) => set({ brushColorMode: value }),
   
     currentBrushTexture: grassImage,
-    setCurrentBrushTexture: (texture) => set({ currentBrushTexture: texture }),
+    setCurrentBrushTexture: (value) => set({ currentBrushTexture: value }),
   
     brushColor: '#000000',
-    setBrushColor: (color) => set({ brushColor: color }),
+    setBrushColor: (value) => set({ brushColor: value }),
   
     currentBrushLayer: 'lower',
-    setCurrentBrushLayer: (layer) => set({ currentBrushLayer: layer }),
+    setCurrentBrushLayer: (value) => set({ currentBrushLayer: value }),
   
     brushThickness: 20,
-    setBrushThickness: (thickness) => set({ brushThickness: thickness }),
+    setBrushThickness: (value) => set({ brushThickness: value }),
   
     brushShape: 'round',
-    setBrushShape: (shape) => set({ brushShape: shape }),
+    setBrushShape: (value) => set({ brushShape: value }),
   
     brushOpacity: 1,
-    setBrushOpacity: (opacity) => set({ brushOpacity: opacity }),
+    setBrushOpacity: (value) => set({ brushOpacity: value }),
   
     brushSoftness: 1,
-    setBrushSoftness: (softness) => set({ brushSoftness: softness }),
+    setBrushSoftness: (value) => set({ brushSoftness: value }),
 }))
+
+export const useLabelSettingsState = create((set) => ({
+    // Настройки текста
+    currentLabelValue: 'test',
+    setCurrentLabelValue: (value) => set({ currentLabelValue: value }),
+
+    fontSize: 20,
+    setFontSize: (value) => set({ fontSize: value }),
+  
+    letterSpacing: 0.5,
+    setLetterSpacing: (value) => set({ letterSpacing: value }),
+  
+    lineSpacing: 1,
+    setLineSpacing: (value) => set({ lineSpacing: value }),
+  
+    labelRotation: 0,
+    setLabelRotation: (value) => set({ labelRotation: value }),
+  
+    borderWidth: 0,
+    setBorderWidth: (value) => set({ borderWidth: value }),
+
+    selectedFont: 'Название шрифта 1',
+    setSelectedFont: (value) => set({ selectedFont: value }),
+  }));
