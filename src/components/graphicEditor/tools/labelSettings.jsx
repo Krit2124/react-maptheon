@@ -76,9 +76,9 @@ export default function LabelSettings() {
                     </span>
                 }>
                     <div className='flex-col-sb-right'>
-                        <Dropdown.Item onClick={() => handleFontSelect('Название шрифта 1')}>Название шрифта 1</Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleFontSelect('Название шрифта 2')}>Название шрифта 2</Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleFontSelect('Название шрифта 3')}>Название шрифта 3</Dropdown.Item>
+                        <Dropdown.Item onClick={() => handleFontSelect('Roboto')}>Roboto</Dropdown.Item>
+                        <Dropdown.Item onClick={() => handleFontSelect('Oxygen')}>Oxygen</Dropdown.Item>
+                        <Dropdown.Item onClick={() => handleFontSelect('Droid Sans')}>Droid Sans</Dropdown.Item>
                     </div>
                 </DropdownButton>
             </div>

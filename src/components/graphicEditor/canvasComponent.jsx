@@ -174,15 +174,20 @@ export default function CanvasComponent() {
             left: event.pointer.x,
             top: event.pointer.y,
             fontSize: fontSize,
-            letterSpacing: letterSpacing,
-            lineSpacing: lineSpacing,
-            rotation: labelRotation,
-            borderWidth: borderWidth,
+            // letterSpacing: letterSpacing,
+            // lineSpacing: lineSpacing,
+            angle: labelRotation,
+
             fontFamily: selectedFont,
           });
 
+          console.log("Text object:", text);
+      
           // Добавление текстового объекта на холст
           middleCanvasRef.current.add(text);
+      
+          // Обновление холста
+          middleCanvasRef.current.renderAll();
         }
       };
 
@@ -214,7 +219,6 @@ export default function CanvasComponent() {
 
         middleCanvasRef.current = middleCanvas;
 
-        middleCanvasRef.current.on('mouse:down', handleCanvasClick);
       } else {
         middleCanvasRef.current.set({
           width: window.innerWidth,
@@ -223,6 +227,7 @@ export default function CanvasComponent() {
 
         middleCanvasRef.current.renderAll();
       } 
+      middleCanvasRef.current.on('mouse:down', handleCanvasClick);
 
       // Создание верхнего холста
       brushOpacityRef.current = brushOpacity;
@@ -459,7 +464,7 @@ export default function CanvasComponent() {
         upperCanvasRef.current.off('mouse:move', handleMouseMove);
         upperCanvasRef.current.off('mouse:up', handleMouseUp);
       };
-    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue]);
+    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue, fontSize, letterSpacing, lineSpacing, labelRotation, borderWidth, selectedFont,]);
 
     // Экспорт изображения карты
     useEffect(() => {

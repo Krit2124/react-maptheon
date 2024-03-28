@@ -103,7 +103,7 @@ export const useBrushSettingsStore = create((set)=> ({
 
 export const useLabelSettingsState = create((set) => ({
     // Настройки текста
-    currentLabelValue: 'test',
+    currentLabelValue: '',
     setCurrentLabelValue: (value) => set({ currentLabelValue: value }),
 
     fontSize: 20,
@@ -121,6 +121,6 @@ export const useLabelSettingsState = create((set) => ({
     borderWidth: 0,
     setBorderWidth: (value) => set({ borderWidth: value }),
 
-    selectedFont: 'Название шрифта 1',
+    selectedFont: 'Roboto',
     setSelectedFont: (value) => set({ selectedFont: value }),
   }));
