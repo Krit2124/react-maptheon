@@ -20,8 +20,13 @@ export default function LabelSettings() {
         letterSpacing, setLetterSpacing,
         lineSpacing, setLineSpacing,
         labelRotation, setLabelRotation,
-        borderWidth, setBorderWidth,
+        labelBorderWidth, setLabelBorderWidth,
         selectedFont, setSelectedFont,
+        labelColor, setLabelColor,
+        labelBorderColor, setLabelBorderColor,
+        isLabelBold, setIsLabelBold,
+        isLabelItalic, setIsLabelItalic,
+        labelAlign, setLabelAlign,
     } = useLabelSettingsState();
     
     // Обработка изменения шрифта
@@ -54,7 +59,8 @@ export default function LabelSettings() {
         <div className='flex-col-top-left flex-gap-25 size-full-horizontal-percent'>
             <div className='flex-col-sb-left flex-gap-10 size-full-horizontal-percent'>
                 <p>Текст</p>
-                <input type="text" className="textInput-usual size-full-horizontal-percent" onChange={(e) => setCurrentLabelValue(e.target.value)}/>
+                {/* @ts-ignore */}
+                <textarea rows="3" className="textInput-usual size-full-horizontal-percent" value={currentLabelValue} onChange={(e) => setCurrentLabelValue(e.target.value)}/>
             </div>
 
             <div className="flex-row-sb-c size-full-horizontal-percent">
@@ -77,8 +83,8 @@ export default function LabelSettings() {
                 }>
                     <div className='flex-col-sb-right'>
                         <Dropdown.Item onClick={() => handleFontSelect('Roboto')}>Roboto</Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleFontSelect('Oxygen')}>Oxygen</Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleFontSelect('Droid Sans')}>Droid Sans</Dropdown.Item>
+                        <Dropdown.Item onClick={() => handleFontSelect('Verdana')}>Verdana</Dropdown.Item>
+                        <Dropdown.Item onClick={() => handleFontSelect('Times New Roman')}>Times New Roman</Dropdown.Item>
                     </div>
                 </DropdownButton>
             </div>
@@ -99,35 +105,35 @@ export default function LabelSettings() {
                 </div>
 
                 <div className="flex-col-sb-left flex-gap-10">
-                    <div className='fontColorPlaceholder'></div>
+                    <input type="color" onChange={(e) => setLabelColor(e.target.value)} />
                     <div className='flex-row-sb-c flex-gap-15'>
-                        <div className='fontColorPlaceholder'></div>
-                        <input type="number" min="0" max="10" value={borderWidth} onChange={(e) => handleInputChange(parseFloat(e.target.value), setBorderWidth, 0, 10)}/>
+                        <input type="color" onChange={(e) => setLabelBorderColor(e.target.value)} />
+                        <input type="number" min="0" max="10" onChange={(e) => handleInputChange(parseFloat(e.target.value), setLabelBorderWidth, 0, 10)}/>
                     </div>
                 </div>
             </div>
 
             <div className="flex-row-sb-c size-full-horizontal-percent">
                 <div className="flex-row-sb-c flex-gap-5">
-                    <button className='button-image-medium'>
+                    <button className={`button-image-medium ${isLabelBold ? 'active' : ''}`} onClick={() => setIsLabelBold(!isLabelBold)}>
                         <img src={boldFontImage} alt="Жирный шрифт"/>
                     </button>
 
-                    <button className='button-image-medium'>
+                    <button className={`button-image-medium ${isLabelItalic ? 'active' : ''}`} onClick={() => setIsLabelItalic(!isLabelItalic)}>
                         <img src={italicFontImage} alt="Курсивный шрифт"/>
                     </button>
                 </div>
 
                 <div className="flex-row-sb-c flex-gap-5">
-                    <button className='button-image-medium active'>
+                    <button className={`button-image-medium ${labelAlign === 'left' ? 'active' : ''}`} onClick={() => setLabelAlign('left')}>
                         <img src={leftAlignmentImage} alt="Выравнивание по левому краю"/>
                     </button>
 
-                    <button className='button-image-medium'>
+                    <button className={`button-image-medium ${labelAlign === 'center' ? 'active' : ''}`} onClick={() => setLabelAlign('center')}>
                         <img src={centerAlignmentImage} alt="Выравнивание по центру"/>
                     </button>
 
-                    <button className='button-image-medium'>
+                    <button className={`button-image-medium ${labelAlign === 'right' ? 'active' : ''}`} onClick={() => setLabelAlign('right')}>
                         <img src={rightAlignmentImage} alt="Выравнивание по правому краю"/>
                     </button>
                 </div>
@@ -137,8 +143,8 @@ export default function LabelSettings() {
                 <p>Межбуквенный интервал</p>
 
                 <div className="flex-row-sb-c size-full-horizontal-percent">
-                    <input type="range" min="0" max="3" step="0.5" value={letterSpacing} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setLetterSpacing)}/>
-                    <input type="number" min="0" max="3" step="0.5" value={letterSpacing} onChange={(e) => handleInputChange(parseFloat(e.target.value), setLetterSpacing, 0, 3)}/>
+                    <input type="range" min="0" max="10" step="0.5" value={letterSpacing} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setLetterSpacing)}/>
+                    <input type="number" min="0" max="10" step="0.5" value={letterSpacing} onChange={(e) => handleInputChange(parseFloat(e.target.value), setLetterSpacing, 0, 10)}/>
                 </div>
             </div>
 
@@ -146,26 +152,14 @@ export default function LabelSettings() {
                 <p>Междустрочный интервал</p>
 
                 <div className="flex-row-sb-c size-full-horizontal-percent">
-                    <input type="range" min="0.5" max="2" step="0.1" value={lineSpacing} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setLineSpacing)}/>
-                    <input type="number" min="0.5" max="2" step="0.1" value={lineSpacing} onChange={(e) => handleInputChange(parseFloat(e.target.value), setLineSpacing, 0.5, 2)}/>
+                    <input type="range" min="0.5" max="3" step="0.1" value={lineSpacing} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setLineSpacing)}/>
+                    <input type="number" min="0.5" max="3" step="0.1" value={lineSpacing} onChange={(e) => handleInputChange(parseFloat(e.target.value), setLineSpacing, 0.5, 3)}/>
                 </div>
             </div>
 
-            <div className="flex-row-sb-c size-full-horizontal-percent">
-                <div className="flex-row-sb-c flex-gap-10">
-                    <p>Поворот (°)</p>
-                    <input type="number" min="0" max="360" value={labelRotation} onChange={(e) => handleInputChange(parseInt(e.target.value), setLabelRotation, 0, 360)}/>
-                </div>
-
-                <div className="flex-row-sb-c flex-gap-10">
-                    <button className='button-image-medium'>
-                        <img src={mirroringImage} alt="Отзеркалить по горизонтали"/>
-                    </button>
-
-                    <button className='button-image-medium'>
-                        <img src={mirroringImage} alt="Отзеркалить по вертикали" className='rotate-left'/>
-                    </button>
-                </div>
+            <div className="flex-row-sb-c flex-gap-10">
+                <p>Поворот (°)</p>
+                <input type="number" min="0" max="360" value={labelRotation} onChange={(e) => handleInputChange(parseInt(e.target.value), setLabelRotation, 0, 360)}/>
             </div>
         </div>
     );

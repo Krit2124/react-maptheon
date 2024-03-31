@@ -541,6 +541,10 @@ header {
   height: 35px;
 }
 
+.panelLabel {
+  min-width: 250px;
+}
+
 /* Canvas */
 .header-graphicEditor {
   position: relative;
@@ -583,10 +587,6 @@ header {
 .canvas-upper {
   z-index: 2;
 }
-
-/* .canvas-upper-container, .canvas-middle-container {
-  pointer-events: none;
-} */
 
 /* Временные заглушки */
 .mapCardPlaceholder {

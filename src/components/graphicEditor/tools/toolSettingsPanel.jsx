@@ -35,7 +35,7 @@ export default function ToolSettingsPanel() {
 
     return (
         <div className="border-black-right background-black canvasPanel size-full-vertical-pagePercent-withHeader flex-col-top-left flex-gap-25">
-            <div className='flex-row-sb-c size-full-horizontal-percent'>
+            <div className='flex-row-sb-c size-full-horizontal-percent panelLabel'>
                 <h1>{panelLabel}</h1>
 
                 <button className='button-image-closePanel' onClick={handleCloseToolSettingsPanel}>

@@ -118,9 +118,27 @@ export const useLabelSettingsState = create((set) => ({
     labelRotation: 0,
     setLabelRotation: (value) => set({ labelRotation: value }),
   
-    borderWidth: 0,
-    setBorderWidth: (value) => set({ borderWidth: value }),
+    labelBorderWidth: 0,
+    setLabelBorderWidth: (value) => set({ labelBorderWidth: value }),
 
     selectedFont: 'Roboto',
     setSelectedFont: (value) => set({ selectedFont: value }),
+
+    labelColor: '#000000',
+    setLabelColor: (value) => set({ labelColor: value }),
+
+    labelBorderColor: '#000000',
+    setLabelBorderColor: (value) => set({ labelBorderColor: value }),
+
+    isLabelBold: false,
+    setIsLabelBold: (value) => set({ isLabelBold: value }),
+
+    isLabelItalic: false,
+    setIsLabelItalic: (value) => set({ isLabelItalic: value }),
+
+    labelAlign: 'left',
+    setLabelAlign: (value) => set({ labelAlign: value }),
+
+    selectedTextObject: null,
+    setSelectedTextObject: (value) => set({ selectedTextObject: value }),
   }));

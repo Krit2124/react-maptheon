@@ -4,10 +4,11 @@ import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorS
 
 export default function CanvasComponent() {
     const {
-      currentTool,
+      currentTool, setCurrentTool,
       isExportRequired, setIsExportRequired,
       isUndoRequired, setIsUndoRequired,
       isRedoRequired, setIsRedoRequired,
+      setIsToolSettingsPanelVisible,
     } = useGeneralGraphicEditorStore();
     
     const {
@@ -38,9 +39,15 @@ export default function CanvasComponent() {
       letterSpacing, setLetterSpacing,
       lineSpacing, setLineSpacing,
       labelRotation, setLabelRotation,
-      borderWidth, setBorderWidth,
+      labelBorderWidth, setLabelBorderWidth,
       selectedFont, setSelectedFont,
-    } = useLabelSettingsState();
+      labelColor, setLabelColor,
+      labelBorderColor, setLabelBorderColor,
+      isLabelBold, setIsLabelBold,
+      isLabelItalic, setIsLabelItalic,
+      labelAlign, setLabelAlign,
+      selectedTextObject, setSelectedTextObject,
+  } = useLabelSettingsState();
 
     // Холсты и рабочая область
     const lowerCanvasRef = useRef(null);
@@ -173,15 +180,18 @@ export default function CanvasComponent() {
           const text = new fabric.Text(currentLabelValue, {
             left: event.pointer.x,
             top: event.pointer.y,
+            fill: labelColor,
             fontSize: fontSize,
-            // letterSpacing: letterSpacing,
-            // lineSpacing: lineSpacing,
-            angle: labelRotation,
-
             fontFamily: selectedFont,
+            angle: labelRotation,
+            stroke: labelBorderColor,
+            strokeWidth: labelBorderWidth,
+            fontWeight: isLabelBold ? 'bold' : 'normal',
+            fontStyle: isLabelItalic ? 'italic' : 'normal',
+            textAlign: labelAlign,
+            charSpacing: letterSpacing * 500,
+            lineHeight: lineSpacing,
           });
-
-          console.log("Text object:", text);
       
           // Добавление текстового объекта на холст
           middleCanvasRef.current.add(text);
@@ -190,6 +200,28 @@ export default function CanvasComponent() {
           middleCanvasRef.current.renderAll();
         }
       };
+
+      const handleCanvasObjectSelected = (event) => {
+        // setSelectedTextObject(event.selected[0]);
+        // console.log(selectedTextObject);
+        // if (selectedTextObject.type === 'text') {
+        //   console.log('объект exn`y');
+        //   setCurrentTool('Label');
+        //   setIsToolSettingsPanelVisible(true);
+        //   setSelectedTextObject(selectedTextObject);
+        //   setFontSize(selectedTextObject.fontSize);
+        //   setLetterSpacing(selectedTextObject.charSpacing / 500);
+        //   setLineSpacing(selectedTextObject.lineHeight);
+        //   setLabelRotation(selectedTextObject.angle);
+        //   setLabelBorderWidth(selectedTextObject.strokeWidth);
+        //   setSelectedFont(selectedTextObject.fontFamily);
+        //   setLabelColor(selectedTextObject.fill);
+        //   setLabelBorderColor(selectedTextObject.stroke);
+        //   setIsLabelBold(selectedTextObject.fontWeight === 'bold');
+        //   setIsLabelItalic(selectedTextObject.fontStyle === 'italic');
+        //   setLabelAlign(selectedTextObject.textAlign);
+        // }
+    };
 
       // Создание среднего холста
       if (middleCanvasRef.current == null) {
@@ -219,6 +251,8 @@ export default function CanvasComponent() {
 
         middleCanvasRef.current = middleCanvas;
 
+        middleCanvasRef.current.on('selection:created', handleCanvasObjectSelected);
+        middleCanvasRef.current.on('selection:updated', handleCanvasObjectSelected);
       } else {
         middleCanvasRef.current.set({
           width: window.innerWidth,
@@ -464,7 +498,7 @@ export default function CanvasComponent() {
         upperCanvasRef.current.off('mouse:move', handleMouseMove);
         upperCanvasRef.current.off('mouse:up', handleMouseUp);
       };
-    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue, fontSize, letterSpacing, lineSpacing, labelRotation, borderWidth, selectedFont,]);
+    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue, fontSize, letterSpacing, lineSpacing, labelRotation, labelBorderWidth, selectedFont, labelColor, labelBorderColor, isLabelBold, isLabelItalic, labelAlign, setCurrentTool, setFontSize, setIsLabelBold, setIsLabelItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLetterSpacing, setLineSpacing, setSelectedFont, setSelectedTextObject, selectedTextObject]);
 
     // Экспорт изображения карты
     useEffect(() => {
