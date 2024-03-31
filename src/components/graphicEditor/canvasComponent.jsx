@@ -201,27 +201,39 @@ export default function CanvasComponent() {
         }
       };
 
+      // Обработка выбора одиночного объекта
       const handleCanvasObjectSelected = (event) => {
-        // setSelectedTextObject(event.selected[0]);
-        // console.log(selectedTextObject);
-        // if (selectedTextObject.type === 'text') {
-        //   console.log('объект exn`y');
-        //   setCurrentTool('Label');
-        //   setIsToolSettingsPanelVisible(true);
-        //   setSelectedTextObject(selectedTextObject);
-        //   setFontSize(selectedTextObject.fontSize);
-        //   setLetterSpacing(selectedTextObject.charSpacing / 500);
-        //   setLineSpacing(selectedTextObject.lineHeight);
-        //   setLabelRotation(selectedTextObject.angle);
-        //   setLabelBorderWidth(selectedTextObject.strokeWidth);
-        //   setSelectedFont(selectedTextObject.fontFamily);
-        //   setLabelColor(selectedTextObject.fill);
-        //   setLabelBorderColor(selectedTextObject.stroke);
-        //   setIsLabelBold(selectedTextObject.fontWeight === 'bold');
-        //   setIsLabelItalic(selectedTextObject.fontStyle === 'italic');
-        //   setLabelAlign(selectedTextObject.textAlign);
-        // }
-    };
+        const selectedObjects = event.selected;
+
+        if (selectedObjects && selectedObjects.length === 1) {
+          const selectedObject = selectedObjects[0];
+
+          if (selectedObject.type === 'text') {
+            setCurrentTool("Label");
+            setIsToolSettingsPanelVisible(true);
+            
+            setCurrentLabelValue(selectedObject.text);
+            setFontSize(selectedObject.fontSize);
+            setLetterSpacing(selectedObject.charSpacing / 500);
+            setLineSpacing(selectedObject.lineHeight);
+            setLabelRotation(selectedObject.angle);
+            setLabelBorderWidth(selectedObject.strokeWidth);
+            setSelectedFont(selectedObject.fontFamily);
+            setLabelColor(selectedObject.fill);
+            setLabelBorderColor(selectedObject.stroke);
+            setIsLabelBold(selectedObject.fontWeight === "bold");
+            setIsLabelItalic(selectedObject.fontStyle === "italic");
+            setLabelAlign(selectedObject.textAlign);
+
+            setSelectedTextObject(selectedObject);
+          }
+        }
+      };
+
+      // Обработка снятия выбора 
+      const handleCanvasObjectCleared = (event) => {
+        setSelectedTextObject(null);
+      };
 
       // Создание среднего холста
       if (middleCanvasRef.current == null) {
@@ -253,6 +265,7 @@ export default function CanvasComponent() {
 
         middleCanvasRef.current.on('selection:created', handleCanvasObjectSelected);
         middleCanvasRef.current.on('selection:updated', handleCanvasObjectSelected);
+        middleCanvasRef.current.on('selection:cleared', handleCanvasObjectCleared);
       } else {
         middleCanvasRef.current.set({
           width: window.innerWidth,
@@ -498,7 +511,7 @@ export default function CanvasComponent() {
         upperCanvasRef.current.off('mouse:move', handleMouseMove);
         upperCanvasRef.current.off('mouse:up', handleMouseUp);
       };
-    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue, fontSize, letterSpacing, lineSpacing, labelRotation, labelBorderWidth, selectedFont, labelColor, labelBorderColor, isLabelBold, isLabelItalic, labelAlign, setCurrentTool, setFontSize, setIsLabelBold, setIsLabelItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLetterSpacing, setLineSpacing, setSelectedFont, setSelectedTextObject, selectedTextObject]);
+    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue, fontSize, letterSpacing, lineSpacing, labelRotation, labelBorderWidth, selectedFont, labelColor, labelBorderColor, isLabelBold, isLabelItalic, labelAlign, setCurrentTool, setFontSize, setIsLabelBold, setIsLabelItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLetterSpacing, setLineSpacing, setSelectedFont, setSelectedTextObject, selectedTextObject, setCurrentLabelValue, selectedTextObject]);
 
     // Экспорт изображения карты
     useEffect(() => {

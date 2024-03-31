@@ -27,6 +27,7 @@ export default function LabelSettings() {
         isLabelBold, setIsLabelBold,
         isLabelItalic, setIsLabelItalic,
         labelAlign, setLabelAlign,
+        selectedTextObject, setSelectedTextObject,
     } = useLabelSettingsState();
     
     // Обработка изменения шрифта
@@ -55,12 +56,30 @@ export default function LabelSettings() {
         setValue(value);
     };
 
+    const [textareaValue, setTextareaValue] = useState(currentLabelValue);
+
+    const handleChange = (e) => {
+        if (selectedTextObject != null) {
+            selectedTextObject.text = e.target.value;
+            setCurrentLabelValue(e.target.value);
+            setTextareaValue(e.target.value);
+        } else {
+            setCurrentLabelValue(e.target.value);
+            setTextareaValue(e.target.value);
+        }
+    };
+
     return (
         <div className='flex-col-top-left flex-gap-25 size-full-horizontal-percent'>
             <div className='flex-col-sb-left flex-gap-10 size-full-horizontal-percent'>
                 <p>Текст</p>
-                {/* @ts-ignore */}
-                <textarea rows="3" className="textInput-usual size-full-horizontal-percent" value={currentLabelValue} onChange={(e) => setCurrentLabelValue(e.target.value)}/>
+                <textarea 
+                    // @ts-ignore
+                    rows="3" 
+                    className="textInput-usual size-full-horizontal-percent" 
+                    value={textareaValue}
+                    onChange={handleChange}
+                />
             </div>
 
             <div className="flex-row-sb-c size-full-horizontal-percent">
