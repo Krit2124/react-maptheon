@@ -9,6 +9,7 @@ export default function CanvasComponent() {
       isUndoRequired, setIsUndoRequired,
       isRedoRequired, setIsRedoRequired,
       setIsToolSettingsPanelVisible,
+      setChoosenObject,
     } = useGeneralGraphicEditorStore();
     
     const {
@@ -209,8 +210,9 @@ export default function CanvasComponent() {
           const selectedObject = selectedObjects[0];
 
           if (selectedObject.type === 'text') {
-            setCurrentTool("Label");
+            setCurrentTool(null);
             setIsToolSettingsPanelVisible(true);
+            setChoosenObject('Label')
             
             setCurrentLabelValue(selectedObject.text);
             setFontSize(selectedObject.fontSize);
@@ -240,7 +242,7 @@ export default function CanvasComponent() {
         const middleCanvas = new fabric.Canvas('middleCanvas', {
           width: window.innerWidth,
           height: window.innerHeight,
-          containerClass: 'canvas-middle-container'
+          containerClass: 'canvas-middle-container',
         });
 
         const rect = new fabric.Rect({
@@ -271,6 +273,18 @@ export default function CanvasComponent() {
           width: window.innerWidth,
           height: window.innerHeight,
         });
+
+        if (currentTool === 'Label' || currentTool === 'Object') {
+          middleCanvasRef.current.set({
+            skipTargetFind: true,
+            selection: false,
+          });
+        } else {
+          middleCanvasRef.current.set({
+            selection: true,
+            skipTargetFind: false,
+          });
+        }
 
         middleCanvasRef.current.renderAll();
       } 

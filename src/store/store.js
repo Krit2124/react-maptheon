@@ -27,6 +27,9 @@ export const useGeneralGraphicEditorStore = create((set)=> ({
   
     currentTool: null,
     setCurrentTool: (value) => set({ currentTool: value }),
+
+    choosenObject: null,
+    setChoosenObject: (value) => set({ choosenObject: value }),
 }))
 
 export const useTextureStore = create((set)=> ({
@@ -121,7 +124,7 @@ export const useLabelSettingsState = create((set) => ({
     labelBorderWidth: 0,
     setLabelBorderWidth: (value) => set({ labelBorderWidth: value }),
 
-    selectedFont: 'Roboto',
+    selectedFont: 'Times New Roman',
     setSelectedFont: (value) => set({ selectedFont: value }),
 
     labelColor: '#000000',

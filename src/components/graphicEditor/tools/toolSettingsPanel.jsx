@@ -12,6 +12,7 @@ export default function ToolSettingsPanel() {
     const {
         currentTool,
         setIsToolSettingsPanelVisible,
+        choosenObject,
     } = useGeneralGraphicEditorStore();
 
     const [panelLabel, setPanelLabel] = useState("Свойства инструмента");
@@ -26,9 +27,9 @@ export default function ToolSettingsPanel() {
             setPanelLabel("Свойства кисти");
         } else if (currentTool === "Object") {
             setPanelLabel("Свойства объекта");
-        } else if (currentTool === "Label") {
+        } else if (currentTool === "Label" || choosenObject === "Label") {
             setPanelLabel("Свойства подписи");
-        } else if (currentTool === "Canvas") {
+        } else if (currentTool === "Canvas" || choosenObject === "Canvas") {
             setPanelLabel("Свойства холста");
         }
     }, [currentTool]);
@@ -46,7 +47,7 @@ export default function ToolSettingsPanel() {
             {/* Изменение контента панели в зависимости от нажатой кнопки */}
             {currentTool === "Brush" ? <BrushSettings/> 
             : currentTool === "Object" ? <ObjectSettings/> 
-            : currentTool === "Label" ? <LabelSettings/> 
+            : (currentTool === "Label" || choosenObject === "Label") ? <LabelSettings/> 
             : currentTool === "Canvas" ? <CanvasSettings/>
             : null}
         </div>
