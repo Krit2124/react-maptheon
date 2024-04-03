@@ -27,12 +27,16 @@ export default function ToolSettingsPanel() {
             setPanelLabel("Свойства кисти");
         } else if (currentTool === "Object") {
             setPanelLabel("Свойства объекта");
-        } else if (currentTool === "Label" || choosenObject === "Label") {
+        } else if (currentTool === "Label") {
             setPanelLabel("Свойства подписи");
-        } else if (currentTool === "Canvas" || choosenObject === "Canvas") {
+        } else if (currentTool === "Canvas") {
+            setPanelLabel("Свойства холста");
+        } else if (choosenObject === "Label") {
+            setPanelLabel("Свойства подписи");
+        } else if ( choosenObject === "Canvas") {
             setPanelLabel("Свойства холста");
         }
-    }, [currentTool]);
+    }, [currentTool, choosenObject]);
 
     return (
         <div className="border-black-right background-black canvasPanel size-full-vertical-pagePercent-withHeader flex-col-top-left flex-gap-25">
@@ -47,8 +51,9 @@ export default function ToolSettingsPanel() {
             {/* Изменение контента панели в зависимости от нажатой кнопки */}
             {currentTool === "Brush" ? <BrushSettings/> 
             : currentTool === "Object" ? <ObjectSettings/> 
-            : (currentTool === "Label" || choosenObject === "Label") ? <LabelSettings/> 
+            : currentTool === "Label" ? <LabelSettings/> 
             : currentTool === "Canvas" ? <CanvasSettings/>
+            : choosenObject === "Label" ? <LabelSettings/> 
             : null}
         </div>
     );

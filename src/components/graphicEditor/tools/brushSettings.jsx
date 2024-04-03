@@ -94,7 +94,7 @@ export default function BrushSettings() {
                     </div>
 
                     {brushColorMode === 'color' ? (
-                        <ChromePicker color={brushColor} onChange={handleChangeBackgroundColor} />
+                        <ChromePicker color={brushColor} onChange={handleChangeBackgroundColor} disableAlpha={true} />
                     ) : brushColorMode === 'texture' ? (
                         <div className='flex-col-top-left flex-gap-10'>
                             <div className='currentTexture' style={{ backgroundImage: currentBrushTexture ? `url(${currentBrushTexture})` : 'none' }}>

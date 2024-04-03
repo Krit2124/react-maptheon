@@ -90,7 +90,7 @@ export default function LabelSettings() {
 
     const handleBorderColorChange = (value) => {
         if (selectedTextObject != null) {
-            selectedTextObject.strokeWidth = value;
+            selectedTextObject.stroke = value;
         }
         setLabelBorderColor(value);
     };
@@ -127,7 +127,7 @@ export default function LabelSettings() {
 
     const handleLetterSpacingChange = (value) => {
         if (selectedTextObject != null) {
-            selectedTextObject.charSpacing = value;
+            selectedTextObject.charSpacing = value * 500;
         }
         setLetterSpacing(value);
     };
@@ -201,9 +201,9 @@ export default function LabelSettings() {
                 </div>
 
                 <div className="flex-col-sb-left flex-gap-10">
-                    <input type="color" onChange={(e) => handleFontColorChange(e.target.value)} />
+                    <input type="color" value={labelColor} onChange={(e) => handleFontColorChange(e.target.value)} />
                     <div className='flex-row-sb-c flex-gap-15'>
-                        <input type="color" onChange={(e) => handleBorderColorChange(e.target.value)} />
+                        <input type="color" value={labelBorderColor} onChange={(e) => handleBorderColorChange(e.target.value)} />
                         <input type="number" min="0" max="10" onChange={(e) => handleInputChange(parseFloat(e.target.value), handleBorderWidthChange, 0, 10)}/>
                     </div>
                 </div>
@@ -239,8 +239,8 @@ export default function LabelSettings() {
                 <p>Межбуквенный интервал</p>
 
                 <div className="flex-row-sb-c size-full-horizontal-percent">
-                    <input type="range" min="0" max="10" step="0.5" value={letterSpacing} onChange={(e) => handleSliderChange(parseFloat(e.target.value), handleLetterSpacingChange)}/>
-                    <input type="number" min="0" max="10" step="0.5" value={letterSpacing} onChange={(e) => handleInputChange(parseFloat(e.target.value), handleLetterSpacingChange, 0, 10)}/>
+                    <input type="range" min="0" max="10" step="0.1" value={letterSpacing} onChange={(e) => handleSliderChange(parseFloat(e.target.value), handleLetterSpacingChange)}/>
+                    <input type="number" min="0" max="10" step="0.1" value={letterSpacing} onChange={(e) => handleInputChange(parseFloat(e.target.value), handleLetterSpacingChange, 0, 10)}/>
                 </div>
             </div>
 

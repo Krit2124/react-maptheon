@@ -163,7 +163,7 @@ export default function CanvasSettings() {
                 </div>
 
                 {backgroundColorMode ? (
-                    <ChromePicker color={canvasBackgroundColor} onChange={handleChangeBackgroundColor}/>
+                    <ChromePicker color={canvasBackgroundColor} onChange={handleChangeBackgroundColor} disableAlpha={true} />
                 ) : (
                     <div className='flex-col-top-left flex-gap-10'>
                         <div className='currentTexture' style={{ backgroundImage: currentBackgroundTexture ? `url(${currentBackgroundTexture})` : 'none' }}>
