@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import Dropdown from 'react-bootstrap/Dropdown'
 import DropdownButton from 'react-bootstrap/DropdownButton'
-import { useLabelSettingsState } from 'store/store';
+import { useGeneralGraphicEditorStore, useLabelSettingsState } from 'store/store';
 
 import showOrHideImage from "../../../assets/icons/ShowOrHide.png"
 import boldFontImage from "../../../assets/icons/BoldFont.png"
@@ -10,8 +10,6 @@ import italicFontImage from "../../../assets/icons/ItalicFont.png"
 import leftAlignmentImage from "../../../assets/icons/LeftAlignment.png"
 import centerAlignmentImage from "../../../assets/icons/CenterAlignment.png"
 import rightAlignmentImage from "../../../assets/icons/RightAlignment.png"
-import mirroringImage from "../../../assets/icons/Mirroring.png"
-
 
 export default function LabelSettings() {
     const {

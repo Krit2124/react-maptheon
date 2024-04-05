@@ -144,4 +144,27 @@ export const useLabelSettingsState = create((set) => ({
 
     selectedTextObject: null,
     setSelectedTextObject: (value) => set({ selectedTextObject: value }),
-  }));
+}));
+
+export const useObjectSettingsState = create((set) => ({
+    objectSize: 100,
+    setObjectSize: (value) => set({ objectSize: value }),
+
+    objectOpacity: 1,
+    setObjectOpacity: (value) => set({ objectOpacity: value }),
+
+    objectRotation: 0,
+    setObjectRotation: (value) => set({ objectRotation: value }),
+
+    objectSaturation: 0.5,
+    setObjectSaturation: (value) => set({ objectSaturation: value }),
+
+    objectBrightness: 0.5,
+    setObjectBrightness: (value) => set({ objectBrightness: value }),
+
+    objectContrast: 0.5,
+    setObjectContrast: (value) => set({ objectContrast: value }),
+
+    isUseRandomObjects: true,
+    setIsUseRandomObjects: (value) => set({ isUseRandomObjects: value }),
+}));

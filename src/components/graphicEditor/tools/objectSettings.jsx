@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
+import { useObjectSettingsState } from 'store/store';
 
 import mirroringImage from "../../../assets/icons/Mirroring.png"
 
 export default function ObjectSettings() {
-    const [objectSize, setObjectSize] = useState(20);
-    const [objectOpacity, setObjectOpacity] = useState(1);
-    const [objectRotation, setObjectRotation] = useState(0);
-    const [objectSaturation, setObjectSaturation] = useState(0.5);
-    const [objectBrightness, setObjectBrightness] = useState(0.5);
-    const [objectContrast, setObjectContrast] = useState(0.5);
+    const {
+        objectSize, setObjectSize,
+        objectOpacity, setObjectOpacity,
+        objectRotation, setObjectRotation,
+        objectSaturation, setObjectSaturation,
+        objectBrightness, setObjectBrightness,
+        objectContrast, setObjectContrast,
+        isUseRandomObjects, setIsUseRandomObjects,
+    } = useObjectSettingsState();
 
     const handleSliderChange = (value, setValue) => {
         setValue(value);
@@ -47,7 +51,7 @@ export default function ObjectSettings() {
                         </div>
                     </div>
 
-                    <button className="button-text-usual active">Использовать случайные</button>
+                    <button className={`button-text-usual ${isUseRandomObjects === true ? 'active' : ''}`} onClick={() => setIsUseRandomObjects(!isUseRandomObjects)}>Использовать случайные</button>
                 </div>
                 
                 <div className='flex-col-top-left flex-gap-10'>

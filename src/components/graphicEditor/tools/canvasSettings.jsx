@@ -16,22 +16,14 @@ export default function CanvasSettings() {
     } = useTextureStore();
 
     const {
-        canvasWidth,
-        setCanvasWidth,
-        canvasHeight,
-        setCanvasHeight,
-        filterIntensity,
-        setFilterIntensity,
-        isResetRequired,
-        setIsResetRequired,
-        backgroundColorMode,
-        setBackgroundColorMode,
-        currentBackgroundTexture,
-        setCurrentBackgroundTexture,
-        canvasBackgroundColor,
-        setCanvasBackgroundColor,
-        selectedFilter,
-        setSelectedFilter,
+        canvasWidth, setCanvasWidth,
+        canvasHeight, setCanvasHeight,
+        filterIntensity, setFilterIntensity,
+        isResetRequired, setIsResetRequired,
+        backgroundColorMode, setBackgroundColorMode,
+        currentBackgroundTexture, setCurrentBackgroundTexture,
+        canvasBackgroundColor, setCanvasBackgroundColor,
+        selectedFilter, setSelectedFilter,
         filtersList
     } = useCanvasSettingsStore();
     

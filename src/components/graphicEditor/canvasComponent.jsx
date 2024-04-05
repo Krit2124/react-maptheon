@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric-all-modules';
-import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState } from 'store/store';
+import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState, useObjectSettingsState } from 'store/store';
+
+import BanditImage from "../../assets/objects/bandit.png";
 
 export default function CanvasComponent() {
     const {
@@ -49,6 +51,16 @@ export default function CanvasComponent() {
       labelAlign, setLabelAlign,
       selectedTextObject, setSelectedTextObject,
   } = useLabelSettingsState();
+
+  const {
+    objectSize, setObjectSize,
+    objectOpacity, setObjectOpacity,
+    objectRotation, setObjectRotation,
+    objectSaturation, setObjectSaturation,
+    objectBrightness, setObjectBrightness,
+    objectContrast, setObjectContrast,
+    isUseRandomObjects, setIsUseRandomObjects,
+} = useObjectSettingsState();
 
     // Холсты и рабочая область
     const lowerCanvasRef = useRef(null);
@@ -174,13 +186,15 @@ export default function CanvasComponent() {
         lowerCanvasRef.current.renderAll();
       }
 
-      // Обработка добавления подписи на холст
+      // Обработка добавления подписи и объектов на холст
       const handleCanvasClick = (event) => {
+        var p = middleCanvasRef.current.getPointer(event);
+
         if (currentTool === 'Label' && currentLabelValue !== '') {
           // Создание нового текстового объекта
           const text = new fabric.Text(currentLabelValue, {
-            left: event.pointer.x,
-            top: event.pointer.y,
+            left: p.x,
+            top: p.y,
             fill: labelColor,
             fontSize: fontSize,
             fontFamily: selectedFont,
@@ -199,6 +213,22 @@ export default function CanvasComponent() {
       
           // Обновление холста
           middleCanvasRef.current.renderAll();
+        }
+
+        if (currentTool === 'Object') {
+          fabric.Image.fromURL(BanditImage, (img) => {
+            const image = new fabric.Image(img.getElement(), {
+                left: p.x,
+                top: p.y,
+                width: 240,
+                height: 240,
+                opacity: objectOpacity,
+                angle: objectRotation,
+            });
+    
+            middleCanvasRef.current.add(image);
+            middleCanvasRef.current.renderAll();
+          });
         }
       };
 
@@ -415,7 +445,7 @@ export default function CanvasComponent() {
       let middleContainer = document.querySelector('.canvas-middle-container');
 
       // Переключение активных слоёв
-      if (currentTool === 'Canvas' || currentTool === null || currentTool === 'Object' || currentTool === 'Label') {
+      if (currentTool === 'Canvas' || currentTool === 'Object' || currentTool === 'Label') {
 
         // Отключение событий с верхнего слоя
         // @ts-ignore
@@ -424,6 +454,8 @@ export default function CanvasComponent() {
         // Включение событий для среднего слоя
         // @ts-ignore
         middleContainer.style.pointerEvents = 'auto';
+
+        setSelectedTextObject(null);
 
       } else if (currentTool === 'Brush') {
         if (currentBrushLayerRef.current === 'upper') {
@@ -442,6 +474,14 @@ export default function CanvasComponent() {
           // @ts-ignore
           middleContainer.style.pointerEvents = 'none';
         }
+      } else if (currentTool === null) {
+        // Отключение событий с верхнего слоя
+        // @ts-ignore
+        upperContainer.style.pointerEvents = 'none';
+
+        // Включение событий для среднего слоя
+        // @ts-ignore
+        middleContainer.style.pointerEvents = 'auto';
       }
 
       // Изменение свойств нарисованных объектов, чтобы их нельзя было выделять
