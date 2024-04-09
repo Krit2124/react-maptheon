@@ -14,12 +14,12 @@ export default function BrushSettings() {
     const {
         brushColorMode,
         setBrushColorMode,
-        currentBrushTexture,
-        setCurrentBrushTexture,
+        brushTexture,
+        setBrushTexture,
         brushColor,
         setBrushColor,
-        currentBrushLayer,
-        setCurrentBrushLayer,
+        brushCurrentLayer,
+        setBrushCurrentLayer,
         brushThickness,
         setBrushThickness,
         brushShape,
@@ -52,7 +52,7 @@ export default function BrushSettings() {
 
     // Обработка смены текстуры
     const handleTextureClick = (texture) => {
-        setCurrentBrushTexture(texture);
+        setBrushTexture(texture);
         updateRecentlyUsedTextures(texture);
     };
 
@@ -75,7 +75,7 @@ export default function BrushSettings() {
 
     // Обработка смены слоя кисти
     const handleLayerButtonClick = (layer) => {
-        setCurrentBrushLayer(layer);
+        setBrushCurrentLayer(layer);
     };
 
     // Обработка смены формы кисти
@@ -97,8 +97,8 @@ export default function BrushSettings() {
                         <ChromePicker color={brushColor} onChange={handleChangeBackgroundColor} disableAlpha={true} />
                     ) : brushColorMode === 'texture' ? (
                         <div className='flex-col-top-left flex-gap-10'>
-                            <div className='currentTexture' style={{ backgroundImage: currentBrushTexture ? `url(${currentBrushTexture})` : 'none' }}>
-                                {currentBrushTexture && <div className="overlay"></div>}
+                            <div className='currentTexture' style={{ backgroundImage: brushTexture ? `url(${brushTexture})` : 'none' }}>
+                                {brushTexture && <div className="overlay"></div>}
                             </div>
 
                             <p>Недавно использованные</p>
@@ -115,11 +115,11 @@ export default function BrushSettings() {
                     <p>Изменяемый слой</p>
 
                     <div className="flex-row-left-c flex-gap-10">
-                    <button className={`button-text-usual ${currentBrushLayer === 'lower' ? 'active' : ''}`} onClick={() => handleLayerButtonClick('lower')}>
+                    <button className={`button-text-usual ${brushCurrentLayer === 'lower' ? 'active' : ''}`} onClick={() => handleLayerButtonClick('lower')}>
                         Фон
                     </button>
 
-                    <button className={`button-text-usual ${currentBrushLayer === 'upper' ? 'active' : ''}`} onClick={() => handleLayerButtonClick('upper')}>
+                    <button className={`button-text-usual ${brushCurrentLayer === 'upper' ? 'active' : ''}`} onClick={() => handleLayerButtonClick('upper')}>
                         Верхний слой
                     </button>
                     </div>

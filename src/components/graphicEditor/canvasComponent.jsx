@@ -11,14 +11,14 @@ export default function CanvasComponent() {
       isUndoRequired, setIsUndoRequired,
       isRedoRequired, setIsRedoRequired,
       setIsToolSettingsPanelVisible,
-      setChoosenObject,
+      setTypeOfChoosenObject,
     } = useGeneralGraphicEditorStore();
     
     const {
         brushColorMode,
-        currentBrushTexture,
+        brushTexture,
         brushColor,
-        currentBrushLayer,
+        brushCurrentLayer,
         brushThickness,
         brushShape,
         brushOpacity,
@@ -30,24 +30,24 @@ export default function CanvasComponent() {
       canvasHeight,
       filterIntensity,
       isResetRequired, setIsResetRequired,
-      backgroundColorMode,
-      currentBackgroundTexture,
+      canvasBackgroundIsColorMode,
+      canvasBackgroundTexture,
       canvasBackgroundColor,
-      selectedFilter,
+      filterSelected,
     } = useCanvasSettingsStore();
 
     const {
-      currentLabelValue, setCurrentLabelValue,
-      fontSize, setFontSize,
-      letterSpacing, setLetterSpacing,
-      lineSpacing, setLineSpacing,
+      labelText, setLabelText,
+      labelFontSize, setLabelFontSize,
+      labelCharSpacing, setLabelCharSpacing,
+      labelLineHeight, setLabelLineHeight,
       labelRotation, setLabelRotation,
       labelBorderWidth, setLabelBorderWidth,
-      selectedFont, setSelectedFont,
+      labelFont, setLabelFont,
       labelColor, setLabelColor,
       labelBorderColor, setLabelBorderColor,
-      isLabelBold, setIsLabelBold,
-      isLabelItalic, setIsLabelItalic,
+      labelIsBold, setLabelIsBold,
+      labelIsItalic, setLabelIsItalic,
       labelAlign, setLabelAlign,
       labelSelected, setLabelSelected,
   } = useLabelSettingsState();
@@ -71,21 +71,21 @@ export default function CanvasComponent() {
     const workingAreaRef = useRef(null);
   
     // Нужно для корректной работы событий холстов
-    const currentBrushLayerRef = useRef(currentBrushLayer);
+    const brushCurrentLayerRef = useRef(brushCurrentLayer);
     const brushOpacityRef = useRef(brushOpacity);
     const brushColorModeRef = useRef(brushColorMode);
 
     useEffect(() => {
-      currentBrushLayerRef.current = currentBrushLayer;
+      brushCurrentLayerRef.current = brushCurrentLayer;
 
       // Рисование при выборе кисти
       const handleMouseDown = (event) => {
         if (event.button === 0) {
           if (currentTool === "Brush") {
-            if (currentBrushLayerRef.current === 'upper') {
+            if (brushCurrentLayerRef.current === 'upper') {
               upperCanvasRef.current.isDrawingMode = true;
               upperCanvasRef.current.freeDrawingBrush.onMouseDown(event);
-            } else if (currentBrushLayerRef.current === 'lower') {
+            } else if (brushCurrentLayerRef.current === 'lower') {
               lowerCanvasRef.current.isDrawingMode = true;
               lowerCanvasRef.current.freeDrawingBrush.onMouseDown(event);
             }
@@ -96,17 +96,17 @@ export default function CanvasComponent() {
       const handleMouseMove = (event) => {
         if (event.button === 0) {
           if (currentTool === "Brush") {
-            (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush.onMouseMove(event);
+            (brushCurrentLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush.onMouseMove(event);
           }
         }
       };
       
       const handleMouseUp = () => {
         if (currentTool === "Brush") {
-          if (currentBrushLayerRef.current === 'upper') {
+          if (brushCurrentLayerRef.current === 'upper') {
             upperCanvasRef.current.isDrawingMode = false;
             upperCanvasRef.current.freeDrawingBrush.onMouseUp();
-          } else if (currentBrushLayerRef.current === 'lower') {
+          } else if (brushCurrentLayerRef.current === 'lower') {
             lowerCanvasRef.current.isDrawingMode = false;
             lowerCanvasRef.current.freeDrawingBrush.onMouseUp();
           }
@@ -171,10 +171,10 @@ export default function CanvasComponent() {
         });
 
         // Установка цвета фона или текстуры фона для рабочей области
-        if (backgroundColorMode) {
+        if (canvasBackgroundIsColorMode) {
           workingAreaRef.current.set('fill', canvasBackgroundColor);
         } else {
-          fabric.util.loadImage(currentBackgroundTexture, function(img) {
+          fabric.util.loadImage(canvasBackgroundTexture, function(img) {
             const texture = new fabric.Pattern({
               source: img,
               repeat: 'repeat'
@@ -190,24 +190,24 @@ export default function CanvasComponent() {
 
       // Обработка добавления подписи и объектов на холст
       const handleCanvasClick = (event) => {
-        var p = middleCanvasRef.current.getPointer(event);
+        var coords = middleCanvasRef.current.getPointer(event);
 
-        if (currentTool === 'Label' && currentLabelValue !== '') {
+        if (currentTool === 'Label' && labelText !== '') {
           // Создание нового текстового объекта
-          const text = new fabric.Text(currentLabelValue, {
-            left: p.x,
-            top: p.y,
+          const text = new fabric.Text(labelText, {
+            left: coords.x,
+            top: coords.y,
             fill: labelColor,
-            fontSize: fontSize,
-            fontFamily: selectedFont,
+            labelFontSize: labelFontSize,
+            fontFamily: labelFont,
             angle: labelRotation,
             stroke: labelBorderColor,
             strokeWidth: labelBorderWidth,
-            fontWeight: isLabelBold ? 'bold' : 'normal',
-            fontStyle: isLabelItalic ? 'italic' : 'normal',
+            fontWeight: labelIsBold ? 'bold' : 'normal',
+            fontStyle: labelIsItalic ? 'italic' : 'normal',
             textAlign: labelAlign,
-            charSpacing: letterSpacing * 500,
-            lineHeight: lineSpacing,
+            charSpacing: labelCharSpacing * 500,
+            lineHeight: labelLineHeight,
           });
       
           // Добавление текстового объекта на холст
@@ -220,8 +220,8 @@ export default function CanvasComponent() {
         if (currentTool === 'Object') {
           fabric.Image.fromURL(BanditImage, (img) => {
             const image = new fabric.Image(img.getElement(), {
-              left: p.x,
-              top: p.y,
+              left: coords.x,
+              top: coords.y,
               width: img.originalWidth,
               height: img.originalHeight,
               opacity: objectOpacity,
@@ -255,19 +255,19 @@ export default function CanvasComponent() {
           if (selectedObject.type === 'text') {
             setCurrentTool(null);
             setIsToolSettingsPanelVisible(true);
-            setChoosenObject('Label')
+            setTypeOfChoosenObject('Label')
             
-            setCurrentLabelValue(selectedObject.text);
-            setFontSize(selectedObject.fontSize);
-            setLetterSpacing(selectedObject.charSpacing / 500);
-            setLineSpacing(selectedObject.lineHeight);
+            setLabelText(selectedObject.text);
+            setLabelFontSize(selectedObject.labelFontSize);
+            setLabelCharSpacing(selectedObject.charSpacing / 500);
+            setLabelLineHeight(selectedObject.lineHeight);
             setLabelRotation(selectedObject.angle);
             setLabelBorderWidth(selectedObject.strokeWidth);
-            setSelectedFont(selectedObject.fontFamily);
+            setLabelFont(selectedObject.fontFamily);
             setLabelColor(selectedObject.fill);
             setLabelBorderColor(selectedObject.stroke);
-            setIsLabelBold(selectedObject.fontWeight === "bold");
-            setIsLabelItalic(selectedObject.fontStyle === "italic");
+            setLabelIsBold(selectedObject.fontWeight === "bold");
+            setLabelIsItalic(selectedObject.fontStyle === "italic");
             setLabelAlign(selectedObject.textAlign);
 
             setLabelSelected(selectedObject);
@@ -279,7 +279,7 @@ export default function CanvasComponent() {
       const handleCanvasObjectCleared = (event) => {
         setLabelSelected(null);
         setIsToolSettingsPanelVisible(false);
-        setChoosenObject(null);
+        setTypeOfChoosenObject(null);
       };
 
       // Создание среднего холста
@@ -440,20 +440,6 @@ export default function CanvasComponent() {
         isDragging = false;
       }
 
-      // Сброс масштабирования (функционал скрыт)
-      if (isResetRequired) {
-        const centerX = canvasWidth / 2;
-        const centerY = canvasHeight / 2;
-
-        lowerCanvasRef.current.zoomToPoint({ x: centerX, y: centerY }, 1);
-        middleCanvasRef.current.zoomToPoint({ x: centerX, y: centerY }, 1);
-        upperCanvasRef.current.zoomToPoint({ x: centerX, y: centerY }, 1);
-
-        lowerCanvasRef.current.centerObject(workingAreaRef.current);
-
-        setIsResetRequired(false);
-      }
-
       let upperContainer = document.querySelector('.canvas-upper-container');
       let middleContainer = document.querySelector('.canvas-middle-container');
 
@@ -471,13 +457,13 @@ export default function CanvasComponent() {
         setLabelSelected(null);
 
       } else if (currentTool === 'Brush') {
-        if (currentBrushLayerRef.current === 'upper') {
+        if (brushCurrentLayerRef.current === 'upper') {
 
           // Включение событий для верхнего слоя
           // @ts-ignore
           upperContainer.style.pointerEvents = 'auto';
 
-        } else if (currentBrushLayerRef.current === 'lower') {
+        } else if (brushCurrentLayerRef.current === 'lower') {
 
           // Отключение событий с верхнего слоя
           // @ts-ignore
@@ -517,30 +503,30 @@ export default function CanvasComponent() {
       const createBrush = () => {
         if (brushColorMode === 'color') {
           // Создание обычной кисти
-          const colorBrush = new fabric.PencilBrush((currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current));
+          const colorBrush = new fabric.PencilBrush((brushCurrentLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current));
           colorBrush.color = `rgba(${parseInt(brushColor.slice(1, 3), 16)}, ${parseInt(brushColor.slice(3, 5), 16)}, ${parseInt(brushColor.slice(5, 7), 16)}, ${brushOpacity})`;
           colorBrush.width = brushThickness;
           colorBrush.strokeLineCap = brushShape;
-          (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush = colorBrush;
+          (brushCurrentLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush = colorBrush;
         } else if (brushColorMode === 'texture') {
           // Создание кисти с текстурой
           const textureImage = new Image();
           textureImage.onload = function () {
-            const textureBrush = new fabric.PatternBrush((currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current));
+            const textureBrush = new fabric.PatternBrush((brushCurrentLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current));
             // @ts-ignore Помечается как ошибка, но без этого не работает
             textureBrush.source = this;
             textureBrush.color = brushColor;
             textureBrush.width = brushThickness;
             textureBrush.strokeLineCap = brushShape;
-            (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush = textureBrush;
+            (brushCurrentLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush = textureBrush;
           };
-          textureImage.src = currentBrushTexture;
+          textureImage.src = brushTexture;
         } else if (brushColorMode === 'eraser') {
           // Создание ластика
-          const eraserBrush = new fabric.EraserBrush((currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current));
+          const eraserBrush = new fabric.EraserBrush((brushCurrentLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current));
           eraserBrush.width = brushThickness;
           eraserBrush.strokeLineCap = brushShape;
-          (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush = eraserBrush;
+          (brushCurrentLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).freeDrawingBrush = eraserBrush;
         }
       };
 
@@ -549,10 +535,10 @@ export default function CanvasComponent() {
 
       // Установка обработчиков рисования кистью при смене инструмента
       if (currentTool === "Brush") {
-        (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).isDrawingMode = true;
+        (brushCurrentLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).isDrawingMode = true;
       } else {
         // Выключение режима рисования при смене инструмента
-        (currentBrushLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).isDrawingMode = false;
+        (brushCurrentLayerRef.current === 'upper' ? upperCanvasRef.current : lowerCanvasRef.current).isDrawingMode = false;
 
         disableBrushObjectsSelection();
       }
@@ -580,7 +566,7 @@ export default function CanvasComponent() {
         upperCanvasRef.current.off('mouse:move', handleMouseMove);
         upperCanvasRef.current.off('mouse:up', handleMouseUp);
       };
-    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue, fontSize, letterSpacing, lineSpacing, labelRotation, labelBorderWidth, selectedFont, labelColor, labelBorderColor, isLabelBold, isLabelItalic, labelAlign, setCurrentTool, setFontSize, setIsLabelBold, setIsLabelItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLetterSpacing, setLineSpacing, setSelectedFont, setLabelSelected, labelSelected, setCurrentLabelValue, labelSelected, setChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast,objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored,]);
+    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, labelSelected, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast,objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored,]);
 
     // Экспорт изображения карты
     useEffect(() => {

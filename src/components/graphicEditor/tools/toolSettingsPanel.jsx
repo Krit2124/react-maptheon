@@ -12,7 +12,7 @@ export default function ToolSettingsPanel() {
     const {
         currentTool,
         setIsToolSettingsPanelVisible,
-        choosenObject,
+        typeOfChoosenObject,
     } = useGeneralGraphicEditorStore();
 
     const [panelLabel, setPanelLabel] = useState("Свойства инструмента");
@@ -31,12 +31,12 @@ export default function ToolSettingsPanel() {
             setPanelLabel("Свойства подписи");
         } else if (currentTool === "Canvas") {
             setPanelLabel("Свойства холста");
-        } else if (choosenObject === "Label") {
+        } else if (typeOfChoosenObject === "Label") {
             setPanelLabel("Свойства подписи");
-        } else if ( choosenObject === "Canvas") {
+        } else if ( typeOfChoosenObject === "Canvas") {
             setPanelLabel("Свойства холста");
         }
-    }, [currentTool, choosenObject]);
+    }, [currentTool, typeOfChoosenObject]);
 
     return (
         <div className="border-black-right background-black canvasPanel size-full-vertical-pagePercent-withHeader flex-col-top-left flex-gap-25">
@@ -53,7 +53,7 @@ export default function ToolSettingsPanel() {
             : currentTool === "Object" ? <ObjectSettings/> 
             : currentTool === "Label" ? <LabelSettings/> 
             : currentTool === "Canvas" ? <CanvasSettings/>
-            : choosenObject === "Label" ? <LabelSettings/> 
+            : typeOfChoosenObject === "Label" ? <LabelSettings/> 
             : null}
         </div>
     );

@@ -28,8 +28,8 @@ export const useGeneralGraphicEditorStore = create((set)=> ({
     currentTool: null,
     setCurrentTool: (value) => set({ currentTool: value }),
 
-    choosenObject: null,
-    setChoosenObject: (value) => set({ choosenObject: value }),
+    typeOfChoosenObject: null,
+    setTypeOfChoosenObject: (value) => set({ typeOfChoosenObject: value }),
 }))
 
 export const useTextureStore = create((set)=> ({
@@ -52,17 +52,14 @@ export const useCanvasSettingsStore = create((set)=> ({
     canvasHeight: 600,
     setCanvasHeight: (value) => set({ canvasHeight: value }),
   
-    isResetRequired: false,
-    setIsResetRequired: (value) => set({ isResetRequired: value }),
-  
-    backgroundColorMode: true,
-    setBackgroundColorMode: (value) => set({ backgroundColorMode: value }),
+    canvasBackgroundIsColorMode: true,
+    setCanvasBackgroundIsColorMode: (value) => set({ canvasBackgroundIsColorMode: value }),
   
     canvasBackgroundColor: '#ffffff',
     setCanvasBackgroundColor: (value) => set({ canvasBackgroundColor: value }),
   
-    currentBackgroundTexture: grassImage,
-    setCurrentBackgroundTexture: (value) => set({ currentBackgroundTexture: value }),
+    canvasBackgroundTexture: grassImage,
+    setCanvasBackgroundTexture: (value) => set({ canvasBackgroundTexture: value }),
   
     filtersList: [
       { name: 'Без фильтра', filter: null },
@@ -70,8 +67,8 @@ export const useCanvasSettingsStore = create((set)=> ({
       { name: 'Сепия', filter: new fabric.Image.filters.Sepia() },
     ],
   
-    selectedFilter: { name: 'Без фильтра', filter: null },
-    setSelectedFilter: (value) => set({ selectedFilter: value }),
+    filterSelected: { name: 'Без фильтра', filter: null },
+    setFilterSelected: (value) => set({ filterSelected: value }),
   
     filterIntensity: 1,
     setFilterIntensity: (value) => set({ filterIntensity: value }),
@@ -82,14 +79,14 @@ export const useBrushSettingsStore = create((set)=> ({
     brushColorMode: 'color',
     setBrushColorMode: (value) => set({ brushColorMode: value }),
   
-    currentBrushTexture: grassImage,
-    setCurrentBrushTexture: (value) => set({ currentBrushTexture: value }),
+    brushTexture: grassImage,
+    setBrushTexture: (value) => set({ brushTexture: value }),
   
     brushColor: '#000000',
     setBrushColor: (value) => set({ brushColor: value }),
   
-    currentBrushLayer: 'lower',
-    setCurrentBrushLayer: (value) => set({ currentBrushLayer: value }),
+    brushCurrentLayer: 'lower',
+    setBrushCurrentLayer: (value) => set({ brushCurrentLayer: value }),
   
     brushThickness: 20,
     setBrushThickness: (value) => set({ brushThickness: value }),
@@ -106,17 +103,17 @@ export const useBrushSettingsStore = create((set)=> ({
 
 export const useLabelSettingsState = create((set) => ({
     // Настройки текста
-    currentLabelValue: '',
-    setCurrentLabelValue: (value) => set({ currentLabelValue: value }),
+    labelText: '',
+    setLabelText: (value) => set({ labelText: value }),
 
-    fontSize: 20,
-    setFontSize: (value) => set({ fontSize: value }),
+    labelFontSize: 20,
+    setLabelFontSize: (value) => set({ labelFontSize: value }),
   
-    letterSpacing: 0.5,
-    setLetterSpacing: (value) => set({ letterSpacing: value }),
+    labelCharSpacing: 0.5,
+    setLabelCharSpacing: (value) => set({ labelCharSpacing: value }),
   
-    lineSpacing: 1,
-    setLineSpacing: (value) => set({ lineSpacing: value }),
+    labelLineHeight: 1,
+    setLabelLineHeight: (value) => set({ labelLineHeight: value }),
   
     labelRotation: 0,
     setLabelRotation: (value) => set({ labelRotation: value }),
@@ -124,8 +121,8 @@ export const useLabelSettingsState = create((set) => ({
     labelBorderWidth: 0,
     setLabelBorderWidth: (value) => set({ labelBorderWidth: value }),
 
-    selectedFont: 'Times New Roman',
-    setSelectedFont: (value) => set({ selectedFont: value }),
+    labelFont: 'Times New Roman',
+    setLabelFont: (value) => set({ labelFont: value }),
 
     labelColor: '#000000',
     setLabelColor: (value) => set({ labelColor: value }),
@@ -133,11 +130,11 @@ export const useLabelSettingsState = create((set) => ({
     labelBorderColor: '#000000',
     setLabelBorderColor: (value) => set({ labelBorderColor: value }),
 
-    isLabelBold: false,
-    setIsLabelBold: (value) => set({ isLabelBold: value }),
+    labelIsBold: false,
+    setLabelIsBold: (value) => set({ labelIsBold: value }),
 
-    isLabelItalic: false,
-    setIsLabelItalic: (value) => set({ isLabelItalic: value }),
+    labelIsItalic: false,
+    setLabelIsItalic: (value) => set({ labelIsItalic: value }),
 
     labelAlign: 'left',
     setLabelAlign: (value) => set({ labelAlign: value }),

@@ -20,10 +20,10 @@ export default function CanvasSettings() {
         canvasHeight, setCanvasHeight,
         filterIntensity, setFilterIntensity,
         isResetRequired, setIsResetRequired,
-        backgroundColorMode, setBackgroundColorMode,
-        currentBackgroundTexture, setCurrentBackgroundTexture,
+        canvasBackgroundIsColorMode, setCanvasBackgroundIsColorMode,
+        canvasBackgroundTexture, setCanvasBackgroundTexture,
         canvasBackgroundColor, setCanvasBackgroundColor,
-        selectedFilter, setSelectedFilter,
+        filterSelected, setFilterSelected,
         filtersList
     } = useCanvasSettingsStore();
     
@@ -73,19 +73,14 @@ export default function CanvasSettings() {
         setCanvasHeight(tempHeight);
     };
 
-    // Обработка сброса масштабирования
-    const handleZoomReset = () => {
-        setIsResetRequired(true)
-    };
-
     // Обработка переключения текстуры и цвета
     const handleToggleMode = (value) => {
-        setBackgroundColorMode(value);
+        setCanvasBackgroundIsColorMode(value);
     };
 
     // Обработка смены текстуры
     const handleTextureClick = (texture) => {
-        setCurrentBackgroundTexture(texture);
+        setCanvasBackgroundTexture(texture);
         updateRecentlyUsedTextures(texture);
     };
 
@@ -110,7 +105,7 @@ export default function CanvasSettings() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const handleFilterSelect = (filterOption) => {
-        setSelectedFilter(filterOption);
+        setFilterSelected(filterOption);
     };
 
     const handleDropdownToggle = () => {
@@ -142,24 +137,22 @@ export default function CanvasSettings() {
                         <img src={reverseImage} alt="Развернуть"/>
                     </button>
                 </div>
-
-                {/* <button className='button-text-usual' onClick={handleZoomReset}>Сбросить масштабирование</button> */}
             </div>
 
             <div className='flex-col-top-left flex-gap-10'>
                 <h2>Фон</h2>
 
                 <div className="flex-row-left-c flex-gap-10">
-                    <button className={`button-text-usual ${!backgroundColorMode ? 'active' : ''}`} onClick={() => handleToggleMode(false)}>Текстура</button>
-                    <button className={`button-text-usual ${backgroundColorMode ? 'active' : ''}`} onClick={() => handleToggleMode(true)}>Цвет</button>
+                    <button className={`button-text-usual ${!canvasBackgroundIsColorMode ? 'active' : ''}`} onClick={() => handleToggleMode(false)}>Текстура</button>
+                    <button className={`button-text-usual ${canvasBackgroundIsColorMode ? 'active' : ''}`} onClick={() => handleToggleMode(true)}>Цвет</button>
                 </div>
 
-                {backgroundColorMode ? (
+                {canvasBackgroundIsColorMode ? (
                     <ChromePicker color={canvasBackgroundColor} onChange={handleChangeBackgroundColor} disableAlpha={true} />
                 ) : (
                     <div className='flex-col-top-left flex-gap-10'>
-                        <div className='currentTexture' style={{ backgroundImage: currentBackgroundTexture ? `url(${currentBackgroundTexture})` : 'none' }}>
-                            {currentBackgroundTexture && <div className="overlay"></div>}
+                        <div className='currentTexture' style={{ backgroundImage: canvasBackgroundTexture ? `url(${canvasBackgroundTexture})` : 'none' }}>
+                            {canvasBackgroundTexture && <div className="overlay"></div>}
                         </div>
 
                         <p>Недавно использованные</p>
@@ -178,7 +171,7 @@ export default function CanvasSettings() {
                 <div className='flex-row-sb-c size-full-horizontal-percent'>
                     <DropdownButton className='flex-col-sb-right white-border-when-active'  onToggle={handleDropdownToggle} align="end" title={
                         <span className='button-text-usual'>
-                            {selectedFilter.name}
+                            {filterSelected.name}
                             <img
                                 src={showOrHideImage}
                                 alt="Показать или скрыть"
