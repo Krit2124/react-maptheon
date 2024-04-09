@@ -49,7 +49,7 @@ export default function CanvasComponent() {
       isLabelBold, setIsLabelBold,
       isLabelItalic, setIsLabelItalic,
       labelAlign, setLabelAlign,
-      selectedTextObject, setSelectedTextObject,
+      labelSelected, setLabelSelected,
   } = useLabelSettingsState();
 
   const {
@@ -59,7 +59,9 @@ export default function CanvasComponent() {
     objectSaturation, setObjectSaturation,
     objectBrightness, setObjectBrightness,
     objectContrast, setObjectContrast,
-    isUseRandomObjects, setIsUseRandomObjects,
+    objectIsUseRandom, setObjectIsUseRandom,
+    objectIsHorizontalMirrored, setObjectIsHorizontalMirrored,
+    objectIsVerticalMirrored, setObjectIsVerticalMirrored
 } = useObjectSettingsState();
 
     // Холсты и рабочая область
@@ -114,15 +116,15 @@ export default function CanvasComponent() {
       // Создание нижнего холста
       if (lowerCanvasRef.current == null) {
         const lowerCanvas = new fabric.Canvas('lowerCanvas', {
-          width: window.innerWidth,
-          height: window.innerHeight,
-          containerClass: 'canvas-lower-container'
+          width: window.screen.width,
+          height: window.screen.height,
+          containerClass: 'canvas-lower-container',
         });
 
         // Создание рабочей области
         const workingArea = new fabric.Rect({
-          left: (window.innerWidth - canvasWidth) / 2,
-          top: (window.innerHeight - canvasHeight) / 2,
+          left: (window.screen.width - canvasWidth) / 2,
+          top: (window.screen.height - canvasHeight) / 2,
           width: canvasWidth,
           height: canvasHeight,
           fill: canvasBackgroundColor,
@@ -157,15 +159,15 @@ export default function CanvasComponent() {
         });
       } else {
         lowerCanvasRef.current.set({
-          width: window.innerWidth,
-          height: window.innerHeight,
+          width: window.screen.width,
+          height: window.screen.height,
         });
 
         workingAreaRef.current.set({
           width: canvasWidth,
           height: canvasHeight,
-          left: (window.innerWidth - canvasWidth) / 2,
-          top: (window.innerHeight - canvasHeight) / 2,
+          left: (window.screen.width - canvasWidth) / 2,
+          top: (window.screen.height - canvasHeight) / 2,
         });
 
         // Установка цвета фона или текстуры фона для рабочей области
@@ -218,13 +220,24 @@ export default function CanvasComponent() {
         if (currentTool === 'Object') {
           fabric.Image.fromURL(BanditImage, (img) => {
             const image = new fabric.Image(img.getElement(), {
-                left: p.x,
-                top: p.y,
-                width: 240,
-                height: 240,
-                opacity: objectOpacity,
-                angle: objectRotation,
+              left: p.x,
+              top: p.y,
+              width: img.originalWidth,
+              height: img.originalHeight,
+              opacity: objectOpacity,
+              angle: objectRotation,
+              scaleX: objectSize / 100,
+              scaleY: objectSize / 100,
+              flipX: objectIsHorizontalMirrored,
+              flipY: objectIsVerticalMirrored,
+              filters: [
+                new fabric.Image.filters.Saturation({ saturation: objectSaturation }),
+                new fabric.Image.filters.Brightness({ brightness: objectBrightness }),
+                new fabric.Image.filters.Contrast({ contrast: objectContrast }),
+              ]
             });
+
+            console.log(image);
     
             middleCanvasRef.current.add(image);
             middleCanvasRef.current.renderAll();
@@ -257,14 +270,14 @@ export default function CanvasComponent() {
             setIsLabelItalic(selectedObject.fontStyle === "italic");
             setLabelAlign(selectedObject.textAlign);
 
-            setSelectedTextObject(selectedObject);
+            setLabelSelected(selectedObject);
           }
         }
       };
 
       // Обработка снятия выбора 
       const handleCanvasObjectCleared = (event) => {
-        setSelectedTextObject(null);
+        setLabelSelected(null);
         setIsToolSettingsPanelVisible(false);
         setChoosenObject(null);
       };
@@ -272,14 +285,14 @@ export default function CanvasComponent() {
       // Создание среднего холста
       if (middleCanvasRef.current == null) {
         const middleCanvas = new fabric.Canvas('middleCanvas', {
-          width: window.innerWidth,
-          height: window.innerHeight,
+          width: window.screen.width,
+          height: window.screen.height,
           containerClass: 'canvas-middle-container',
         });
 
         const rect = new fabric.Rect({
-          left: (window.innerWidth - canvasWidth) / 2,
-          top: (window.innerHeight - canvasHeight) / 2,
+          left: (window.screen.width - canvasWidth) / 2,
+          top: (window.screen.height - canvasHeight) / 2,
           fill: 'red',
           width: 100,
           height: 100,
@@ -302,8 +315,8 @@ export default function CanvasComponent() {
         middleCanvasRef.current.on('selection:cleared', handleCanvasObjectCleared);
       } else {
         middleCanvasRef.current.set({
-          width: window.innerWidth,
-          height: window.innerHeight,
+          width: window.screen.width,
+          height: window.screen.height,
         });
 
         if (currentTool === 'Label' || currentTool === 'Object') {
@@ -327,8 +340,8 @@ export default function CanvasComponent() {
       brushColorModeRef.current = brushColorMode;
       if (upperCanvasRef.current == null) {
         const upperCanvas = new fabric.Canvas('upperCanvas', {
-          width: window.innerWidth,
-          height: window.innerHeight,
+          width: window.screen.width,
+          height: window.screen.height,
           containerClass: 'canvas-upper-container'
         });
 
@@ -355,8 +368,8 @@ export default function CanvasComponent() {
         });
       } else {
         upperCanvasRef.current.set({
-          width: window.innerWidth,
-          height: window.innerHeight,
+          width: window.screen.width,
+          height: window.screen.height,
         });
 
         upperCanvasRef.current.renderAll();
@@ -455,7 +468,7 @@ export default function CanvasComponent() {
         // @ts-ignore
         middleContainer.style.pointerEvents = 'auto';
 
-        setSelectedTextObject(null);
+        setLabelSelected(null);
 
       } else if (currentTool === 'Brush') {
         if (currentBrushLayerRef.current === 'upper') {
@@ -567,7 +580,7 @@ export default function CanvasComponent() {
         upperCanvasRef.current.off('mouse:move', handleMouseMove);
         upperCanvasRef.current.off('mouse:up', handleMouseUp);
       };
-    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue, fontSize, letterSpacing, lineSpacing, labelRotation, labelBorderWidth, selectedFont, labelColor, labelBorderColor, isLabelBold, isLabelItalic, labelAlign, setCurrentTool, setFontSize, setIsLabelBold, setIsLabelItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLetterSpacing, setLineSpacing, setSelectedFont, setSelectedTextObject, selectedTextObject, setCurrentLabelValue, selectedTextObject, setChoosenObject]);
+    }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, currentBrushLayer, currentTool, brushColorMode, currentBrushTexture, backgroundColorMode, currentBackgroundTexture, brushShape, currentLabelValue, fontSize, letterSpacing, lineSpacing, labelRotation, labelBorderWidth, selectedFont, labelColor, labelBorderColor, isLabelBold, isLabelItalic, labelAlign, setCurrentTool, setFontSize, setIsLabelBold, setIsLabelItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLetterSpacing, setLineSpacing, setSelectedFont, setLabelSelected, labelSelected, setCurrentLabelValue, labelSelected, setChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast,objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored,]);
 
     // Экспорт изображения карты
     useEffect(() => {
@@ -579,8 +592,8 @@ export default function CanvasComponent() {
         });
     
         // Определяем центр рабочей области
-        const centerX = (window.innerWidth - canvasWidth) / 2;
-        const centerY = (window.innerHeight - canvasHeight) / 2;
+        const centerX = (window.screen.width - canvasWidth) / 2;
+        const centerY = (window.screen.height - canvasHeight) / 2;
         tempCanvas.absolutePan({
           x: centerX,
           y: centerY

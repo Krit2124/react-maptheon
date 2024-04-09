@@ -142,8 +142,8 @@ export const useLabelSettingsState = create((set) => ({
     labelAlign: 'left',
     setLabelAlign: (value) => set({ labelAlign: value }),
 
-    selectedTextObject: null,
-    setSelectedTextObject: (value) => set({ selectedTextObject: value }),
+    labelSelected: null,
+    setLabelSelected: (value) => set({ labelSelected: value }),
 }));
 
 export const useObjectSettingsState = create((set) => ({
@@ -156,15 +156,21 @@ export const useObjectSettingsState = create((set) => ({
     objectRotation: 0,
     setObjectRotation: (value) => set({ objectRotation: value }),
 
-    objectSaturation: 0.5,
+    objectSaturation: 0.1,
     setObjectSaturation: (value) => set({ objectSaturation: value }),
 
-    objectBrightness: 0.5,
+    objectBrightness: 0,
     setObjectBrightness: (value) => set({ objectBrightness: value }),
 
-    objectContrast: 0.5,
+    objectContrast: 0,
     setObjectContrast: (value) => set({ objectContrast: value }),
 
-    isUseRandomObjects: true,
-    setIsUseRandomObjects: (value) => set({ isUseRandomObjects: value }),
+    objectIsUseRandom: true,
+    setObjectIsUseRandom: (value) => set({ objectIsUseRandom: value }),
+
+    objectIsHorizontalMirrored: false,
+    setObjectIsHorizontalMirrored: (value) => set({ objectIsHorizontalMirrored: value }),
+
+    objectIsVerticalMirrored: false,
+    setObjectIsVerticalMirrored: (value) => set({ objectIsVerticalMirrored: value }),
 }));

@@ -25,7 +25,7 @@ export default function LabelSettings() {
         isLabelBold, setIsLabelBold,
         isLabelItalic, setIsLabelItalic,
         labelAlign, setLabelAlign,
-        selectedTextObject, setSelectedTextObject,
+        labelSelected, setLabelSelected,
     } = useLabelSettingsState();
     
     // Обработка изменения шрифта
@@ -58,88 +58,88 @@ export default function LabelSettings() {
 
     // Обработки изменения значений свойств
     const handleTextChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.text = value;
+        if (labelSelected != null) {
+            labelSelected.text = value;
         }
         setCurrentLabelValue(value);
         setTextareaValue(value);
     };
 
     const handleFontChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.fontFamily = value;
+        if (labelSelected != null) {
+            labelSelected.fontFamily = value;
         } 
         setSelectedFont(value);
     };
 
     const handleFontSizeChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.fontSize = value;
+        if (labelSelected != null) {
+            labelSelected.fontSize = value;
         }
         setFontSize(value);
     };
 
     const handleBorderWidthChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.strokeWidth = value;
+        if (labelSelected != null) {
+            labelSelected.strokeWidth = value;
         }
         setLabelBorderWidth(value);
     };
 
     const handleBorderColorChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.stroke = value;
+        if (labelSelected != null) {
+            labelSelected.stroke = value;
         }
         setLabelBorderColor(value);
     };
 
     const handleFontColorChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.fill = value;
+        if (labelSelected != null) {
+            labelSelected.fill = value;
         }
         setLabelColor(value);
     };
 
     const handleIsBoldChange = (value) => {
-        if (selectedTextObject != null) {
-            if (value === true) selectedTextObject.fontWeight = 'bold';
-            else selectedTextObject.fontWeight = 'normal'
+        if (labelSelected != null) {
+            if (value === true) labelSelected.fontWeight = 'bold';
+            else labelSelected.fontWeight = 'normal'
         }
         setIsLabelBold(value);
     };
 
     const handleIsItalicChange = (value) => {
-        if (selectedTextObject != null) {
-            if (value === true) selectedTextObject.fontStyle = 'italic';
-            else selectedTextObject.fontStyle = 'normal'
+        if (labelSelected != null) {
+            if (value === true) labelSelected.fontStyle = 'italic';
+            else labelSelected.fontStyle = 'normal'
         }
         setIsLabelItalic(value);
     };
 
     const handleAlignChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.textAlign = value;
+        if (labelSelected != null) {
+            labelSelected.textAlign = value;
         }
         setLabelAlign(value);
     };
 
     const handleLetterSpacingChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.charSpacing = value * 500;
+        if (labelSelected != null) {
+            labelSelected.charSpacing = value * 500;
         }
         setLetterSpacing(value);
     };
 
     const handleLineSpacingChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.lineHeight = value;
+        if (labelSelected != null) {
+            labelSelected.lineHeight = value;
         }
         setLineSpacing(value);
     };
 
     const handleRotationChange = (value) => {
-        if (selectedTextObject != null) {
-            selectedTextObject.angle = value;
+        if (labelSelected != null) {
+            labelSelected.angle = value;
         }
         setLabelRotation(value);
     };

@@ -11,7 +11,9 @@ export default function ObjectSettings() {
         objectSaturation, setObjectSaturation,
         objectBrightness, setObjectBrightness,
         objectContrast, setObjectContrast,
-        isUseRandomObjects, setIsUseRandomObjects,
+        objectIsUseRandom, setObjectIsUseRandom,
+        objectIsHorizontalMirrored, setObjectIsHorizontalMirrored,
+        objectIsVerticalMirrored, setObjectIsVerticalMirrored
     } = useObjectSettingsState();
 
     const handleSliderChange = (value, setValue) => {
@@ -51,7 +53,7 @@ export default function ObjectSettings() {
                         </div>
                     </div>
 
-                    <button className={`button-text-usual ${isUseRandomObjects === true ? 'active' : ''}`} onClick={() => setIsUseRandomObjects(!isUseRandomObjects)}>Использовать случайные</button>
+                    <button className={`button-text-usual ${objectIsUseRandom === true ? 'active' : ''}`} onClick={() => setObjectIsUseRandom(!objectIsUseRandom)}>Использовать случайные</button>
                 </div>
                 
                 <div className='flex-col-top-left flex-gap-10'>
@@ -92,11 +94,11 @@ export default function ObjectSettings() {
                 </div>
 
                 <div className="flex-row-sb-c flex-gap-10">
-                    <button className='button-image-medium'>
+                    <button className={`button-image-medium ${objectIsHorizontalMirrored === true ? 'active' : ''}`} onClick={() => setObjectIsHorizontalMirrored(!objectIsHorizontalMirrored)}>
                         <img src={mirroringImage} alt="Отзеркалить по горизонтали"/>
                     </button>
 
-                    <button className='button-image-medium'>
+                    <button className={`button-image-medium ${objectIsVerticalMirrored === true ? 'active' : ''}`} onClick={() => setObjectIsVerticalMirrored(!objectIsVerticalMirrored)}>
                         <img src={mirroringImage} alt="Отзеркалить по вертикали" className='rotate-left'/>
                     </button>
                 </div>
