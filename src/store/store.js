@@ -102,7 +102,7 @@ export const useBrushSettingsStore = create((set)=> ({
 }))
 
 export const useLabelSettingsState = create((set) => ({
-    // Настройки текста
+    // Настройки подписи
     labelText: '',
     setLabelText: (value) => set({ labelText: value }),
 
@@ -139,12 +139,19 @@ export const useLabelSettingsState = create((set) => ({
     labelAlign: 'left',
     setLabelAlign: (value) => set({ labelAlign: value }),
 
+    labelOpacity: 1,
+    setLabelOpacity: (value) => set({ labelOpacity: value }),
+
     labelSelected: null,
     setLabelSelected: (value) => set({ labelSelected: value }),
 }));
 
 export const useObjectSettingsState = create((set) => ({
-    objectSize: 100,
+    objectIsUseRandom: true,
+    setObjectIsUseRandom: (value) => set({ objectIsUseRandom: value }),
+
+    // Настройки объекта
+    objectSize: 50,
     setObjectSize: (value) => set({ objectSize: value }),
 
     objectOpacity: 1,
@@ -162,12 +169,12 @@ export const useObjectSettingsState = create((set) => ({
     objectContrast: 0,
     setObjectContrast: (value) => set({ objectContrast: value }),
 
-    objectIsUseRandom: true,
-    setObjectIsUseRandom: (value) => set({ objectIsUseRandom: value }),
-
     objectIsHorizontalMirrored: false,
     setObjectIsHorizontalMirrored: (value) => set({ objectIsHorizontalMirrored: value }),
 
     objectIsVerticalMirrored: false,
     setObjectIsVerticalMirrored: (value) => set({ objectIsVerticalMirrored: value }),
+
+    objectSelected: null,
+    setObjectSelected: (value) => set({ objectSelected: value }),
 }));

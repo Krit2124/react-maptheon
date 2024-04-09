@@ -31,6 +31,8 @@ export default function ToolSettingsPanel() {
             setPanelLabel("Свойства подписи");
         } else if (currentTool === "Canvas") {
             setPanelLabel("Свойства холста");
+        } else if (typeOfChoosenObject === "Object") {
+            setPanelLabel("Свойства объекта");
         } else if (typeOfChoosenObject === "Label") {
             setPanelLabel("Свойства подписи");
         } else if ( typeOfChoosenObject === "Canvas") {
@@ -54,6 +56,7 @@ export default function ToolSettingsPanel() {
             : currentTool === "Label" ? <LabelSettings/> 
             : currentTool === "Canvas" ? <CanvasSettings/>
             : typeOfChoosenObject === "Label" ? <LabelSettings/> 
+            : typeOfChoosenObject === "Object" ? <ObjectSettings/>
             : null}
         </div>
     );

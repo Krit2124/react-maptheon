@@ -95,11 +95,11 @@ export default function ObjectSettings() {
 
                 <div className="flex-row-sb-c flex-gap-10">
                     <button className={`button-image-medium ${objectIsHorizontalMirrored === true ? 'active' : ''}`} onClick={() => setObjectIsHorizontalMirrored(!objectIsHorizontalMirrored)}>
-                        <img src={mirroringImage} alt="Отзеркалить по горизонтали"/>
+                        <img src={mirroringImage} alt="Отзеркалить по горизонтали" className='rotate-left'/>
                     </button>
 
                     <button className={`button-image-medium ${objectIsVerticalMirrored === true ? 'active' : ''}`} onClick={() => setObjectIsVerticalMirrored(!objectIsVerticalMirrored)}>
-                        <img src={mirroringImage} alt="Отзеркалить по вертикали" className='rotate-left'/>
+                        <img src={mirroringImage} alt="Отзеркалить по вертикали"/>
                     </button>
                 </div>
             </div>

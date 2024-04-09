@@ -26,14 +26,11 @@ export default function LabelSettings() {
         labelIsItalic, setLabelIsItalic,
         labelAlign, setLabelAlign,
         labelSelected, setLabelSelected,
+        labelOpacity, setLabelOpacity,
     } = useLabelSettingsState();
     
     // Обработка изменения шрифта
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-    const handleFontSelect = (fontOption) => {
-        setLabelFont(fontOption);
-    };
 
     const handleDropdownToggle = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -58,90 +55,8 @@ export default function LabelSettings() {
 
     // Обработки изменения значений свойств
     const handleTextChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.text = value;
-        }
         setLabelText(value);
         setTextareaValue(value);
-    };
-
-    const handleFontChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.fontFamily = value;
-        } 
-        setLabelFont(value);
-    };
-
-    const handleFontSizeChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.labelFontSize = value;
-        }
-        setLabelFontSize(value);
-    };
-
-    const handleBorderWidthChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.strokeWidth = value;
-        }
-        setLabelBorderWidth(value);
-    };
-
-    const handleBorderColorChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.stroke = value;
-        }
-        setLabelBorderColor(value);
-    };
-
-    const handleFontColorChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.fill = value;
-        }
-        setLabelColor(value);
-    };
-
-    const handleIsBoldChange = (value) => {
-        if (labelSelected != null) {
-            if (value === true) labelSelected.fontWeight = 'bold';
-            else labelSelected.fontWeight = 'normal'
-        }
-        setLabelIsBold(value);
-    };
-
-    const handleIsItalicChange = (value) => {
-        if (labelSelected != null) {
-            if (value === true) labelSelected.fontStyle = 'italic';
-            else labelSelected.fontStyle = 'normal'
-        }
-        setLabelIsItalic(value);
-    };
-
-    const handleAlignChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.textAlign = value;
-        }
-        setLabelAlign(value);
-    };
-
-    const handleLetterSpacingChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.charSpacing = value * 500;
-        }
-        setLabelCharSpacing(value);
-    };
-
-    const handleLineSpacingChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.lineHeight = value;
-        }
-        setLabelLineHeight(value);
-    };
-
-    const handleRotationChange = (value) => {
-        if (labelSelected != null) {
-            labelSelected.angle = value;
-        }
-        setLabelRotation(value);
     };
 
     return (
@@ -176,9 +91,9 @@ export default function LabelSettings() {
                     </span>
                 }>
                     <div className='flex-col-sb-right'>
-                        <Dropdown.Item onClick={() => handleFontChange('Times New Roman')}>Times New Roman</Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleFontChange('Verdana')}>Verdana</Dropdown.Item>
-                        <Dropdown.Item onClick={() => handleFontChange('Segoe UI')}>Segoe UI</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setLabelFont('Times New Roman')}>Times New Roman</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setLabelFont('Verdana')}>Verdana</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setLabelFont('Segoe UI')}>Segoe UI</Dropdown.Item>
                     </div>
                 </DropdownButton>
             </div>
@@ -187,8 +102,17 @@ export default function LabelSettings() {
                 <p>Размер шрифта</p>
 
                 <div className="flex-row-sb-c size-full-horizontal-percent">
-                    <input type="range" min="8" max="72" value={labelFontSize} onChange={(e) => handleSliderChange(parseInt(e.target.value), handleFontSizeChange)}/>
-                    <input type="number" min="8" max="72" value={labelFontSize} onChange={(e) => handleInputChange(parseInt(e.target.value), handleFontSizeChange, 8, 72)}/>
+                    <input type="range" min="8" max="72" value={labelFontSize} onChange={(e) => handleSliderChange(parseInt(e.target.value), setLabelFontSize)}/>
+                    <input type="number" min="8" max="72" value={labelFontSize} onChange={(e) => handleInputChange(parseInt(e.target.value), setLabelFontSize, 8, 72)}/>
+                </div>
+            </div>
+
+            <div className='flex-col-top-left flex-gap-10 size-full-horizontal-percent'>
+                <p>Прозрачность</p>
+
+                <div className="flex-row-sb-c size-full-horizontal-percent">
+                    <input type="range" min="0" max="1" step={0.01} value={labelOpacity} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setLabelOpacity)}/>
+                    <input type="number" min="0" max="1" step={0.01} value={labelOpacity} onChange={(e) => handleInputChange(parseFloat(e.target.value), setLabelOpacity, 0, 1)}/>
                 </div>
             </div>
 
@@ -199,35 +123,35 @@ export default function LabelSettings() {
                 </div>
 
                 <div className="flex-col-sb-left flex-gap-10">
-                    <input type="color" value={labelColor} onChange={(e) => handleFontColorChange(e.target.value)} />
+                    <input type="color" value={labelColor} onChange={(e) => setLabelColor(e.target.value)} />
                     <div className='flex-row-sb-c flex-gap-15'>
-                        <input type="color" value={labelBorderColor} onChange={(e) => handleBorderColorChange(e.target.value)} />
-                        <input type="number" min="0" max="10" onChange={(e) => handleInputChange(parseFloat(e.target.value), handleBorderWidthChange, 0, 10)}/>
+                        <input type="color" value={labelBorderColor} onChange={(e) => setLabelBorderColor(e.target.value)} />
+                        <input type="number" min="0" max="10" value={labelBorderWidth} onChange={(e) => handleInputChange(parseFloat(e.target.value), setLabelBorderWidth, 0, 10)}/>
                     </div>
                 </div>
             </div>
 
             <div className="flex-row-sb-c size-full-horizontal-percent">
                 <div className="flex-row-sb-c flex-gap-5">
-                    <button className={`button-image-medium ${labelIsBold ? 'active' : ''}`} onClick={() => handleIsBoldChange(!labelIsBold)}>
+                    <button className={`button-image-medium ${labelIsBold ? 'active' : ''}`} onClick={() => setLabelIsBold(!labelIsBold)}>
                         <img src={boldFontImage} alt="Жирный шрифт"/>
                     </button>
 
-                    <button className={`button-image-medium ${labelIsItalic ? 'active' : ''}`} onClick={() => handleIsItalicChange(!labelIsItalic)}>
+                    <button className={`button-image-medium ${labelIsItalic ? 'active' : ''}`} onClick={() => setLabelIsItalic(!labelIsItalic)}>
                         <img src={italicFontImage} alt="Курсивный шрифт"/>
                     </button>
                 </div>
 
                 <div className="flex-row-sb-c flex-gap-5">
-                    <button className={`button-image-medium ${labelAlign === 'left' ? 'active' : ''}`} onClick={() => handleAlignChange('left')}>
+                    <button className={`button-image-medium ${labelAlign === 'left' ? 'active' : ''}`} onClick={() => setLabelAlign('left')}>
                         <img src={leftAlignmentImage} alt="Выравнивание по левому краю"/>
                     </button>
 
-                    <button className={`button-image-medium ${labelAlign === 'center' ? 'active' : ''}`} onClick={() => handleAlignChange('center')}>
+                    <button className={`button-image-medium ${labelAlign === 'center' ? 'active' : ''}`} onClick={() => setLabelAlign('center')}>
                         <img src={centerAlignmentImage} alt="Выравнивание по центру"/>
                     </button>
 
-                    <button className={`button-image-medium ${labelAlign === 'right' ? 'active' : ''}`} onClick={() => handleAlignChange('right')}>
+                    <button className={`button-image-medium ${labelAlign === 'right' ? 'active' : ''}`} onClick={() => setLabelAlign('right')}>
                         <img src={rightAlignmentImage} alt="Выравнивание по правому краю"/>
                     </button>
                 </div>
@@ -237,8 +161,8 @@ export default function LabelSettings() {
                 <p>Межбуквенный интервал</p>
 
                 <div className="flex-row-sb-c size-full-horizontal-percent">
-                    <input type="range" min="0" max="10" step="0.1" value={labelCharSpacing} onChange={(e) => handleSliderChange(parseFloat(e.target.value), handleLetterSpacingChange)}/>
-                    <input type="number" min="0" max="10" step="0.1" value={labelCharSpacing} onChange={(e) => handleInputChange(parseFloat(e.target.value), handleLetterSpacingChange, 0, 10)}/>
+                    <input type="range" min="0" max="10" step="0.1" value={labelCharSpacing} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setLabelCharSpacing)}/>
+                    <input type="number" min="0" max="10" step="0.1" value={labelCharSpacing} onChange={(e) => handleInputChange(parseFloat(e.target.value), setLabelCharSpacing, 0, 10)}/>
                 </div>
             </div>
 
@@ -246,14 +170,14 @@ export default function LabelSettings() {
                 <p>Междустрочный интервал</p>
 
                 <div className="flex-row-sb-c size-full-horizontal-percent">
-                    <input type="range" min="0.5" max="3" step="0.1" value={labelLineHeight} onChange={(e) => handleSliderChange(parseFloat(e.target.value), handleLineSpacingChange)}/>
-                    <input type="number" min="0.5" max="3" step="0.1" value={labelLineHeight} onChange={(e) => handleInputChange(parseFloat(e.target.value), handleLineSpacingChange, 0.5, 3)}/>
+                    <input type="range" min="0.5" max="3" step="0.1" value={labelLineHeight} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setLabelLineHeight)}/>
+                    <input type="number" min="0.5" max="3" step="0.1" value={labelLineHeight} onChange={(e) => handleInputChange(parseFloat(e.target.value), setLabelLineHeight, 0.5, 3)}/>
                 </div>
             </div>
 
             <div className="flex-row-sb-c flex-gap-10">
                 <p>Поворот (°)</p>
-                <input type="number" min="0" max="360" value={labelRotation} onChange={(e) => handleInputChange(parseInt(e.target.value), handleRotationChange, 0, 360)}/>
+                <input type="number" min="0" max="360" value={labelRotation} onChange={(e) => handleInputChange(parseInt(e.target.value), setLabelRotation, 0, 360)}/>
             </div>
         </div>
     );
