@@ -163,8 +163,6 @@ export default function CanvasComponent() {
       workingAreaRef.current.set({
         width: canvasWidth,
         height: canvasHeight,
-        left: (window.screen.width - canvasWidth) / 2,
-        top: (window.screen.height - canvasHeight) / 2,
       });
 
       // Установка цвета фона или текстуры фона для рабочей области
@@ -177,7 +175,6 @@ export default function CanvasComponent() {
             repeat: 'repeat'
           });
           workingAreaRef.current.set('fill', texture);
-          workingAreaRef.current.dirty = true;
           workingAreaRef.current.canvas.renderAll();
         });
       }
@@ -187,11 +184,11 @@ export default function CanvasComponent() {
 
     // Обработка добавления подписи и объектов на холст
     const handleCanvasClick = (event) => {
+      //Получение координат курсора
       var coords = middleCanvasRef.current.getPointer(event);
 
       // Подпись
       if (currentTool === 'Label' && labelText !== '') {
-        // Создание нового текстового объекта
         const text = new fabric.Text(labelText, {
           left: coords.x,
           top: coords.y,
@@ -309,12 +306,10 @@ export default function CanvasComponent() {
         scaleY: objectSize / 100,
         flipX: objectIsHorizontalMirrored,
         flipY: objectIsVerticalMirrored,
-        filters: [
-          new fabric.Image.filters.Saturation({ saturation: objectSaturation }),
-          new fabric.Image.filters.Brightness({ brightness: objectBrightness }),
-          new fabric.Image.filters.Contrast({ contrast: objectContrast }),
-        ]
       });
+      objectSelected.filters[0].saturation = objectSaturation;
+      objectSelected.filters[1].brightness = objectBrightness;
+      objectSelected.filters[2].contrast = objectContrast;
     } else if (typeOfChoosenObject === 'Label') {
       labelSelected.set({
         text: labelText,
@@ -396,6 +391,7 @@ export default function CanvasComponent() {
 
       middleCanvasRef.current.renderAll();
     } 
+    // Присвоение события удаления объекта
     document.addEventListener('keydown', handleKeyDown);
 
     middleCanvasRef.current.on('mouse:down', handleCanvasClick);
@@ -431,13 +427,6 @@ export default function CanvasComponent() {
           lastDrawnObject.set('opacity', brushOpacityRef.current);
         }
       });
-    } else {
-      upperCanvasRef.current.set({
-        width: window.screen.width,
-        height: window.screen.height,
-      });
-
-      upperCanvasRef.current.renderAll();
     }
 
     const mainContainer = document.getElementById('canvasContainer');
@@ -636,7 +625,7 @@ export default function CanvasComponent() {
       upperCanvasRef.current.off('mouse:move', handleMouseMove);
       upperCanvasRef.current.off('mouse:up', handleMouseUp);
     };
-  }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, labelSelected, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast,objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored, labelOpacity]);
+  }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, labelSelected, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast, objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored, labelOpacity]);
 
   // Экспорт изображения карты
   useEffect(() => {
