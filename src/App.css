@@ -13,8 +13,8 @@
   color: white;
   font-size: 16px;
   /* Кастомизация полосы прокрутки для Firefox */
-  scrollbar-color: var(--background-gray) none;
-  scrollbar-width: thin;
+  /* scrollbar-color: var(--background-gray) none;
+  scrollbar-width: thin; */
 }
 
 /* Полосы прокрутки */
@@ -90,6 +90,13 @@ a {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+}
+
+.flex-row-left-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .flex-row-c-c {
@@ -173,6 +180,10 @@ a {
 
 .flex-gap-8 {
   gap: 8px;
+}
+
+.flex-gap-7 {
+  gap: 7px;
 }
 
 .flex-gap-6 {
@@ -545,6 +556,38 @@ header {
   min-width: 250px;
 }
 
+.mainObject {
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.otherObjectsBox {
+  width: 167px;
+  height: 100px;
+  overflow-y: auto;
+}
+
+.otherObject {
+  width: 47px;
+  height: 47px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.recentGroupOfObjects {
+  width: 60px;
+  height: 60px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
 /* Canvas */
 .header-graphicEditor {
   position: relative;
@@ -556,7 +599,7 @@ header {
   background-color: var(--background-gray);
   position:fixed;
   width: 100%;
-  height: calc(100vh - 72px);
+  min-height: calc(100vh - 72px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -606,24 +649,6 @@ header {
   width: 49px;
   height: 19px;
   background-color: white;
-}
-
-.bigObjectPlaceholder {
-  width: 100px;
-  height: 100px;
-  background-color: var(--background-beige);
-}
-
-.mediumObjectPlaceholder {
-  width: 60px;
-  height: 60px;
-  background-color: var(--background-beige);
-}
-
-.smallObjectPlaceholder {
-  width: 47px;
-  height: 47px;
-  background-color: var(--background-beige);
 }
 
 .tinyObjectPlaceholder {

@@ -7,6 +7,28 @@ import sandImage from "../assets/textures/sand.jpg";
 import snowImage from "../assets/textures/snow.jpg";
 import stoneTileImage from "../assets/textures/stoneTile.jpg";
 
+import rock1Image from "../assets/objects/rock1.png";
+import rock2Image from "../assets/objects/rock2.png";
+import rock3Image from "../assets/objects/rock3.png";
+import rock4Image from "../assets/objects/rock4.png";
+import rock5Image from "../assets/objects/rock5.png";
+import rock6Image from "../assets/objects/rock6.png";
+import rock7Image from "../assets/objects/rock7.png";
+import rock8Image from "../assets/objects/rock8.png";
+import rock9Image from "../assets/objects/rock9.png";
+import rock10Image from "../assets/objects/rock10.png";
+import rock11Image from "../assets/objects/rock11.png";
+import rock12Image from "../assets/objects/rock12.png";
+import rock13Image from "../assets/objects/rock13.png";
+import rock14Image from "../assets/objects/rock14.png";
+import rock15Image from "../assets/objects/rock15.png";
+import rock16Image from "../assets/objects/rock16.png";
+import rock17Image from "../assets/objects/rock17.png";
+
+import tree1Image from "../assets/objects/tree1.png";
+import tree2Image from "../assets/objects/tree2.png";
+import tree3Image from "../assets/objects/tree3.png";
+
 export const useGeneralGraphicEditorStore = create((set)=> ({
     // Действия с графическим редактором
     isExportRequired: false,
@@ -40,8 +62,40 @@ export const useTextureStore = create((set)=> ({
         sandImage,
         snowImage,
         stoneTileImage
+    ],
+
+    setRecentlyUsedTextures: (value) => set({ recentlyUsedTextures: value }),
+}))
+
+export const useObjectsStore = create((set)=> ({
+    // Список недавно использованных текстур
+    recentlyUsedObjects: [
+        [
+            rock1Image,
+            rock2Image,
+            rock3Image,
+            rock4Image,
+            rock5Image,
+            rock6Image,
+            rock7Image,
+            rock8Image,
+            rock9Image,
+            rock10Image,
+            rock11Image,
+            rock12Image,
+            rock13Image,
+            rock14Image,
+            rock15Image,
+            rock16Image,
+            rock17Image,
+        ],
+        [
+            tree1Image,
+            tree2Image,
+            tree3Image,
+        ],
       ],
-      setRecentlyUsedTextures: (value) => set({ recentlyUsedTextures: value }),
+      setRecentlyUsedObjects: (value) => set({ recentlyUsedObjects: value }),
 }))
 
 export const useCanvasSettingsStore = create((set)=> ({

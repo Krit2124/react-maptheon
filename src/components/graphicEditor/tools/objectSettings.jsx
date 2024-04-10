@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useObjectSettingsState } from 'store/store';
+import { useObjectSettingsState, useObjectsStore } from 'store/store';
 
 import mirroringImage from "../../../assets/icons/Mirroring.png"
 
@@ -13,9 +13,14 @@ export default function ObjectSettings() {
         objectContrast, setObjectContrast,
         objectIsUseRandom, setObjectIsUseRandom,
         objectIsHorizontalMirrored, setObjectIsHorizontalMirrored,
-        objectIsVerticalMirrored, setObjectIsVerticalMirrored
+        objectIsVerticalMirrored, setObjectIsVerticalMirrored,
     } = useObjectSettingsState();
 
+    const {
+        recentlyUsedObjects, setRecentlyUsedObjects,
+    } = useObjectsStore();
+
+    // Обработка параметров с ползунками
     const handleSliderChange = (value, setValue) => {
         setValue(value);
     };
@@ -30,26 +35,67 @@ export default function ObjectSettings() {
         setValue(value);
     };
 
+    // Обработка смены объектов
+    // Группы
+    const handleObjectGroupClick = (group) => {
+        updateRecentlyUsedGroupOfObjects(group);
+    };
+
+    const updateRecentlyUsedGroupOfObjects = (group) => {
+        // Проверка, была ли выбрана эта группа ранее
+        const groupIndex = recentlyUsedObjects.findIndex(obj => obj === group);
+    
+        if (groupIndex === -1) {
+            // Если группа новая, добавляем её в начало списка
+            setRecentlyUsedObjects([group, ...recentlyUsedObjects]);
+        } else if (groupIndex !== 0) {
+            // Если группа уже была выбрана и не находится на первом месте, перемещаем её на первое место
+            const updatedGroups = [...recentlyUsedObjects];
+            updatedGroups.splice(groupIndex, 1);
+            updatedGroups.unshift(group);
+            setRecentlyUsedObjects(updatedGroups);
+        }
+    };
+
+    // Конкретного объекта
+    const handleObjectClick = (image) => {
+        updateRecentlyUsedObjectOrder(image);
+    };
+    
+    const updateRecentlyUsedObjectOrder = (selectedImage) => {
+        // Находим индекс выбранного объекта в группе
+        const groupIndex = Object.values(recentlyUsedObjects[0]).findIndex(img => img === selectedImage);
+    
+        if (groupIndex !== -1 && groupIndex !== 0) {
+            // Клонируем массив объектов в выбранной группе
+            const updatedGroup = [...Object.values(recentlyUsedObjects[0])];
+            
+            // Удаляем выбранный объект из массива и добавляем его на первое место
+            updatedGroup.splice(groupIndex, 1);
+            updatedGroup.unshift(selectedImage);
+    
+            // Обновляем состояние recentlyUsedObjects
+            const updatedObjects = [...recentlyUsedObjects];
+            updatedObjects[0] = Object.fromEntries(updatedGroup.map((image, index) => [index, image]));
+            
+            setRecentlyUsedObjects(updatedObjects);
+        }
+    };
+
     return (
         <div className='flex-col-top-left flex-gap-25 size-full-horizontal-percent'>
             <div className='flex-col-top-left flex-gap-15'>
                 <div className='flex-col-top-left flex-gap-10'>
                     <div className='flex-row-sb-c flex-gap-8'>
-                        <div className='bigObjectPlaceholder'></div>
+                        {/* Первый (текущий) объект */}
+                        <div className='mainObject' style={{ backgroundImage: `url(${Object.values(recentlyUsedObjects[0])[0]})` }}></div>
 
-                        <div className='flex-col-sb-c flex-gap-6'>
-                            <div className='smallObjectPlaceholder'></div>
-                            <div className='smallObjectPlaceholder'></div>
-                        </div>
-
-                        <div className='flex-col-sb-c flex-gap-6'>
-                            <div className='smallObjectPlaceholder'></div>
-                            <div className='smallObjectPlaceholder'></div>
-                        </div>
-
-                        <div className='flex-col-sb-c flex-gap-6'>
-                            <div className='smallObjectPlaceholder'></div>
-                            <div className='smallObjectPlaceholder'></div>
+                        <div className='otherObjectsBox flex-row-left-top flex-wrap flex-gap-6'>
+                            {Object.values(recentlyUsedObjects[0]).map((image, index) => (
+                                // Пропускаем первое изображение, так как оно уже отображено выше
+                                index === 0 ? null :
+                                <div key={index} className='otherObject' style={{ backgroundImage: `url(${image})` }} onClick={() => handleObjectClick(image)}/>
+                            ))}
                         </div>
                     </div>
 
@@ -59,11 +105,13 @@ export default function ObjectSettings() {
                 <div className='flex-col-top-left flex-gap-10'>
                     <p>Недавно использованные</p>
 
-                    <div className='flex-row-sb-c flex-gap-8'>
-                        <div className='mediumObjectPlaceholder'></div>
-                        <div className='mediumObjectPlaceholder'></div>
-                        <div className='mediumObjectPlaceholder'></div>
-                        <div className='mediumObjectPlaceholder'></div>
+                    <div className='flex-row-sb-c flex-gap-7'>
+                        {recentlyUsedObjects.map((group, index) => {
+                            const firstImage = Object.values(group)[0];
+                            return (
+                                <div key={index} className='recentGroupOfObjects' style={{ backgroundImage: `url(${firstImage})` }} onClick={() => handleObjectGroupClick(group)}></div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -108,8 +156,8 @@ export default function ObjectSettings() {
                 <p>Насыщенность</p>
 
                 <div className="flex-row-sb-c size-full-horizontal-percent">
-                    <input type="range" min="0" max="1" step={0.01} value={objectSaturation} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setObjectSaturation)}/>
-                    <input type="number" min="0" max="1" step={0.01} value={objectSaturation} onChange={(e) => handleInputChange(parseFloat(e.target.value), setObjectSaturation, 0, 1)}/>
+                    <input type="range" min="-1" max="1" step={0.01} value={objectSaturation} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setObjectSaturation)}/>
+                    <input type="number" min="-1" max="1" step={0.01} value={objectSaturation} onChange={(e) => handleInputChange(parseFloat(e.target.value), setObjectSaturation, -1, 1)}/>
                 </div>
             </div>
 
@@ -117,8 +165,8 @@ export default function ObjectSettings() {
                 <p>Яркость</p>
 
                 <div className="flex-row-sb-c size-full-horizontal-percent">
-                    <input type="range" min="0" max="1" step={0.01} value={objectBrightness} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setObjectBrightness)}/>
-                    <input type="number" min="0" max="1" step={0.01} value={objectBrightness} onChange={(e) => handleInputChange(parseFloat(e.target.value), setObjectBrightness, 0, 1)}/>
+                    <input type="range" min="-1" max="1" step={0.01} value={objectBrightness} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setObjectBrightness)}/>
+                    <input type="number" min="-1" max="1" step={0.01} value={objectBrightness} onChange={(e) => handleInputChange(parseFloat(e.target.value), setObjectBrightness, -1, 1)}/>
                 </div>
             </div>
 
@@ -126,8 +174,8 @@ export default function ObjectSettings() {
                 <p>Контрастность</p>
 
                 <div className="flex-row-sb-c size-full-horizontal-percent">
-                    <input type="range" min="0" max="1" step={0.01} value={objectContrast} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setObjectContrast)}/>
-                    <input type="number" min="0" max="1" step={0.01} value={objectContrast} onChange={(e) => handleInputChange(parseFloat(e.target.value), setObjectContrast, 0, 1)}/>
+                    <input type="range" min="-1" max="1" step={0.01} value={objectContrast} onChange={(e) => handleSliderChange(parseFloat(e.target.value), setObjectContrast)}/>
+                    <input type="number" min="-1" max="1" step={0.01} value={objectContrast} onChange={(e) => handleInputChange(parseFloat(e.target.value), setObjectContrast, -1, 1)}/>
                 </div>
             </div>
         </div>

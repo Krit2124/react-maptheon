@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric-all-modules';
-import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState, useObjectSettingsState } from 'store/store';
-
-import BanditImage from "../../assets/objects/bandit.png";
+import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState, useObjectSettingsState, useObjectsStore } from 'store/store';
 
 export default function CanvasComponent() {
   const {
@@ -15,14 +13,14 @@ export default function CanvasComponent() {
   } = useGeneralGraphicEditorStore();
   
   const {
-      brushColorMode,
-      brushTexture,
-      brushColor,
-      brushCurrentLayer,
-      brushThickness,
-      brushShape,
-      brushOpacity,
-      brushSoftness,
+    brushColorMode,
+    brushTexture,
+    brushColor,
+    brushCurrentLayer,
+    brushThickness,
+    brushShape,
+    brushOpacity,
+    brushSoftness,
   } = useBrushSettingsStore();
 
   const {
@@ -65,6 +63,10 @@ export default function CanvasComponent() {
     objectIsVerticalMirrored, setObjectIsVerticalMirrored,
     objectSelected, setObjectSelected,
   } = useObjectSettingsState();
+
+  const {
+    recentlyUsedObjects, setRecentlyUsedObjects,
+  } = useObjectsStore();
 
   // Холсты и рабочая область
   const lowerCanvasRef = useRef(null);
@@ -189,7 +191,7 @@ export default function CanvasComponent() {
 
       // Подпись
       if (currentTool === 'Label' && labelText !== '') {
-        const text = new fabric.Text(labelText, {
+        const text = new fabric.IText(labelText, {
           left: coords.x,
           top: coords.y,
           fill: labelColor,
@@ -212,7 +214,16 @@ export default function CanvasComponent() {
 
       // Объект
       if (currentTool === 'Object') {
-        fabric.Image.fromURL(BanditImage, (img) => {
+        let imageUrl;
+    
+        if (objectIsUseRandom) {
+          const randomIndex = Math.floor(Math.random() * Object.keys(recentlyUsedObjects[0]).length)
+            imageUrl = recentlyUsedObjects[0][randomIndex];
+        } else {
+            imageUrl = recentlyUsedObjects[0][0];
+        }
+
+        fabric.Image.fromURL(imageUrl, (img) => {
           const image = new fabric.Image(img.getElement(), {
             left: coords.x,
             top: coords.y,
@@ -228,7 +239,7 @@ export default function CanvasComponent() {
               new fabric.Image.filters.Saturation({ saturation: objectSaturation }),
               new fabric.Image.filters.Brightness({ brightness: objectBrightness }),
               new fabric.Image.filters.Contrast({ contrast: objectContrast }),
-            ]
+            ],
           });
   
           middleCanvasRef.current.add(image);
@@ -245,7 +256,7 @@ export default function CanvasComponent() {
         const selectedObject = selectedObjects[0];
 
         // Сохранение параметров выбранной подписи
-        if (selectedObject.type === 'text') {
+        if (selectedObject.type === 'i-text') {
           setCurrentTool(null);
           setIsToolSettingsPanelVisible(true);
           setTypeOfChoosenObject('Label');
@@ -310,6 +321,9 @@ export default function CanvasComponent() {
       objectSelected.filters[0].saturation = objectSaturation;
       objectSelected.filters[1].brightness = objectBrightness;
       objectSelected.filters[2].contrast = objectContrast;
+
+      // Применение фильтров
+      objectSelected.applyFilters();
     } else if (typeOfChoosenObject === 'Label') {
       labelSelected.set({
         text: labelText,
@@ -346,6 +360,8 @@ export default function CanvasComponent() {
         }
       }
     };
+    // Присвоение события удаления объекта
+    document.addEventListener('keydown', handleKeyDown);
 
     // Создание среднего холста
     if (middleCanvasRef.current == null) {
@@ -383,17 +399,12 @@ export default function CanvasComponent() {
         middleCanvasRef.current.set('selection', false);
         middleCanvasRef.current.set('skipTargetFind', true);
       } else {
-        middleCanvasRef.current.set({
-          selection: true,
-          skipTargetFind: false,
-        });
+        middleCanvasRef.current.set('selection', true);
+        middleCanvasRef.current.set('skipTargetFind', false);
       }
 
       middleCanvasRef.current.renderAll();
     } 
-    // Присвоение события удаления объекта
-    document.addEventListener('keydown', handleKeyDown);
-
     middleCanvasRef.current.on('mouse:down', handleCanvasClick);
 
     // Создание верхнего холста
@@ -625,7 +636,7 @@ export default function CanvasComponent() {
       upperCanvasRef.current.off('mouse:move', handleMouseMove);
       upperCanvasRef.current.off('mouse:up', handleMouseUp);
     };
-  }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, labelSelected, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast, objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored, labelOpacity]);
+  }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, labelSelected, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast, objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored, labelOpacity, recentlyUsedObjects]);
 
   // Экспорт изображения карты
   useEffect(() => {
