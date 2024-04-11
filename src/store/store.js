@@ -37,9 +37,11 @@ export const useGeneralGraphicEditorStore = create((set)=> ({
     isObjectListVisible: true,
     setIsObjectListVisible: (value) => set({ isObjectListVisible: value }),
 
+    // Требуется ли отмена последнего действия
     isUndoRequired: false,
     setIsUndoRequired: (value) => set({ isUndoRequired: value }),
 
+    // Требуется ли возврат последнего действия
     isRedoRequired: false,
     setIsRedoRequired: (value) => set({ isRedoRequired: value }),
 

@@ -638,6 +638,84 @@ export default function CanvasComponent() {
     };
   }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, labelSelected, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast, objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored, labelOpacity, recentlyUsedObjects]);
 
+  // Отмена и возврат последнего действия
+  useEffect(() => {
+    // Присвоение функций отслеживания действий
+    lowerCanvasRef.current.on("object:added", handleCanvasState);
+    middleCanvasRef.current.on("object:added", handleCanvasState);
+    upperCanvasRef.current.on("object:added", handleCanvasState);
+
+    lowerCanvasRef.current.on("object:modified", handleCanvasState);
+    middleCanvasRef.current.on("object:modified", handleCanvasState);
+    upperCanvasRef.current.on("object:modified", handleCanvasState);
+
+    // Функция отслеживания действий
+    function handleCanvasState(event) {
+      return function(event) {
+        const object = event.target;
+        object.saveState();
+        const currentState = JSON.stringify(object.originalState);
+        const { list, index } = canvasState[canvasKey];
+  
+        setCanvasState(prevState => ({
+          ...prevState,
+          [canvasKey]: {
+            list: [...list.slice(0, index), object, ...list.slice(index)],
+            index: index + 1,
+          },
+        }));
+      };
+    }
+
+    const [canvasState, setCanvasState] = useState({
+      lower: { list: [], index: 0 },
+      middle: { list: [], index: 0 },
+      upper: { list: [], index: 0 },
+    });
+
+    // Отмена последнего действия
+    if (isUndoRequired) {
+      setCanvasState(prevState => {
+        const { list, index } = prevState.lower;
+        if (index <= 0) return prevState;
+  
+        const previousState = JSON.parse(list[index - 1].originalState);
+        list[index - 1].setOptions(previousState);
+        list[index - 1].setCoords();
+        return {
+          ...prevState,
+          lower: {
+            list,
+            index: index - 1,
+          },
+        };
+      });
+      setIsUndoRequired(false);
+    }
+
+    // Возврат последнего действия
+    if (isRedoRequired) {
+      setCanvasState(prevState => {
+        const { list, index } = prevState.lower;
+        if (index >= list.length - 1) return prevState;
+  
+        const nextState = JSON.parse(list[index + 1].originalState);
+        list[index + 1].setOptions(nextState);
+        list[index + 1].setCoords();
+        return {
+          ...prevState,
+          lower: {
+            list,
+            index: index + 1,
+          },
+        };
+      });
+      setIsRedoRequired(false);
+    }
+
+    
+  }, [isUndoRequired, isRedoRequired]);
+
   // Экспорт изображения карты
   useEffect(() => {
     if (isExportRequired) {
