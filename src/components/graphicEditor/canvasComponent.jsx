@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric-all-modules';
 import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState, useObjectSettingsState, useObjectsStore } from 'store/store';
 
@@ -636,85 +636,102 @@ export default function CanvasComponent() {
       upperCanvasRef.current.off('mouse:move', handleMouseMove);
       upperCanvasRef.current.off('mouse:up', handleMouseUp);
     };
-  }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, labelSelected, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast, objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored, labelOpacity, recentlyUsedObjects]);
+  }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast, objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored, labelOpacity, recentlyUsedObjects, objectSelected, setLabelOpacity, setObjectBrightness, setObjectContrast, setObjectIsHorizontalMirrored, setObjectIsVerticalMirrored, setObjectOpacity, setObjectRotation, setObjectSaturation, setObjectSelected, setObjectSize, typeOfChoosenObject]);
 
-  // Отмена и возврат последнего действия
+  // Состояния холста
+  const [canvasState, setCanvasState] = useState({
+    list: [],
+    index: 0,
+  });
+  const [initialState, setInitialState] = useState(null); // Добавлено начальное состояние
+
+  useEffect(() => {
+    // Сохранение начального состояния холста при загрузке приложения
+    const initialCanvasState = JSON.stringify({
+      lowerCanvas: lowerCanvasRef.current.toObject(),
+      middleCanvas: middleCanvasRef.current.toObject(),
+      upperCanvas: upperCanvasRef.current.toObject(),
+    });
+    setInitialState(initialCanvasState);
+  }, []);
+    
+  // Функция отслеживания действий
+  const handleCanvasState = useCallback((event) => {
+    if (!isRedoRequired && !isUndoRequired) {
+      let object = event.target;
+
+      setCanvasState({
+          list: [...canvasState.list.slice(0, canvasState.index + 1), object.saveState()],
+          index: canvasState.index + 1,
+      });
+    }
+  }, [canvasState, isRedoRequired, isUndoRequired]);
+
   useEffect(() => {
     // Присвоение функций отслеживания действий
     lowerCanvasRef.current.on("object:added", handleCanvasState);
     middleCanvasRef.current.on("object:added", handleCanvasState);
     upperCanvasRef.current.on("object:added", handleCanvasState);
-
+  
     lowerCanvasRef.current.on("object:modified", handleCanvasState);
     middleCanvasRef.current.on("object:modified", handleCanvasState);
     upperCanvasRef.current.on("object:modified", handleCanvasState);
+  }, [handleCanvasState]);
 
-    // Функция отслеживания действий
-    function handleCanvasState(event) {
-      return function(event) {
-        const object = event.target;
-        object.saveState();
-        const currentState = JSON.stringify(object.originalState);
-        const { list, index } = canvasState[canvasKey];
+  useEffect(() => {
+    console.log(canvasState);
+  }, [canvasState]);
   
-        setCanvasState(prevState => ({
-          ...prevState,
-          [canvasKey]: {
-            list: [...list.slice(0, index), object, ...list.slice(index)],
-            index: index + 1,
-          },
-        }));
-      };
-    }
-
-    const [canvasState, setCanvasState] = useState({
-      lower: { list: [], index: 0 },
-      middle: { list: [], index: 0 },
-      upper: { list: [], index: 0 },
-    });
-
-    // Отмена последнего действия
+  // Отмена последнего действия
+  useEffect(() => {
     if (isUndoRequired) {
       setCanvasState(prevState => {
-        const { list, index } = prevState.lower;
-        if (index <= 0) return prevState;
-  
-        const previousState = JSON.parse(list[index - 1].originalState);
-        list[index - 1].setOptions(previousState);
-        list[index - 1].setCoords();
-        return {
-          ...prevState,
-          lower: {
-            list,
-            index: index - 1,
-          },
-        };
+        const currentIndex = prevState.index;
+        if (currentIndex <= 0) return prevState; // Нельзя отменить, если нет предыдущего состояния
+
+        const previousState = prevState.list[currentIndex - 1];
+        applyStateToCanvas(previousState); // Применяем состояние на холсте
+        return { ...prevState, index: currentIndex - 1 };
       });
+
       setIsUndoRequired(false);
     }
+  }, [isUndoRequired, setIsUndoRequired]);
 
-    // Возврат последнего действия
+  // Возврат последнего действия
+  useEffect(() => {
     if (isRedoRequired) {
       setCanvasState(prevState => {
-        const { list, index } = prevState.lower;
-        if (index >= list.length - 1) return prevState;
-  
-        const nextState = JSON.parse(list[index + 1].originalState);
-        list[index + 1].setOptions(nextState);
-        list[index + 1].setCoords();
-        return {
-          ...prevState,
-          lower: {
-            list,
-            index: index + 1,
-          },
-        };
+        const currentIndex = prevState.index;
+        if (currentIndex >= prevState.list.length - 1) return prevState; // Нельзя вернуть, если нет следующего состояния
+
+        const nextState = prevState.list[currentIndex + 1];
+        applyStateToCanvas(nextState); // Применяем состояние на холсте
+        return { ...prevState, index: currentIndex + 1 };
       });
+
       setIsRedoRequired(false);
     }
+  }, [isRedoRequired, setIsRedoRequired]);
 
+  // Применить состояние объектов на холсте
+  function applyStateToCanvas(state) {
+    // Применяем состояние к каждому холсту
+    lowerCanvasRef.current.clear(); // Очищаем холст перед загрузкой нового состояния
+    middleCanvasRef.current.clear(); // Очищаем холст перед загрузкой нового состояния
+    upperCanvasRef.current.clear(); // Очищаем холст перед загрузкой нового состояния
     
-  }, [isUndoRequired, isRedoRequired]);
+    // Загружаем новое состояние на каждый холст
+    lowerCanvasRef.current.loadFromJSON(state, () => {
+      lowerCanvasRef.current.renderAll();
+    });
+    middleCanvasRef.current.loadFromJSON(state, () => {
+      middleCanvasRef.current.renderAll();
+    });
+    upperCanvasRef.current.loadFromJSON(state, () => {
+      upperCanvasRef.current.renderAll();
+    });
+  }
 
   // Экспорт изображения карты
   useEffect(() => {
