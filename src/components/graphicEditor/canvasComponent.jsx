@@ -643,7 +643,6 @@ export default function CanvasComponent() {
     list: [],
     index: 0,
   });
-  const [initialState, setInitialState] = useState(null); // Добавлено начальное состояние
 
   useEffect(() => {
     // Сохранение начального состояния холста при загрузке приложения
@@ -652,51 +651,108 @@ export default function CanvasComponent() {
       middleCanvas: middleCanvasRef.current.toObject(),
       upperCanvas: upperCanvasRef.current.toObject(),
     });
-    setInitialState(initialCanvasState);
+    setCanvasState(prevState => ({
+      ...prevState,
+      list: [initialCanvasState],
+    }));
+
+    console.log('Изначальные данные сохранены');
   }, []);
-    
-  // Функция отслеживания действий
-  const handleCanvasState = useCallback((event) => {
-    if (!isRedoRequired && !isUndoRequired) {
-      let object = event.target;
-
-      setCanvasState({
-          list: [...canvasState.list.slice(0, canvasState.index + 1), object.saveState()],
-          index: canvasState.index + 1,
-      });
-    }
-  }, [canvasState, isRedoRequired, isUndoRequired]);
-
-  useEffect(() => {
-    // Присвоение функций отслеживания действий
-    lowerCanvasRef.current.on("object:added", handleCanvasState);
-    middleCanvasRef.current.on("object:added", handleCanvasState);
-    upperCanvasRef.current.on("object:added", handleCanvasState);
-  
-    lowerCanvasRef.current.on("object:modified", handleCanvasState);
-    middleCanvasRef.current.on("object:modified", handleCanvasState);
-    upperCanvasRef.current.on("object:modified", handleCanvasState);
-  }, [handleCanvasState]);
 
   useEffect(() => {
     console.log(canvasState);
   }, [canvasState]);
-  
+
+  useEffect(() => {
+    console.log(isUndoRequired);
+  }, [isUndoRequired]);
+    
+  // Функция отслеживания действий
+  const handleCanvasState = useCallback((event) => {
+      console.log('Вызвана функция отслеживания действий');
+      let object = event.target;
+
+      // Проверяем, изменился ли объект на холсте
+      if (object.canvasStateSaved !== true) {
+        // Помечаем объект, чтобы избежать повторного сохранения
+        object.canvasStateSaved = true;
+
+        const canvasData = {
+          lowerCanvas: lowerCanvasRef.current.toObject(),
+          middleCanvas: middleCanvasRef.current.toObject(),
+          upperCanvas: upperCanvasRef.current.toObject(),
+        };
+
+        setCanvasState(prevState => {
+          const updatedList = [...prevState.list.slice(0, prevState.index + 1), JSON.stringify(canvasData)];
+          if (updatedList.length > 20) {
+            // Если количество состояний превышает 20, сдвигаем их на одну позицию назад
+            return { ...prevState, list: updatedList.slice(1), index: prevState.index };
+          } else {
+            return { ...prevState, list: updatedList, index: prevState.index + 1 };
+          }
+        });
+      }
+  }, []);
+
+  useEffect(() => {
+    // Присвоение функций отслеживания действий
+    if (!isRedoRequired && !isUndoRequired) {
+      console.log('Были присвоены функции отслеживания действий');
+      lowerCanvasRef.current.on("object:added", handleCanvasState);
+      middleCanvasRef.current.on("object:added", handleCanvasState);
+      upperCanvasRef.current.on("object:added", handleCanvasState);
+
+      lowerCanvasRef.current.on("object:modified", handleCanvasState);
+      middleCanvasRef.current.on("object:modified", handleCanvasState);
+      upperCanvasRef.current.on("object:modified", handleCanvasState);
+    } else {
+      console.log('Были отключены функции отслеживания действий');
+      lowerCanvasRef.current.off("object:added", handleCanvasState);
+      middleCanvasRef.current.off("object:added", handleCanvasState);
+      upperCanvasRef.current.off("object:added", handleCanvasState);
+
+      lowerCanvasRef.current.off("object:modified", handleCanvasState);
+      middleCanvasRef.current.off("object:modified", handleCanvasState);
+      upperCanvasRef.current.off("object:modified", handleCanvasState);
+    }
+  }, [handleCanvasState, isUndoRequired, isRedoRequired]);
+
+  // Применить состояние объектов на холсте
+  const applyStateToCanvas = useCallback((state) => {
+    console.log('Начало применения изменений');
+    lowerCanvasRef.current.clear(); // Очищаем холст перед загрузкой нового состояния
+    middleCanvasRef.current.clear(); // Очищаем холст перед загрузкой нового состояния
+    upperCanvasRef.current.clear(); // Очищаем холст перед загрузкой нового состояния
+
+    // Загружаем новое состояние на каждый холст
+    lowerCanvasRef.current.loadFromJSON(state.lowerCanvas, () => {
+      lowerCanvasRef.current.renderAll();
+    });
+    middleCanvasRef.current.loadFromJSON(state.middleCanvas, () => {
+      middleCanvasRef.current.renderAll();
+    });
+    upperCanvasRef.current.loadFromJSON(state.upperCanvas, () => {
+      upperCanvasRef.current.renderAll();
+    });
+    console.log('Были применены изменения');
+  }, []);
+
   // Отмена последнего действия
   useEffect(() => {
-    if (isUndoRequired) {
+    if (isUndoRequired && canvasState.index > 0) {
+      console.log('Запущена отмена последнего действия');
       setCanvasState(prevState => {
-        const currentIndex = prevState.index;
-        if (currentIndex <= 0) return prevState; // Нельзя отменить, если нет предыдущего состояния
-
-        const previousState = prevState.list[currentIndex - 1];
-        applyStateToCanvas(previousState); // Применяем состояние на холсте
+        const currentIndex = prevState.index; 
         return { ...prevState, index: currentIndex - 1 };
       });
 
+      applyStateToCanvas(JSON.parse(canvasState.list[canvasState.index - 1])); // Применяем состояние на холсте
+
       setIsUndoRequired(false);
+      console.log('Закончена отмена последнего действия');
     }
-  }, [isUndoRequired, setIsUndoRequired]);
+  }, [isUndoRequired, setIsUndoRequired, canvasState, applyStateToCanvas]);
 
   // Возврат последнего действия
   useEffect(() => {
@@ -705,33 +761,14 @@ export default function CanvasComponent() {
         const currentIndex = prevState.index;
         if (currentIndex >= prevState.list.length - 1) return prevState; // Нельзя вернуть, если нет следующего состояния
 
-        const nextState = prevState.list[currentIndex + 1];
+        const nextState = JSON.parse(prevState.list[currentIndex + 1]);
         applyStateToCanvas(nextState); // Применяем состояние на холсте
         return { ...prevState, index: currentIndex + 1 };
       });
 
       setIsRedoRequired(false);
     }
-  }, [isRedoRequired, setIsRedoRequired]);
-
-  // Применить состояние объектов на холсте
-  function applyStateToCanvas(state) {
-    // Применяем состояние к каждому холсту
-    lowerCanvasRef.current.clear(); // Очищаем холст перед загрузкой нового состояния
-    middleCanvasRef.current.clear(); // Очищаем холст перед загрузкой нового состояния
-    upperCanvasRef.current.clear(); // Очищаем холст перед загрузкой нового состояния
-    
-    // Загружаем новое состояние на каждый холст
-    lowerCanvasRef.current.loadFromJSON(state, () => {
-      lowerCanvasRef.current.renderAll();
-    });
-    middleCanvasRef.current.loadFromJSON(state, () => {
-      middleCanvasRef.current.renderAll();
-    });
-    upperCanvasRef.current.loadFromJSON(state, () => {
-      upperCanvasRef.current.renderAll();
-    });
-  }
+  }, [isRedoRequired, setIsRedoRequired, applyStateToCanvas]);
 
   // Экспорт изображения карты
   useEffect(() => {
