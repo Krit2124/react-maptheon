@@ -244,6 +244,10 @@ section .container {
   background-color: var(--background-beige);
 }
 
+.background-map {
+  background-image: url('/src/assets/Backgrounds/SignInUpBg.jpg');
+}
+
 /* Кнопки */
 button {
   cursor: pointer;

@@ -758,7 +758,7 @@ export default function CanvasComponent() {
 
       await applyStateToCanvas(JSON.parse(canvasState.list[canvasState.index - 1])); // Применяем состояние на холсте
 
-      setCanvasState({list: prevCanvasState.list, index: prevCanvasState.index - 1});
+      setCanvasState(prev => {return {list: prevCanvasState.list, index: prevCanvasState.index - 1}});
       console.log('Холст после отмены: ', canvasState);
       addEventListeners();
 
