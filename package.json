@@ -10,6 +10,7 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "fabric-all-modules": "^5.3.0",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
     "react-color": "^2.19.3",

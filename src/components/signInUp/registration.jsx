@@ -1,18 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { Link } from 'react-router-dom';
+import { useUserStore } from 'store/store';
 
 export default function Registration() {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const navigate = useNavigate();
+
+    const {
+        registration,
+    } = useUserStore();
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        
+        if (password !== confirmPassword) {
+            toast.error('Пароли должны совпадать');
+            return;
+        }
+
+        let result = await registration(username, email, password);
+        if (result.isSuccess) {
+            return navigate(`/maps/personal/yours/`);
+        } else {
+            toast.error(result.message);
+        }
+    };
+
     return (
         <div className="flex-col-sb-left flex-gap-30">
             <h1>Регистрация</h1>
 
-            <form className="flex-col-sb-left flex-gap-30">
+            <form className="flex-col-sb-left flex-gap-30" onSubmit={handleSubmit}>
                 <div className="flex-col-sb-left flex-gap-15">
-                    <input className="textInput-usual" type="text" placeholder="Имя пользователя"/>
-                    <input className="textInput-usual" type="email" placeholder="Email"/>
-                    <input className="textInput-usual" type="password" placeholder="Пароль"/>
-                    <input className="textInput-usual" type="password" placeholder="Повторите пароль"/>
+                    <input className="textInput-usual" type="text" placeholder="Имя пользователя" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                    <input className="textInput-usual" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+                    <input className="textInput-usual" type="password" placeholder="Пароль" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                    <input className="textInput-usual" type="password" placeholder="Повторите пароль" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
                 </div>
                 
                 <div className="flex-row-sb-c flex-gap-10">
@@ -20,6 +49,8 @@ export default function Registration() {
                     <Link to="/sign/in" className="button-text-usual">Вход</Link>
                 </div>
             </form>
+
+            <ToastContainer theme="dark"/>
         </div>
     );
 }

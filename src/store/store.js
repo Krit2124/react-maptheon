@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { fabric } from 'fabric-all-modules';
 import axios from 'axios';
-import { toast } from "react-toastify";
 
 import AuthService from '../services/AuthService';
 import { API_URL } from '../http';
@@ -242,11 +241,7 @@ export const useObjectSettingsState = create((set) => ({
 
 export const useUserStore = create((set) => ({
     user: {},
-    setUser: (value) => set({ user: value }),
-
     isAuth: false,
-    setIsAuth: (value) => set({ isAuth: value }),
-
     isLoading: false,
 
     login: async (emailOrUsername, password) => {
@@ -254,10 +249,16 @@ export const useUserStore = create((set) => ({
             const response = await AuthService.login(emailOrUsername, password);
             localStorage.setItem('token', response.data.accessToken);
             set({ isAuth: true, user: response.data.user });
-            return null;
+            return {
+                isSuccess: true,
+                message: 'Авторизация прошла успешно',
+            };
         } catch (e) {
-            console.log(e.response?.data?.message);
-            return e;
+            console.log(e.response.data.message);
+            return {
+                isSuccess: false,
+                message: e.response.data.message,
+            };;
         }
     },
 
@@ -266,8 +267,16 @@ export const useUserStore = create((set) => ({
             const response = await AuthService.registration(username,email, password);
             localStorage.setItem('token', response.data.accessToken);
             set({ isAuth: true, user: response.data.user });
+            return {
+                isSuccess: true,
+                message: 'Регистрация прошла успешно',
+            };
         } catch (e) {
-            console.log(e.response?.data?.message);
+            console.log(e.response.data.message);
+            return {
+                isSuccess: false,
+                message: e.response.data.message,
+            };
         }
     },
 
@@ -277,7 +286,7 @@ export const useUserStore = create((set) => ({
             localStorage.removeItem('token');
             set({ isAuth: false, user: {} });
         } catch (e) {
-            console.log(e.response?.data?.message);
+            console.log(e.response.data.message);
         }
     },
 
@@ -285,10 +294,11 @@ export const useUserStore = create((set) => ({
         set({ isLoading: true });
         try {
             const response = await axios.get(`${API_URL}/refresh`, { withCredentials: true });
+            console.log(response);
             localStorage.setItem('token', response.data.accessToken);
             set({ isAuth: true, user: response.data.user });
         } catch (e) {
-            console.log(e.response?.data?.message);
+            console.log(e.response.data.message);
         } finally {
             set({ isLoading: false });
         }

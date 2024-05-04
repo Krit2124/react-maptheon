@@ -1,7 +1,9 @@
 import React from 'react';
 
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
+
+import { useUserStore } from 'store/store';
 
 import logoImage from "../../assets/Logo.png"
 import personalMapsImage from "../../assets/icons/PersonalMaps.png"
@@ -9,6 +11,10 @@ import publicMapsImage from "../../assets/icons/PublicMaps.png"
 import userImage from "../../assets/icons/User.png"
 
 export default function Header() {
+    const {
+        logout,
+    } = useUserStore();
+
     return (
         <header className="border-black-bottom background-black">
             <div className="container flex-row-sb-c">
@@ -41,7 +47,7 @@ export default function Header() {
                         </Dropdown.Item>
 
                         <Dropdown.Item>
-                            <Link to="/sign/in">Выход</Link>
+                            <Link to="/sign/in/" onClick={logout}>Выход</Link>
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
