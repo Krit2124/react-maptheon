@@ -9,6 +9,7 @@ export default function Registration() {
 
             <form className="flex-col-sb-left flex-gap-30">
                 <div className="flex-col-sb-left flex-gap-15">
+                    <input className="textInput-usual" type="text" placeholder="Имя пользователя"/>
                     <input className="textInput-usual" type="email" placeholder="Email"/>
                     <input className="textInput-usual" type="password" placeholder="Пароль"/>
                     <input className="textInput-usual" type="password" placeholder="Повторите пароль"/>

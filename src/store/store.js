@@ -1,5 +1,10 @@
 import { create } from "zustand";
 import { fabric } from 'fabric-all-modules';
+import axios from 'axios';
+import { toast } from "react-toastify";
+
+import AuthService from '../services/AuthService';
+import { API_URL } from '../http';
 
 import grassImage from "../assets/textures/grass.jpg";
 import iceImage from "../assets/textures/ice.jpg";
@@ -233,4 +238,59 @@ export const useObjectSettingsState = create((set) => ({
 
     objectSelected: null,
     setObjectSelected: (value) => set({ objectSelected: value }),
+}));
+
+export const useUserStore = create((set) => ({
+    user: {},
+    setUser: (value) => set({ user: value }),
+
+    isAuth: false,
+    setIsAuth: (value) => set({ isAuth: value }),
+
+    isLoading: false,
+
+    login: async (emailOrUsername, password) => {
+        try {
+            const response = await AuthService.login(emailOrUsername, password);
+            localStorage.setItem('token', response.data.accessToken);
+            set({ isAuth: true, user: response.data.user });
+            return null;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+            return e;
+        }
+    },
+
+    registration: async (username, email, password) => {
+        try {
+            const response = await AuthService.registration(username,email, password);
+            localStorage.setItem('token', response.data.accessToken);
+            set({ isAuth: true, user: response.data.user });
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+
+    logout: async () => {
+        try {
+            await AuthService.logout();
+            localStorage.removeItem('token');
+            set({ isAuth: false, user: {} });
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+
+    checkAuth: async () => {
+        set({ isLoading: true });
+        try {
+            const response = await axios.get(`${API_URL}/refresh`, { withCredentials: true });
+            localStorage.setItem('token', response.data.accessToken);
+            set({ isAuth: true, user: response.data.user });
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 }));
