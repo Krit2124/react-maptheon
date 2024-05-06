@@ -1,26 +1,40 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUserStore } from 'store/store';
 
 export default function App() {
   const {
+    isAuth,
     checkAuth,
   } = useUserStore();
 
   const navigate = useNavigate();
 
+  const [isTockensChecked, setIsTockensChecked] = useState(false);
+
   // Проверка, зашёл ли пользователь в аккаунт
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      checkAuth();
-      return navigate(`/maps/personal/yours/`);
-    } else {
-      return navigate(`/sign/in/`);
+    async function handleCheckAuth() {
+      await checkAuth();
+      setIsTockensChecked(true);
     }
-}, [checkAuth, navigate])
+
+    handleCheckAuth();
+  }, []);
+
+  // Если проверка завершена и пользователь аутентифицирован, перенаправляем на нужную страницу
+  useEffect(() => {
+    if (isTockensChecked && isAuth) {
+      console.log('Есть refresh токен');
+      navigate(`/maps/personal/yours/`);
+    } else if (isTockensChecked && !isAuth) {
+      console.log('Нет токенов');
+      navigate(`/sign/in/`);
+    }
+  }, [isTockensChecked, isAuth, navigate]);
   
   return (
-    <div className="App">
-    </div>
+    <>
+    </>
   );
 }

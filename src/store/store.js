@@ -254,7 +254,7 @@ export const useUserStore = create((set) => ({
                 message: 'Авторизация прошла успешно',
             };
         } catch (e) {
-            console.log(e.response.data.message);
+            console.log(e.response?.data?.message);
             return {
                 isSuccess: false,
                 message: e.response.data.message,
@@ -272,7 +272,7 @@ export const useUserStore = create((set) => ({
                 message: 'Регистрация прошла успешно',
             };
         } catch (e) {
-            console.log(e.response.data.message);
+            console.log(e.response?.data?.message);
             return {
                 isSuccess: false,
                 message: e.response.data.message,
@@ -286,7 +286,7 @@ export const useUserStore = create((set) => ({
             localStorage.removeItem('token');
             set({ isAuth: false, user: {} });
         } catch (e) {
-            console.log(e.response.data.message);
+            console.log(e.response?.data?.message);
         }
     },
 
@@ -298,7 +298,7 @@ export const useUserStore = create((set) => ({
             localStorage.setItem('token', response.data.accessToken);
             set({ isAuth: true, user: response.data.user });
         } catch (e) {
-            console.log(e.response.data.message);
+            console.log(e.response?.data?.message);
         } finally {
             set({ isLoading: false });
         }
