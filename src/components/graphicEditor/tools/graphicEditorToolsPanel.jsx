@@ -11,10 +11,10 @@ import saveImage from "../../../assets/icons/Save.png"
 
 export default function GraphicEditorToolsPanel() {
     const {
-        currentTool,
-        setCurrentTool,
+        currentTool, setCurrentTool,
         setIsToolSettingsPanelVisible,
         setIsExportRequired,
+        setIsSaveRequired,
     } = useGeneralGraphicEditorStore();
 
     // Обработка закрытия панели с настройками
@@ -57,7 +57,7 @@ export default function GraphicEditorToolsPanel() {
                 <button className="button-image-big" onClick={() => setIsExportRequired(true)}>
                     <img src={downloadImage} alt="Скачать"/>
                 </button>
-                <button className="button-image-big">
+                <button className="button-image-big" onClick={() => setIsSaveRequired(true)}>
                     <img src={saveImage} alt="Сохранить"/>
                 </button>
             </div>

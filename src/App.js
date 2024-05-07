@@ -34,7 +34,7 @@ export default function App() {
   }, [isTockensChecked, isAuth, navigate]);
   
   return (
-    <>
-    </>
+    <div className='App background-gray-default'>
+    </div>
   );
 }

@@ -1,13 +1,14 @@
 import React from 'react';
+import api from "../../http/index";
 
-export default function PersonalMapCard() {
+export default function PersonalMapCard({id, name, isPublic, updatedAt, imagePath}) {
     return (
         <div className="flex-col-sb-c background-gray-search flex-gap-15 personalMapCard">
-            <div className="mapCardPlaceholder"></div>
+            <img src={"http://localhost:3051/" + imagePath} className="mapCardImg" alt={name}></img>
             <div className="flex-row-sb-c mapCardContent">
-                <h3>Название карты</h3>
+                <h3>{name}</h3>
                 
-                <p>22.02.2024</p>
+                <p>{updatedAt}</p>
             </div>
         </div>
     );

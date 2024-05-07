@@ -3,6 +3,7 @@ import { fabric } from 'fabric-all-modules';
 import axios from 'axios';
 
 import AuthService from '../services/AuthService';
+import MapService from "services/MapService";
 import { API_URL } from '../http';
 
 import grassImage from "../assets/textures/grass.jpg";
@@ -37,6 +38,9 @@ export const useGeneralGraphicEditorStore = create((set)=> ({
     // Действия с графическим редактором
     isExportRequired: false,
     setIsExportRequired: (value) => set({ isExportRequired: value }),
+
+    isSaveRequired: false,
+    setIsSaveRequired: (value) => set({ isSaveRequired: value }),
 
     isObjectListVisible: true,
     setIsObjectListVisible: (value) => set({ isObjectListVisible: value }),
@@ -304,3 +308,14 @@ export const useUserStore = create((set) => ({
         }
     },
 }));
+
+export const useServerMapOperationsStore = create((set)=> ({
+    myMaps: async (id_user) => {
+        try {
+            const maps = await MapService.myMaps(id_user);
+            return maps;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+}))
