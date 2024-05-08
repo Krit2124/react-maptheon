@@ -12,30 +12,35 @@ export default function MapCardList({reqCards}) {
         checkAuth,
     } = useUserStore();
 
-    const { myMaps } = useServerMapOperationsStore();
+    const { 
+        myMaps 
+    } = useServerMapOperationsStore();
     const [cards, setCards] = useState();
 
     useEffect(() => {
         const fetchData = async () => {
-            await checkAuth();
-            const response = await myMaps(user.id);
-            console.log(response);
+            try {
+                if (user === null) await checkAuth();
+                const response = await myMaps(user.id);
 
-            setCards(response.data.map(map => (
-                <PersonalMapCard
-                    id={map.id}
-                    name={map.name}
-                    isPublic={map.is_public}
-                    updatedAt={map.updatedAt}
-                    imagePath={map.imagePath}
-                />
-            )))
+                setCards(response.data.map(map => (
+                    <PersonalMapCard
+                        id={map.id}
+                        name={map.name}
+                        isPublic={map.is_public}
+                        updatedAt={map.updatedAt}
+                        imagePath={map.imagePath}
+                    />
+                )))
+            } catch (e) {
+                console.log(e);
+            }
         };
 
         if (reqCards === 'personal') {
             fetchData();
         }
-    }, []);
+    }, [user]);
 
     // if (reqCards === 'public') {
     //     cards = Array(10).fill(<PublicMapCard />);

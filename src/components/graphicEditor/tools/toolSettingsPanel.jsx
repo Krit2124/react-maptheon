@@ -45,7 +45,7 @@ export default function ToolSettingsPanel() {
             <div className='flex-row-sb-c size-full-horizontal-percent panelLabel'>
                 <h1>{panelLabel}</h1>
 
-                <button className='button-image-closePanel' onClick={handleCloseToolSettingsPanel}>
+                <button className='button-image-small' onClick={handleCloseToolSettingsPanel}>
                     <img src={closeImage} alt="Закрыть"/>
                 </button>
             </div>

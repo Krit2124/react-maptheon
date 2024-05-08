@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric-all-modules';
-import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState, useObjectSettingsState, useObjectsStore } from 'store/store';
+import Cookies from 'js-cookie';
+
+import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState, useObjectSettingsState, useObjectsStore, useServerMapOperationsStore } from 'store/store';
 
 export default function CanvasComponent() {
   const {
@@ -67,6 +69,10 @@ export default function CanvasComponent() {
   const {
     recentlyUsedObjects, setRecentlyUsedObjects,
   } = useObjectsStore();
+
+  const {
+    myMapData,
+  } = useServerMapOperationsStore();
 
   // Холсты и рабочая область
   const lowerCanvasRef = useRef(null);
@@ -177,7 +183,7 @@ export default function CanvasComponent() {
             repeat: 'repeat'
           });
           workingAreaRef.current.set('fill', texture);
-          workingAreaRef.current.canvas.renderAll();
+          lowerCanvasRef.current.renderAll();
         });
       }
 
@@ -637,6 +643,36 @@ export default function CanvasComponent() {
       upperCanvasRef.current.off('mouse:up', handleMouseUp);
     };
   }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast, objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored, labelOpacity, recentlyUsedObjects, objectSelected, setLabelOpacity, setObjectBrightness, setObjectContrast, setObjectIsHorizontalMirrored, setObjectIsVerticalMirrored, setObjectOpacity, setObjectRotation, setObjectSaturation, setObjectSelected, setObjectSize, typeOfChoosenObject]);
+
+  // Если карта была выбрана для редактирования, то то загружаем ее
+  useEffect(() => {
+    async function loadMapData(Id) {
+      try {
+        let rawMapData = await myMapData(Id);
+
+        let mapData = rawMapData.data;
+
+        console.log(mapData);
+
+        const lowerCanvasData = mapData.lowerCanvas;
+        const middleCanvasData = mapData.middleCanvas;
+        const upperCanvasData = mapData.upperCanvas;
+
+        lowerCanvasRef.current.loadFromJSON(lowerCanvasData);
+        middleCanvasRef.current.loadFromJSON(middleCanvasData);
+        upperCanvasRef.current.loadFromJSON(upperCanvasData);
+        
+        } catch (error) {
+        console.error('Ошибка при загрузке данных карты:', error);
+      }
+    }
+
+    let editingMapId = Cookies.get('idEditingCard');
+
+    if (editingMapId) {
+      loadMapData(editingMapId);
+    }
+  }, [])
 
   // Состояния холста
   const [canvasState, setCanvasState] = useState({

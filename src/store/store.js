@@ -298,7 +298,6 @@ export const useUserStore = create((set) => ({
         set({ isLoading: true });
         try {
             const response = await axios.get(`${API_URL}/refresh`, { withCredentials: true });
-            console.log(response);
             localStorage.setItem('token', response.data.accessToken);
             set({ isAuth: true, user: response.data.user });
         } catch (e) {
@@ -310,10 +309,23 @@ export const useUserStore = create((set) => ({
 }));
 
 export const useServerMapOperationsStore = create((set)=> ({
+    // Функция получения списка карт текущего пользователя
+    // Получаемые поля: id, name, is_public, updatedAt, imagePath
     myMaps: async (id_user) => {
         try {
             const maps = await MapService.myMaps(id_user);
             return maps;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+
+    // Функция получения данных карты для продолжения работы с ней
+    // Получаемые поля: data (в формате JSON)
+    myMapData: async (id_map) => {
+        try {
+            const mapData = await MapService.myMapData(id_map);
+            return mapData;
         } catch (e) {
             console.log(e.response?.data?.message);
         }

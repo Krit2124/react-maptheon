@@ -304,7 +304,7 @@ button {
   max-width: 30px;
 }
 
-.button-image-closePanel {
+.button-image-small {
   background-color: var(--background-element-gray);
   border: none;
   border-radius: 5px;
@@ -316,7 +316,7 @@ button {
   align-items: center;
 }
 
-.button-image-closePanel img {
+.button-image-small img {
   max-height: 15px;
   max-width: 15px;
 }
@@ -335,6 +335,23 @@ button {
 .button-image-placeSwitcher img {
   max-height: 10px;
   max-width: 12px;
+}
+
+.button-image-mini {
+  background-color: var(--background-element-gray);
+  border: none;
+  border-radius: 2px;
+  width: 15px;
+  height: 15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-image-mini img {
+  max-height: 10px;
+  max-width: 10px;
 }
 
 .button-text-usual {
@@ -374,7 +391,7 @@ button {
 }
 
 /* Обводки активных элементов */
-.button-image-placeSwitcher:hover, .button-image-closePanel:hover {
+.button-image-placeSwitcher:hover, .button-image-small:hover {
   border: 1px solid white;
 }
 
@@ -542,8 +559,9 @@ header {
   max-width: 270px;
 }
 
-.chrome-picker {
+.chrome-picker > div {
   background: var(--background-element-gray);
+  color: white;
 }
 
 .currentTexture {
@@ -595,6 +613,12 @@ header {
 .mapCardImg {
   width: 350px;
   height: 215px;
+}
+
+.mapCardButtons {
+  position: absolute;
+  width: 350px;
+  padding: 15px;
 }
 
 /* Canvas */
