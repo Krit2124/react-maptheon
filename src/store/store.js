@@ -330,4 +330,15 @@ export const useServerMapOperationsStore = create((set)=> ({
             console.log(e.response?.data?.message);
         }
     },
+
+    // Функция сохранения данных карты
+    // Получаемые данные: сообщение о состоянии запроса
+    saveMapData: async (id_map, data, mapImage) => {
+        try {
+            const message = await MapService.saveMapData(id_map, data);
+            return message;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
 }))

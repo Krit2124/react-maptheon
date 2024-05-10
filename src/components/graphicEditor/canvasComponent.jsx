@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric-all-modules';
 import Cookies from 'js-cookie';
+import { toast, ToastContainer } from 'react-toastify';
 
 import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState, useObjectSettingsState, useObjectsStore, useServerMapOperationsStore } from 'store/store';
 
@@ -8,6 +9,7 @@ export default function CanvasComponent() {
   const {
     currentTool, setCurrentTool,
     isExportRequired, setIsExportRequired,
+    isSaveRequired, setIsSaveRequired,
     isUndoRequired, setIsUndoRequired,
     isRedoRequired, setIsRedoRequired,
     setIsToolSettingsPanelVisible,
@@ -72,6 +74,7 @@ export default function CanvasComponent() {
 
   const {
     myMapData,
+    saveMapData,
   } = useServerMapOperationsStore();
 
   // Холсты и рабочая область
@@ -142,6 +145,9 @@ export default function CanvasComponent() {
         evented: false,
         erasable: false,
       });
+
+      console.log('workingArea', workingArea);
+
       workingAreaRef.current = workingArea;
 
       lowerCanvas.add(workingArea);
@@ -463,6 +469,10 @@ export default function CanvasComponent() {
       upperCanvasRef.current.zoomToPoint({ x: event.offsetX, y: event.offsetY }, newZoom);
 
       event.preventDefault();
+
+      lowerCanvasRef.current.renderAll();
+      middleCanvasRef.current.renderAll();
+      upperCanvasRef.current.renderAll();
     }
 
     let isDragging = false;
@@ -644,6 +654,12 @@ export default function CanvasComponent() {
     };
   }, [canvasWidth, canvasHeight, canvasBackgroundColor, isResetRequired, setIsResetRequired, brushColor, brushOpacity, brushThickness, brushCurrentLayer, currentTool, brushColorMode, brushTexture, canvasBackgroundIsColorMode, canvasBackgroundTexture, brushShape, labelText, labelFontSize, labelCharSpacing, labelLineHeight, labelRotation, labelBorderWidth, labelFont, labelColor, labelBorderColor, labelIsBold, labelIsItalic, labelAlign, setCurrentTool, setLabelFontSize, setLabelIsBold, setLabelIsItalic, setIsToolSettingsPanelVisible, setLabelAlign, setLabelBorderColor, setLabelBorderWidth, setLabelColor, setLabelRotation, setLabelCharSpacing, setLabelLineHeight, setLabelFont, setLabelSelected, labelSelected, setLabelText, setTypeOfChoosenObject, objectSize, objectOpacity, objectRotation, objectSaturation, objectBrightness, objectContrast, objectIsUseRandom, objectIsHorizontalMirrored, objectIsVerticalMirrored, labelOpacity, recentlyUsedObjects, objectSelected, setLabelOpacity, setObjectBrightness, setObjectContrast, setObjectIsHorizontalMirrored, setObjectIsVerticalMirrored, setObjectOpacity, setObjectRotation, setObjectSaturation, setObjectSelected, setObjectSize, typeOfChoosenObject]);
 
+  // Состояния холста
+  const [canvasState, setCanvasState] = useState({
+    list: [],
+    index: 0,
+  });
+
   // Если карта была выбрана для редактирования, то то загружаем ее
   useEffect(() => {
     async function loadMapData(Id) {
@@ -658,11 +674,25 @@ export default function CanvasComponent() {
         const middleCanvasData = mapData.middleCanvas;
         const upperCanvasData = mapData.upperCanvas;
 
+        // Очищаем холсты перед загрузкой данных
+        await lowerCanvasRef.current.clear();
+        await middleCanvasRef.current.clear();
+        await upperCanvasRef.current.clear();
+
         lowerCanvasRef.current.loadFromJSON(lowerCanvasData);
         middleCanvasRef.current.loadFromJSON(middleCanvasData);
         upperCanvasRef.current.loadFromJSON(upperCanvasData);
-        
-        } catch (error) {
+
+        // Получаем объекты холста
+        const canvasObjects = lowerCanvasRef.current.getObjects();
+
+        // Поиск рабочей области по свойству нестираемости (есть только у неё)
+        canvasObjects.find((obj) => {
+          if (obj.erasable === false) {
+            workingAreaRef.current = obj;
+          }
+        });
+      } catch (error) {
         console.error('Ошибка при загрузке данных карты:', error);
       }
     }
@@ -674,12 +704,6 @@ export default function CanvasComponent() {
     }
   }, [])
 
-  // Состояния холста
-  const [canvasState, setCanvasState] = useState({
-    list: [],
-    index: 0,
-  });
-
   const [isUndoOrRedoInProgress, setIsUndoOrRedoInProgress] = useState(false);
 
   useEffect(() => {
@@ -689,10 +713,13 @@ export default function CanvasComponent() {
       middleCanvas: middleCanvasRef.current.toObject(),
       upperCanvas: upperCanvasRef.current.toObject(),
     });
-    setCanvasState(prevState => ({
-      ...prevState,
-      list: [initialCanvasState],
-    }));
+
+    setTimeout(() => {
+      setCanvasState(prevState => ({
+        list: [initialCanvasState],
+        index: 0,
+      }));
+    }, 1000)
 
     console.log('Изначальные данные сохранены');
   }, []);
@@ -702,27 +729,24 @@ export default function CanvasComponent() {
     function handleCanvasState(event)  {
       if (!isUndoOrRedoInProgress) {
         let object = event.target;
-        // Проверяем, перерисован ли объект
-        if (object.isObjectRerendered !== true) {
-          console.log('Вызвана функция отслеживания действий');
-          console.log('Обработанный объект', object);
-          
-          const canvasData = {
-            lowerCanvas: lowerCanvasRef.current.toObject(),
-            middleCanvas: middleCanvasRef.current.toObject(),
-            upperCanvas: upperCanvasRef.current.toObject(),
-          };
-      
-          setCanvasState(prevState => {
-            const updatedList = [...prevState.list.slice(0, prevState.index + 1), JSON.stringify(canvasData)];
-            if (updatedList.length > 20) {
-              // Если количество состояний превышает 20, сдвигаем их на одну позицию назад
-              return { ...prevState, list: updatedList.slice(1), index: prevState.index };
-            } else {
-              return { ...prevState, list: updatedList, index: prevState.index + 1 };
-            }
-          })
-        }
+        console.log('Вызвана функция отслеживания действий');
+        console.log('Обработанный объект', object);
+        
+        const canvasData = {
+          lowerCanvas: lowerCanvasRef.current.toObject(),
+          middleCanvas: middleCanvasRef.current.toObject(),
+          upperCanvas: upperCanvasRef.current.toObject(),
+        };
+    
+        setCanvasState(prevState => {
+          const updatedList = [...prevState.list.slice(0, prevState.index + 1), JSON.stringify(canvasData)];
+          if (updatedList.length > 20) {
+            // Если количество состояний превышает 20, сдвигаем их на одну позицию назад
+            return { ...prevState, list: updatedList.slice(1), index: prevState.index };
+          } else {
+            return { ...prevState, list: updatedList, index: prevState.index + 1 };
+          }
+        })
       }
     }
 
@@ -735,6 +759,16 @@ export default function CanvasComponent() {
       lowerCanvasRef.current.on("object:modified", handleCanvasState);
       middleCanvasRef.current.on("object:modified", handleCanvasState);
       upperCanvasRef.current.on("object:modified", handleCanvasState);
+
+      lowerCanvasRef.current.on("object:removed", handleCanvasState);
+      middleCanvasRef.current.on("object:removed", handleCanvasState);
+      upperCanvasRef.current.on("object:removed", handleCanvasState);
+
+      if (brushColorMode === 'eraser') {
+        lowerCanvasRef.current.on("path:created", handleCanvasState);
+        middleCanvasRef.current.on("path:created", handleCanvasState);
+        upperCanvasRef.current.on("path:created", handleCanvasState);
+      }
     };
   
     function removeEventListeners() {
@@ -745,6 +779,14 @@ export default function CanvasComponent() {
       lowerCanvasRef.current.off("object:modified", handleCanvasState);
       middleCanvasRef.current.off("object:modified", handleCanvasState);
       upperCanvasRef.current.off("object:modified", handleCanvasState);
+
+      lowerCanvasRef.current.off("object:removed", handleCanvasState);
+      middleCanvasRef.current.off("object:removed", handleCanvasState);
+      upperCanvasRef.current.off("object:removed", handleCanvasState);
+
+      lowerCanvasRef.current.off("path:created", handleCanvasState);
+      middleCanvasRef.current.off("path:created", handleCanvasState);
+      upperCanvasRef.current.off("path:created", handleCanvasState);
     };
   
     if (!isUndoOrRedoInProgress) {
@@ -766,20 +808,21 @@ export default function CanvasComponent() {
           lowerCanvasRef.current.forEachObject(obj => {
               obj.isObjectRerendered = true;
           });
-          lowerCanvasRef.current.renderAll();
       });
       await middleCanvasRef.current.loadFromJSON(state.middleCanvas, () => {
           middleCanvasRef.current.forEachObject(obj => {
               obj.isObjectRerendered = true;
           });
-          middleCanvasRef.current.renderAll();
       });
       await upperCanvasRef.current.loadFromJSON(state.upperCanvas, () => {
           upperCanvasRef.current.forEachObject(obj => {
               obj.isObjectRerendered = true;
           });
-          upperCanvasRef.current.renderAll();
       });
+
+      lowerCanvasRef.current.renderAll();
+      middleCanvasRef.current.renderAll();
+      upperCanvasRef.current.renderAll();
 
       console.log('Были применены изменения');
   };
@@ -796,15 +839,17 @@ export default function CanvasComponent() {
 
       setCanvasState(prev => {return {list: prevCanvasState.list, index: prevCanvasState.index - 1}});
       console.log('Холст после отмены: ', canvasState);
-      addEventListeners();
-
-      setIsUndoOrRedoInProgress(false);
+      
       console.log('Закончена отмена последнего действия');
     }
 
     if (isUndoRequired && canvasState.index > 0) {
       setIsUndoRequired(false);
       undo();
+      // Костыльное решение из-за проблем с асинхронностью
+      setTimeout(() => {
+        setIsUndoOrRedoInProgress(false);
+      });
     } else {
       setIsUndoRequired(false);
     }
@@ -821,15 +866,17 @@ export default function CanvasComponent() {
 
       setCanvasState(prev => {return {...prev, list: prevCanvasState.list, index: prevCanvasState.index + 1}});
       console.log('Холст после возврата: ', canvasState);
-      addEventListeners();
 
-      setIsUndoOrRedoInProgress(false);
       console.log('Закончен возврат последнего действия');
     }
 
     if (isRedoRequired && canvasState.index < canvasState.list.length - 1) {
       setIsRedoRequired(false);
       redo();
+      // Костыльное решение из-за проблем с асинхронностью
+      setTimeout(() => {
+        setIsUndoOrRedoInProgress(false);
+      });
     } else {
       setIsRedoRequired(false);
     }
@@ -837,11 +884,25 @@ export default function CanvasComponent() {
     return () => {
       removeEventListeners();
     };
-  }, [canvasState, isRedoRequired, isUndoOrRedoInProgress, isUndoRequired, setIsRedoRequired, setIsUndoRequired]);
+  }, [canvasState, isRedoRequired, isUndoOrRedoInProgress, isUndoRequired, setIsRedoRequired, setIsUndoRequired, brushColorMode]);
 
   useEffect(() => {
     console.log(canvasState);
   }, [canvasState]);
+
+  // Сохранение карты на сервере
+  useEffect(() => {
+    async function handleSaveMapData() {
+      let mapData = canvasState.list[canvasState.index];
+      let message = await saveMapData(Cookies.get('idEditingCard'), mapData);
+      toast.success(message);
+    }
+
+    if (isSaveRequired) {
+      setIsSaveRequired(false);
+      handleSaveMapData();
+    }
+  }, [isSaveRequired])
 
   // Экспорт изображения карты
   useEffect(() => {
@@ -878,7 +939,7 @@ export default function CanvasComponent() {
   
       // Преобразуем содержимое в URL данных
       const dataURL = tempCanvas.toDataURL({
-        format: 'jpeg',
+        format: 'jpg',
         quality: 1 // качество изображения
       });
   
@@ -896,7 +957,7 @@ export default function CanvasComponent() {
       // Сбрасываем флаг экспорта
       setIsExportRequired(false);
     }
-  }, [isExportRequired, setIsExportRequired, canvasWidth, canvasHeight]);
+  }, [isExportRequired]);
 
   return (
     <div id="canvasContainer" className="canvasContainer">
@@ -906,6 +967,8 @@ export default function CanvasComponent() {
       <canvas id='middleCanvas' className="canvas-middle" />
       {/* Верхний холст */}
       <canvas id='upperCanvas' className="canvas-upper" />
+
+      <ToastContainer theme="dark"/>
     </div>
   );
 }
