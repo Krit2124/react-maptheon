@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useServerMapOperationsStore, useUserStore } from 'store/store';
+import { useSearchFieldStore, useServerMapOperationsStore, useUserStore } from 'store/store';
 
 import PersonalMapCard from "./personalMapCard";
 import UserMapCard from './userMapCard';
@@ -12,6 +12,11 @@ export default function MapCardList({reqCards}) {
         checkAuth,
     } = useUserStore();
 
+    const {
+        textToFind,
+        sortByField,
+    } = useSearchFieldStore();
+
     const { 
         myMaps 
     } = useServerMapOperationsStore();
@@ -20,8 +25,7 @@ export default function MapCardList({reqCards}) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (user === null) await checkAuth();
-                const response = await myMaps(user.id);
+                const response = await myMaps(textToFind, sortByField);
 
                 setCards(response.data.map(map => (
                     <PersonalMapCard
@@ -39,8 +43,10 @@ export default function MapCardList({reqCards}) {
 
         if (reqCards === 'personal') {
             fetchData();
+        } else {
+            setCards(null);
         }
-    }, [user]);
+    }, [reqCards, textToFind, sortByField]);
 
     // if (reqCards === 'public') {
     //     cards = Array(10).fill(<PublicMapCard />);

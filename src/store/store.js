@@ -311,9 +311,9 @@ export const useUserStore = create((set) => ({
 export const useServerMapOperationsStore = create((set)=> ({
     // Функция получения списка карт текущего пользователя
     // Получаемые поля: id, name, is_public, updatedAt, imagePath
-    myMaps: async (id_user) => {
+    myMaps: async (textToFind, sortByField) => {
         try {
-            const maps = await MapService.myMaps(id_user);
+            const maps = await MapService.myMaps(textToFind, sortByField);
             return maps;
         } catch (e) {
             console.log(e.response?.data?.message);
@@ -335,10 +335,22 @@ export const useServerMapOperationsStore = create((set)=> ({
     // Получаемые данные: сообщение о состоянии запроса
     saveMapData: async (id_map, data, mapImage) => {
         try {
-            const message = await MapService.saveMapData(id_map, data);
+            const message = await MapService.saveMapData(id_map, data, mapImage);
             return message;
         } catch (e) {
             console.log(e.response?.data?.message);
+            return (e.response?.data?.message);
         }
     },
+}))
+
+export const useSearchFieldStore = create((set)=> ({
+    textToFind: "",
+    setTextToFind: (value) => set({ textToFind: value }),
+
+    sortByField: 'updatedAt',
+    setSortByField: (value) => set({ sortByField: value }), 
+
+    sortCapture: 'Недавние',
+    setSortCapture: (value) => set({ sortCapture: value }),
 }))

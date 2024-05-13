@@ -28,8 +28,8 @@ export default function CanvasComponent() {
   } = useBrushSettingsStore();
 
   const {
-    canvasWidth,
-    canvasHeight,
+    canvasWidth, setCanvasWidth,
+    canvasHeight, setCanvasHeight,
     filterIntensity,
     isResetRequired, setIsResetRequired,
     canvasBackgroundIsColorMode,
@@ -383,16 +383,6 @@ export default function CanvasComponent() {
         containerClass: 'canvas-middle-container',
       });
 
-      const rect = new fabric.Rect({
-        left: (window.screen.width - canvasWidth) / 2,
-        top: (window.screen.height - canvasHeight) / 2,
-        fill: 'red',
-        width: 100,
-        height: 100,
-      });
-
-      middleCanvas.add(rect);
-
       let middleContainer = document.querySelector('.canvas-middle-container');
       // @ts-ignore
       middleContainer.style.width = '100%';
@@ -690,6 +680,8 @@ export default function CanvasComponent() {
         canvasObjects.find((obj) => {
           if (obj.erasable === false) {
             workingAreaRef.current = obj;
+            setCanvasWidth(obj.width);
+            setCanvasHeight(obj.height);
           }
         });
       } catch (error) {
@@ -893,9 +885,49 @@ export default function CanvasComponent() {
   // Сохранение карты на сервере
   useEffect(() => {
     async function handleSaveMapData() {
+      // Создаем временный холст для сбора всего содержимого
+        const tempCanvas = new fabric.StaticCanvas(null, {
+          width: canvasWidth,
+          height: canvasHeight
+      });
+
+      // Определяем центр рабочей области
+      const centerX = (window.screen.width - canvasWidth) / 2;
+      const centerY = (window.screen.height - canvasHeight) / 2;
+      tempCanvas.absolutePan({
+          x: centerX,
+          y: centerY
+      });
+
+      // Создаем копии объектов с каждого холста и добавляем их на временный холст
+      lowerCanvasRef.current.getObjects().forEach(obj => {
+          const cloneObj = fabric.util.object.clone(obj);
+          tempCanvas.add(cloneObj);
+      });
+
+      middleCanvasRef.current.getObjects().forEach(obj => {
+          const cloneObj = fabric.util.object.clone(obj);
+          tempCanvas.add(cloneObj);
+      });
+
+      upperCanvasRef.current.getObjects().forEach(obj => {
+          const cloneObj = fabric.util.object.clone(obj);
+          tempCanvas.add(cloneObj);
+      });
+
+      // Преобразуем содержимое в URL данных
+      const mapImageDataURL = tempCanvas.toDataURL({
+        format: 'jpg',
+        quality: 1 // качество изображения
+      });
+
+      let id_map = await Number(Cookies.get('idEditingCard'));
+      id_map = id_map ? Number(id_map) : 0;
+
       let mapData = canvasState.list[canvasState.index];
-      let message = await saveMapData(Cookies.get('idEditingCard'), mapData);
-      toast.success(message);
+
+      let message = await saveMapData(id_map, mapData, mapImageDataURL);
+      toast(message);
     }
 
     if (isSaveRequired) {
@@ -960,15 +992,18 @@ export default function CanvasComponent() {
   }, [isExportRequired]);
 
   return (
-    <div id="canvasContainer" className="canvasContainer">
-      {/* Нижний холст */}
-      <canvas id='lowerCanvas' className="canvas-lower" />
-      {/* Средний холст */}
-      <canvas id='middleCanvas' className="canvas-middle" />
-      {/* Верхний холст */}
-      <canvas id='upperCanvas' className="canvas-upper" />
+    <>
+      <div id="canvasContainer" className="canvasContainer">
+        {/* Нижний холст */}
+        <canvas id='lowerCanvas' className="canvas-lower" />
+        {/* Средний холст */}
+        <canvas id='middleCanvas' className="canvas-middle" />
+        {/* Верхний холст */}
+        <canvas id='upperCanvas' className="canvas-upper" />
+      </div>
 
       <ToastContainer theme="dark"/>
-    </div>
+    </>
+    
   );
 }

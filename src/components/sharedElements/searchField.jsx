@@ -5,18 +5,24 @@ import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import { useState } from 'react'
+import { useSearchFieldStore } from 'store/store';
 
 import loupeImage from "../../assets/icons/Loupe.png"
 import showOrHideImage from "../../assets/icons/ShowOrHide.png"
 
 function SearchField() {
-    const [selectedSort, setSelectedSort] = useState('Недавние');
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const {
+        textToFind, setTextToFind,
+        sortByField, setSortByField,
+        sortCapture, setSortCapture,
+    } = useSearchFieldStore();
 
+    const [selectedSort, setSelectedSort] = useState('Недавние');
     const handleSortSelect = (sortOption) => {
         setSelectedSort(sortOption);
     };
 
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const handleDropdownToggle = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
@@ -29,11 +35,13 @@ function SearchField() {
                 placeholder="Введите название или ключевые слова..."
                 aria-label="Введите название или ключевые слова..."
                 className='flex-row-left-c textInput-search-field'
+                value={textToFind}
+                onChange={(e) => setTextToFind(e.target.value)}
             />
 
             <DropdownButton className='flex-col-sb-right' id="input-dropdown" onToggle={handleDropdownToggle} align="end" title={
                 <span>
-                    {selectedSort}
+                    {sortCapture}
                     <img
                         src={showOrHideImage}
                         alt="Показать или скрыть"
@@ -47,9 +55,9 @@ function SearchField() {
                 </span>
             }>
                 <div className='flex-col-sb-right'>
-                    <Dropdown.Item onClick={() => handleSortSelect('Недавние')}>Недавние</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSortSelect('Наиболее популярные')}>Наиболее популярные</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSortSelect('А-Я')}>А-Я</Dropdown.Item>
+                    <Dropdown.Item onClick={() => {setSortByField('updatedAt'); setSortCapture('Недавние')}}>Недавние</Dropdown.Item>
+                    <Dropdown.Item onClick={() => {setSortByField('number_in_favourites'); setSortCapture('Наиболее популярные')}}>Наиболее популярные</Dropdown.Item>
+                    <Dropdown.Item onClick={() => {setSortByField('name'); setSortCapture('А-Я')}}>А-Я</Dropdown.Item>
                 </div>
             </DropdownButton>
         </InputGroup>
