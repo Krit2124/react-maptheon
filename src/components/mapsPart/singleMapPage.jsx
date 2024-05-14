@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import LikeCounter from '../sharedElements/likeCounter';
 
-
 export default function SingleMapPage() {
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">

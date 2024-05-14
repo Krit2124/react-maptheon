@@ -9,6 +9,10 @@ export default class MapService {
         return api.get('/myMapData/' + id_map);
     }
 
+    static async myMapSettings(id_map) {
+        return api.get('/myMapSettings/' + id_map);
+    }
+
     static async saveMapData(id_map, data, mapImage) {
         return api.post('/saveMapData', {id_map, data, mapImage});
     }

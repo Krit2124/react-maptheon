@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { useSearchFieldStore, useServerMapOperationsStore, useUserStore } from 'store/store';
+import { useSearchFieldStore, useServerMapOperationsStore } from 'store/store';
 
 import PersonalMapCard from "./personalMapCard";
 import UserMapCard from './userMapCard';
 import PublicMapCard from './publicMapCard';
 
 export default function MapCardList({reqCards}) {
-    const {
-        user,
-        checkAuth,
-    } = useUserStore();
-
     const {
         textToFind,
         sortByField,
@@ -23,15 +18,15 @@ export default function MapCardList({reqCards}) {
     const [cards, setCards] = useState();
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPersonalData = async () => {
             try {
                 const response = await myMaps(textToFind, sortByField);
 
                 setCards(response.data.map(map => (
                     <PersonalMapCard
+                        key={map.id}
                         id={map.id}
                         name={map.name}
-                        isPublic={map.is_public}
                         updatedAt={map.updatedAt}
                         imagePath={map.imagePath}
                     />
@@ -42,7 +37,7 @@ export default function MapCardList({reqCards}) {
         };
 
         if (reqCards === 'personal') {
-            fetchData();
+            fetchPersonalData();
         } else {
             setCards(null);
         }

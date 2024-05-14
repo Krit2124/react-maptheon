@@ -18,7 +18,7 @@ export default function PersonalMapsPage() {
 
                     <SearchField />
 
-                    <Link onClick={() => Cookies.remove('idEditingCard')} to="/editor" className="button-text-usual">Создать карту</Link>
+                    <Link onClick={() => Cookies.remove('idEditingMap')} to="/editor" className="button-text-usual">Создать карту</Link>
                 </div>
             </div>
 

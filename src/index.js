@@ -19,6 +19,7 @@ import Authorization from 'components/signInUp/authorization';
 import Registration from 'components/signInUp/registration';
 import MainGraphicEditor from 'components/graphicEditor/mainGraphicEditor';
 import ErrorPage from 'errorPage';
+import PersonalSingleMapPage from 'components/mapsPart/personalSingleMapPage';
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
           {
             path: 'singleMap',
             element: <SingleMapPage />,
+          },
+          {
+            path: 'personalSingleMap',
+            element: <PersonalSingleMapPage />,
           },
           {
             path: 'profileSettings',

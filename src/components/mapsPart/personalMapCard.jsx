@@ -2,21 +2,20 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-import { useServerMapOperationsStore } from 'store/store';
-
 import GearImage from '../../assets/icons/Gear.png';
 import PencilImage from '../../assets/icons/Pencil.png';
 
-export default function PersonalMapCard({id, name, isPublic, updatedAt, imagePath}) {
-    const { 
-        selectedMapId, setSelectedMapId,
-    } = useServerMapOperationsStore();
-
+export default function PersonalMapCard({key, id, name, updatedAt, imagePath}) {
     const navigate = useNavigate();
 
     const handleStartEdit = (id) => {
-        Cookies.set('idEditingCard', id, { expires: 30 });
+        Cookies.set('idEditingMap', id, { expires: 30 });
         navigate(`/editor`);
+    };
+
+    const handleEditMapSettings = (id) => {
+        Cookies.set('idEditingMap', id, { expires: 30 });
+        navigate(`/maps/personalSingleMap`);
     };
 
     // Функция для извлечения понятной даты
@@ -29,7 +28,7 @@ export default function PersonalMapCard({id, name, isPublic, updatedAt, imagePat
         <div className="flex-col-sb-c background-gray-search flex-gap-15 personalMapCard">
             <div className='flex-row-sb-c mapCardButtons'>
                 <button className='button-image-small'>
-                    <img src={GearImage} alt="Настройки"/>
+                    <img src={GearImage} alt="Настройки" onClick={() => handleEditMapSettings(id)} />
                 </button>
 
                 <button className='button-image-small' onClick={() => handleStartEdit(id)}>

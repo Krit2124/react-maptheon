@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import AuthService from '../services/AuthService';
 import MapService from "services/MapService";
+import TagService from "services/TagService";
 import { API_URL } from '../http';
 
 import grassImage from "../assets/textures/grass.jpg";
@@ -243,6 +244,17 @@ export const useObjectSettingsState = create((set) => ({
     setObjectSelected: (value) => set({ objectSelected: value }),
 }));
 
+export const useSearchFieldStore = create((set)=> ({
+    textToFind: "",
+    setTextToFind: (value) => set({ textToFind: value }),
+
+    sortByField: 'updatedAt',
+    setSortByField: (value) => set({ sortByField: value }), 
+
+    sortCapture: 'Недавние',
+    setSortCapture: (value) => set({ sortCapture: value }),
+}))
+
 export const useUserStore = create((set) => ({
     user: {},
     isAuth: false,
@@ -310,7 +322,7 @@ export const useUserStore = create((set) => ({
 
 export const useServerMapOperationsStore = create((set)=> ({
     // Функция получения списка карт текущего пользователя
-    // Получаемые поля: id, name, is_public, updatedAt, imagePath
+    // Получаемые поля: id, name, updatedAt, imagePath
     myMaps: async (textToFind, sortByField) => {
         try {
             const maps = await MapService.myMaps(textToFind, sortByField);
@@ -331,6 +343,17 @@ export const useServerMapOperationsStore = create((set)=> ({
         }
     },
 
+    // Функция получения настроек карты для её редактирования
+    // Получаемые поля: data (в формате JSON)
+    myMapSettings: async (id_map) => {
+        try {
+            const mapSettings = await MapService.myMapSettings(id_map);
+            return mapSettings;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+
     // Функция сохранения данных карты
     // Получаемые данные: сообщение о состоянии запроса
     saveMapData: async (id_map, data, mapImage) => {
@@ -344,13 +367,36 @@ export const useServerMapOperationsStore = create((set)=> ({
     },
 }))
 
-export const useSearchFieldStore = create((set)=> ({
-    textToFind: "",
-    setTextToFind: (value) => set({ textToFind: value }),
+export const useServerTagOperationsStore = create((set)=> ({
+    // Функция получения списка тегов для выбранной карты
+    // Получение записей из таблицы tags
+    tagsForMap: async (id_map) => {
+        try {
+            const tags = await TagService.tagsForMap(id_map);
+            return tags;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+    
+    // Функция привязки тега к карте
+    bindTagToMap: async (tag_name, id_map) => {
+        try {
+            await TagService.bindTagToMap(tag_name, id_map);
+            return 'Данные успешно сохранены';
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
 
-    sortByField: 'updatedAt',
-    setSortByField: (value) => set({ sortByField: value }), 
-
-    sortCapture: 'Недавние',
-    setSortCapture: (value) => set({ sortCapture: value }),
+    // Функция удаления привязки тега к карте (и удаления тега, если он никем не используется)
+    saveMapData: async (id_map, id_tag) => {
+        try {
+            await TagService.deleteTag(id_map, id_tag);
+            return 'Данные успешно удалены';
+        } catch (e) {
+            console.log(e.response?.data?.message);
+            return (e.response?.data?.message);
+        }
+    },
 }))

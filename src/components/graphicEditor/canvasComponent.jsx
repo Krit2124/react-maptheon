@@ -689,7 +689,7 @@ export default function CanvasComponent() {
       }
     }
 
-    let editingMapId = Cookies.get('idEditingCard');
+    let editingMapId = Cookies.get('idEditingMap');
 
     if (editingMapId) {
       loadMapData(editingMapId);
@@ -921,13 +921,18 @@ export default function CanvasComponent() {
         quality: 1 // качество изображения
       });
 
-      let id_map = await Number(Cookies.get('idEditingCard'));
+      let id_map = await Number(Cookies.get('idEditingMap'));
       id_map = id_map ? Number(id_map) : 0;
 
       let mapData = canvasState.list[canvasState.index];
 
       let message = await saveMapData(id_map, mapData, mapImageDataURL);
-      toast(message);
+      if (message === '') {
+        toast(message);
+      } else {
+        toast('Данные успешно сохранены');
+      }
+      
     }
 
     if (isSaveRequired) {
@@ -993,6 +998,7 @@ export default function CanvasComponent() {
 
   return (
     <>
+      <ToastContainer theme="dark" position="bottom-center"/>
       <div id="canvasContainer" className="canvasContainer">
         {/* Нижний холст */}
         <canvas id='lowerCanvas' className="canvas-lower" />
@@ -1001,8 +1007,6 @@ export default function CanvasComponent() {
         {/* Верхний холст */}
         <canvas id='upperCanvas' className="canvas-upper" />
       </div>
-
-      <ToastContainer theme="dark"/>
     </>
     
   );
