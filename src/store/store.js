@@ -348,7 +348,7 @@ export const useServerMapOperationsStore = create((set)=> ({
     myMapSettings: async (id_map) => {
         try {
             const mapSettings = await MapService.myMapSettings(id_map);
-            return mapSettings;
+            return mapSettings.data;
         } catch (e) {
             console.log(e.response?.data?.message);
         }

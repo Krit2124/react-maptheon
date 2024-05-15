@@ -15,6 +15,7 @@ export default function MapCardList({reqCards}) {
     const { 
         myMaps 
     } = useServerMapOperationsStore();
+    
     const [cards, setCards] = useState();
 
     useEffect(() => {

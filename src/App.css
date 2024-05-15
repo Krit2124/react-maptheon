@@ -222,7 +222,7 @@ section .container, .container-fullScreen {
 }
 
 .container-fullScreen {
-  width: 90vw;
+  max-width: 90vw;
   margin: 0 5vw;
 }
 
@@ -648,7 +648,10 @@ header {
   width: 430px;
 }
 
-
+.mapFillSizeImage {
+  max-width: 100%;
+  max-height: 100%;
+}
 
 /* Canvas */
 .header-graphicEditor {

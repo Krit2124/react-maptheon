@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import GearImage from '../../assets/icons/Gear.png';
 import PencilImage from '../../assets/icons/Pencil.png';
 
-export default function PersonalMapCard({key, id, name, updatedAt, imagePath}) {
+export default function PersonalMapCard({ id, name, updatedAt, imagePath}) {
     const navigate = useNavigate();
 
     const handleStartEdit = (id) => {
