@@ -13,6 +13,18 @@ export default class MapService {
         return api.get('/myMapSettings/' + id_map);
     }
 
+    static async updateMapName(id_map, newName) {
+        return api.post('/updateMapName', {id_map, newName});
+    }
+
+    static async updateMapDescription(id_map, newDescription) {
+        return api.post('/updateMapDescription', {id_map, newDescription});
+    }
+
+    static async updateMapPublicStatus(id_map, newPublicStatus) {
+        return api.post('/updateMapPublicStatus', {id_map, newPublicStatus});
+    }
+
     static async saveMapData(id_map, data, mapImage) {
         return api.post('/saveMapData', {id_map, data, mapImage});
     }

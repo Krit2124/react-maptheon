@@ -64,8 +64,7 @@ export default function LabelSettings() {
             <div className='flex-col-sb-left flex-gap-10 size-full-horizontal-percent'>
                 <p>Текст</p>
                 <textarea 
-                    // @ts-ignore
-                    rows="3" 
+                    rows={3}
                     className="textInput-usual size-full-horizontal-percent" 
                     value={textareaValue}
                     onChange={(e) => handleTextChange(e.target.value)}

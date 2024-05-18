@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { useServerMapOperationsStore, useServerTagOperationsStore } from 'store/store';
 
@@ -9,17 +10,22 @@ import deleteImage from "../../assets/icons/Close.png";
 import plusImage from "../../assets/icons/Plus.png";
 
 export default function PersonalSingleMapPage() {
+    const navigate = useNavigate();
+
     const { 
-        myMapSettings
+        myMapSettings,
+        updateMapName,
+        updateMapDescription,
+        updateMapPublicStatus,
     } = useServerMapOperationsStore();
 
     const { 
         tagsForMap,
         bindTagToMap,
-        saveMapData, 
+        deleteTag, 
     } = useServerTagOperationsStore();
 
-    // Информация о карте
+    const [mapId, setMapId] = useState('');
     const [mapImage, setMapImage] = useState('');
     const [mapName, setMapName] = useState('Название карты');
     const [likeAmount, setLikeAmount] = useState(0);
@@ -28,28 +34,45 @@ export default function PersonalSingleMapPage() {
     const [updatedAt, setUpdatedAt] = useState('14.05.2024');
     const [isMapPublic, setIsMapPublic] = useState(false);
 
-    // Информация о тегах
-    const [tags, setTags] = useState(['Тег 1', 'Тег 2', 'Тег 3', 'Тег 4']);
+    const [tags, setTags] = useState([]);
     const [isAddingTag, setIsAddingTag] = useState(false);
     const [newTag, setNewTag] = useState('');
 
-    const handleDeleteTag = (tagToDelete) => {
-        setTags(tags.filter(tag => tag !== tagToDelete));
+    const handleDeleteTag = async (tagToDelete) => {
+        const tagToDeleteObj = tags.find(tag => tag.name === tagToDelete);
+        if (tagToDeleteObj) {
+            try {
+                await deleteTag(mapId, tagToDeleteObj.id);
+                setTags(tags.filter(tag => tag.name !== tagToDelete));
+            } catch (e) {
+                console.log(e);
+            }
+        }
     };
 
     const handleAddTag = () => {
         setIsAddingTag(true);
     };
 
-    const handleTagInputBlur = () => {
+    const handleTagInputBlur = async () => {
         if (newTag.trim()) {
-            setTags([...tags, newTag.trim()]);
+            const trimmedTag = newTag.trim();
+            if (!tags.find(tag => tag.name === trimmedTag)) {
+                try {
+                    toast(await bindTagToMap(trimmedTag, mapId));
+                    const updatedTags = await tagsForMap(mapId);
+                    setTags(updatedTags);
+                } catch (e) {
+                    console.log(e);
+                }
+            } else {
+                toast('Тег уже существует');
+            }
         }
         setNewTag('');
         setIsAddingTag(false);
     };
 
-    // Функция для извлечения понятной даты
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleString().slice(0, 10);
@@ -58,10 +81,9 @@ export default function PersonalSingleMapPage() {
     useEffect(() => {
         const fetchMapSettings = async () => {
             try {
-                // Получение данных о карте из таблицы map
-                let mapId = Cookies.get('idEditingMap');
-                let mapSettings = await myMapSettings(mapId);
-                console.log(mapSettings);
+                const id = Cookies.get('idEditingMap');
+                setMapId(id);
+                const mapSettings = await myMapSettings(id);
                 setMapImage(mapSettings.image);
                 setMapName(mapSettings.name);
                 setMapDescription(mapSettings.description);
@@ -74,8 +96,50 @@ export default function PersonalSingleMapPage() {
             }
         };
 
+        const fetchTags = async () => {
+            try {
+                const id = Cookies.get('idEditingMap');
+                const newTags = await tagsForMap(id);
+                setTags(newTags);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
         fetchMapSettings();
+        fetchTags();
     }, []);
+
+    const handleMapNameChange = async (newName) => {
+        try {
+            toast(await updateMapName(mapId, newName));;
+            setMapName(newName);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const handleMapDescriptionChange = async (newDescription) => {
+        try {
+            toast(await updateMapDescription(mapId, newDescription));
+            setMapDescription(newDescription);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const handleMapPublicStatusChange = async () => {
+        try {
+            toast(await updateMapPublicStatus(mapId, !isMapPublic));
+            setIsMapPublic(!isMapPublic);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const handleStartEdit = () => {
+        navigate(`/editor`);
+    };
 
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
@@ -86,7 +150,13 @@ export default function PersonalSingleMapPage() {
 
                 <div className='flex-col-sb-left flex-gap-30 container-mapInfo'>
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
-                        <h1>{mapName}</h1>
+                        <input 
+                            type="text" 
+                            value={mapName} 
+                            onChange={(e) => setMapName(e.target.value)}
+                            onBlur={() => handleMapNameChange(mapName)}
+                            className="textInput-usual" 
+                        />
 
                         <div className="flex-row-sb-c flex-gap-10">
                             <p>{likeAmount}</p>
@@ -95,7 +165,13 @@ export default function PersonalSingleMapPage() {
                     </div>
 
                     <div className='size-full-horizontal-percent'>
-                        <p>{mapDescription}</p>
+                        <textarea 
+                            value={mapDescription} 
+                            onChange={(e) => setMapDescription(e.target.value)}
+                            onBlur={() => handleMapDescriptionChange(mapDescription)}
+                            rows={5}
+                            className="textInput-usual size-full-horizontal-percent" 
+                        />
                     </div>
 
                     <div className='flex-col-sb-left flex-gap-10 size-full-horizontal-percent'>
@@ -105,13 +181,16 @@ export default function PersonalSingleMapPage() {
 
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
                         <div className="flex-col-sb-left flex-gap-10">
-                            <button className="button-text-usual">Скачать изображение</button>
-                            <button className="button-text-usual">Перейти в редактор карты</button>
+                            <a href={mapImage} download={mapName + '.jpg'} type='image/jpeg' target='_blank' rel='noreferrer' className="button-text-usual">Скачать изображение</a>
+                            <button className="button-text-usual" onClick={() => handleStartEdit()}>Перейти в редактор карты</button>
                         </div>
 
                         <div className="flex-col-sb-right flex-gap-10">
                             <button className="button-text-usual">Удалить карту</button>
-                            <button className={`button-text-usual ${isMapPublic ? 'active' : ''}`} onClick={() => setIsMapPublic(!isMapPublic)}>
+                            <button 
+                                className={`button-text-usual ${isMapPublic ? 'active' : ''}`} 
+                                onClick={handleMapPublicStatusChange}
+                            >
                                 {isMapPublic ? 'Карта публичная' : 'Карта не публичная'}
                             </button>
                         </div>
@@ -120,8 +199,8 @@ export default function PersonalSingleMapPage() {
                     <div className='flex-row-left-top flex-gap-15 flex-wrap'>
                         {tags.map((tag, index) => (
                             <div key={index} className='tagBox flex-row-sb-c flex-gap-5'>
-                                <p>{tag}</p>
-                                <button onClick={() => handleDeleteTag(tag)}><img src={deleteImage} alt="Удалить" /></button>
+                                <p>{tag.name}</p>
+                                <button onClick={() => handleDeleteTag(tag.name)}><img src={deleteImage} alt="Удалить" /></button>
                             </div>
                         ))}
                         {isAddingTag ? (
@@ -142,6 +221,8 @@ export default function PersonalSingleMapPage() {
                     </div>
                 </div>
             </div>
+
+            <ToastContainer theme="dark"/>
         </section>
     );
 }

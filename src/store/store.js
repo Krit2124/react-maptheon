@@ -343,6 +343,42 @@ export const useServerMapOperationsStore = create((set)=> ({
         }
     },
 
+    // Функция сохранения названия карты
+    // Получаемые данные: сообщение о состоянии запроса
+    updateMapName: async (id_map, newName) => {
+        try {
+            const message = await MapService.updateMapName(id_map, newName);
+            return message.data;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+            return (e.response?.data?.message);
+        }
+    },
+
+    // Функция сохранения описания карты
+    // Получаемые данные: сообщение о состоянии запроса
+    updateMapDescription: async (id_map, newDescription) => {
+        try {
+            const message = await MapService.updateMapDescription(id_map, newDescription);
+            return message.data;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+            return (e.response?.data?.message);
+        }
+    },
+
+    // Функция сохранения статуса публичности карты
+    // Получаемые данные: сообщение о состоянии запроса
+    updateMapPublicStatus: async (id_map, newPublicStatus) => {
+        try {
+            const message = await MapService.updateMapPublicStatus(id_map, newPublicStatus);
+            return message.data;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+            return (e.response?.data?.message);
+        }
+    },
+
     // Функция получения настроек карты для её редактирования
     // Получаемые поля: data (в формате JSON)
     myMapSettings: async (id_map) => {
@@ -373,7 +409,7 @@ export const useServerTagOperationsStore = create((set)=> ({
     tagsForMap: async (id_map) => {
         try {
             const tags = await TagService.tagsForMap(id_map);
-            return tags;
+            return tags.data;
         } catch (e) {
             console.log(e.response?.data?.message);
         }
@@ -390,7 +426,7 @@ export const useServerTagOperationsStore = create((set)=> ({
     },
 
     // Функция удаления привязки тега к карте (и удаления тега, если он никем не используется)
-    saveMapData: async (id_map, id_tag) => {
+    deleteTag: async (id_map, id_tag) => {
         try {
             await TagService.deleteTag(id_map, id_tag);
             return 'Данные успешно удалены';

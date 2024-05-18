@@ -12,6 +12,7 @@
   box-sizing: border-box;
   color: white;
   font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
   /* Кастомизация полосы прокрутки для Firefox */
   /* scrollbar-color: var(--background-gray) none;
   scrollbar-width: thin; */
