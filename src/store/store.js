@@ -321,12 +321,26 @@ export const useUserStore = create((set) => ({
 }));
 
 export const useServerMapOperationsStore = create((set)=> ({
+    urlToGetPreviewImg: 'http://localhost:3051/img/mapsPreviews/',
+    urlToGetFullSizeImg: 'http://localhost:3051/img/mapsFullSize/',
+
+    // Функция получения списка всех карт
+    // Получаемые поля: id, name, id_creator, creator_name, number_in_favourites
+    allMaps: async (textToFind, sortByField) => {
+        try {
+            const maps = await MapService.allMaps(textToFind, sortByField);
+            return maps.data;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+
     // Функция получения списка карт текущего пользователя
-    // Получаемые поля: id, name, updatedAt, imagePath
+    // Получаемые поля: id, name, updatedAt
     myMaps: async (textToFind, sortByField) => {
         try {
             const maps = await MapService.myMaps(textToFind, sortByField);
-            return maps;
+            return maps.data;
         } catch (e) {
             console.log(e.response?.data?.message);
         }
@@ -380,7 +394,7 @@ export const useServerMapOperationsStore = create((set)=> ({
     },
 
     // Функция получения настроек карты для её редактирования
-    // Получаемые поля: data (в формате JSON)
+    // Получаемые поля: id, name, description, number_in_favourites, is_public, createdAt, updatedAt
     myMapSettings: async (id_map) => {
         try {
             const mapSettings = await MapService.myMapSettings(id_map);
@@ -395,6 +409,18 @@ export const useServerMapOperationsStore = create((set)=> ({
     saveMapData: async (id_map, data, mapImage) => {
         try {
             const message = await MapService.saveMapData(id_map, data, mapImage);
+            return message;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+            return (e.response?.data?.message);
+        }
+    },
+
+    // Функция для удаления карты
+    // Получаемые данные: сообщение о состоянии запроса
+    deleteMap: async (id_map) => {
+        try {
+            const message = await MapService.deleteMap(id_map);
             return message;
         } catch (e) {
             console.log(e.response?.data?.message);

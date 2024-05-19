@@ -12,33 +12,54 @@ export default function MapCardList({reqCards}) {
         sortByField,
     } = useSearchFieldStore();
 
-    const { 
-        myMaps 
+    const {
+        allMaps,
+        myMaps,
     } = useServerMapOperationsStore();
     
     const [cards, setCards] = useState();
 
+    const fetchPersonalMaps = async () => {
+        try {
+            const response = await myMaps(textToFind, sortByField);
+
+            setCards(response.map(map => (
+                <PersonalMapCard
+                    key={map.id}
+                    id={map.id}
+                    name={map.name}
+                    updatedAt={map.updatedAt}
+                />
+            )))
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const fetchPublicMaps = async () => {
+        try {
+            const response = await allMaps(textToFind, sortByField);
+
+            setCards(response.map(map => (
+                <PublicMapCard
+                    key={map.id}
+                    id={map.id}
+                    name={map.name}
+                    id_creator={map.id_creator}
+                    creator_name={map.creator_name}
+                    number_in_favourites={map.number_in_favourites}
+                />
+            )))
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
-        const fetchPersonalData = async () => {
-            try {
-                const response = await myMaps(textToFind, sortByField);
-
-                setCards(response.data.map(map => (
-                    <PersonalMapCard
-                        key={map.id}
-                        id={map.id}
-                        name={map.name}
-                        updatedAt={map.updatedAt}
-                        imagePath={map.imagePath}
-                    />
-                )))
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
         if (reqCards === 'personal') {
-            fetchPersonalData();
+            fetchPersonalMaps();
+        } else if (reqCards === 'public') {
+            fetchPublicMaps()
         } else {
             setCards(null);
         }

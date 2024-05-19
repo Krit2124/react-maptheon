@@ -13,10 +13,12 @@ export default function PersonalSingleMapPage() {
     const navigate = useNavigate();
 
     const { 
+        urlToGetFullSizeImg,
         myMapSettings,
         updateMapName,
         updateMapDescription,
         updateMapPublicStatus,
+        deleteMap,
     } = useServerMapOperationsStore();
 
     const { 
@@ -26,7 +28,6 @@ export default function PersonalSingleMapPage() {
     } = useServerTagOperationsStore();
 
     const [mapId, setMapId] = useState('');
-    const [mapImage, setMapImage] = useState('');
     const [mapName, setMapName] = useState('Название карты');
     const [likeAmount, setLikeAmount] = useState(0);
     const [mapDescription, setMapDescription] = useState('Описание карты');
@@ -84,7 +85,6 @@ export default function PersonalSingleMapPage() {
                 const id = Cookies.get('idEditingMap');
                 setMapId(id);
                 const mapSettings = await myMapSettings(id);
-                setMapImage(mapSettings.image);
                 setMapName(mapSettings.name);
                 setMapDescription(mapSettings.description);
                 setLikeAmount(mapSettings.number_in_favourites);
@@ -112,7 +112,7 @@ export default function PersonalSingleMapPage() {
 
     const handleMapNameChange = async (newName) => {
         try {
-            toast(await updateMapName(mapId, newName));;
+            toast(await updateMapName(mapId, newName));
             setMapName(newName);
         } catch (e) {
             console.log(e);
@@ -141,11 +141,22 @@ export default function PersonalSingleMapPage() {
         navigate(`/editor`);
     };
 
+    const handleDeleteMap = async () => {
+        if (window.confirm("Вы действительно хотите удалить эту карту?")) {
+            try {
+                await deleteMap(mapId);
+                navigate('/maps/personal/yours');
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    };
+
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
             <div className="container-fullScreen size-full-vertical-pagePercent-withHeader flex-row-c-c flex-gap-50">
                 <div className="mapFillSizeImage">
-                    <img src={mapImage} alt="Карта" />
+                    <img src={urlToGetFullSizeImg + mapId + '.jpg'} alt="Карта" />
                 </div>
 
                 <div className='flex-col-sb-left flex-gap-30 container-mapInfo'>
@@ -181,12 +192,12 @@ export default function PersonalSingleMapPage() {
 
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
                         <div className="flex-col-sb-left flex-gap-10">
-                            <a href={mapImage} download={mapName + '.jpg'} type='image/jpeg' target='_blank' rel='noreferrer' className="button-text-usual">Скачать изображение</a>
-                            <button className="button-text-usual" onClick={() => handleStartEdit()}>Перейти в редактор карты</button>
+                            <a href={urlToGetFullSizeImg + mapId + '.jpg'} download={`${mapName}.jpg`} type='image/jpeg' className="button-text-usual">Скачать изображение</a>
+                            <button className="button-text-usual" onClick={handleStartEdit}>Перейти в редактор карты</button>
                         </div>
 
                         <div className="flex-col-sb-right flex-gap-10">
-                            <button className="button-text-usual">Удалить карту</button>
+                            <button className="button-text-usual" onClick={handleDeleteMap}>Удалить карту</button>
                             <button 
                                 className={`button-text-usual ${isMapPublic ? 'active' : ''}`} 
                                 onClick={handleMapPublicStatusChange}

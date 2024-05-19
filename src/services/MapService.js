@@ -1,6 +1,10 @@
 import api from "../http/index";
 
 export default class MapService {
+    static async allMaps(textToFind, sortByField) {
+        return api.post('/allMaps', {textToFind, sortByField});
+    }
+
     static async myMaps(textToFind, sortByField) {
         return api.post('/myMaps', {textToFind, sortByField});
     }
@@ -27,5 +31,9 @@ export default class MapService {
 
     static async saveMapData(id_map, data, mapImage) {
         return api.post('/saveMapData', {id_map, data, mapImage});
+    }
+
+    static async deleteMap(id_map) {
+        return api.post('/deleteMap', {id_map});
     }
 }

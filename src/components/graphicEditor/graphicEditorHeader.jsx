@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import { useGeneralGraphicEditorStore } from 'store/store';
 
 import exitImage from "../../assets/icons/Exit.png"
 import arrowBackImage from "../../assets/icons/ArrowBack.png"
 import arrowForwardImage from "../../assets/icons/ArrowForward.png"
 import showOrHideImage from "../../assets/icons/ShowOrHide.png"
-import { useGeneralGraphicEditorStore } from 'store/store';
 
 export default function GraphicEditorHeader() {
+    const navigate = useNavigate();
+
     const {
         isObjectListVisible,
         setIsObjectListVisible,
@@ -23,13 +26,23 @@ export default function GraphicEditorHeader() {
         setRotationClass(rotationClass === 'rotate-right' ? 'rotate-left' : 'rotate-right');
     }
 
+    const handleExit = async () => {
+        if (window.confirm("Вы действительно выйти?\nНесохранённые данные будут утеряны")) {
+            try {
+                navigate('/maps/personal/yours');
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    };
+
     return (
         <header className="border-black-bottom background-black header-graphicEditor">
             <div className="flex-row-sb-c">
                 <div className="flex-row-sb-c flex-gap-30">
-                    <Link to="/maps/personal/yours" className="button-image-big">
+                    <button className="button-image-big" onClick={() => handleExit()}>
                         <img src={exitImage} alt="Выйти из редактора"/>
-                    </Link>
+                    </button>
 
                     <div className='flex-row-sb-c flex-gap-10'>
                         <button className="button-image-big" onClick={() => setIsUndoRequired(true)}>

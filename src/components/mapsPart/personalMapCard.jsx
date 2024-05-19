@@ -2,11 +2,17 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
+import { useServerMapOperationsStore } from 'store/store';
+
 import GearImage from '../../assets/icons/Gear.png';
 import PencilImage from '../../assets/icons/Pencil.png';
 
-export default function PersonalMapCard({ id, name, updatedAt, imagePath}) {
+export default function PersonalMapCard({ id, name, updatedAt }) {
     const navigate = useNavigate();
+
+    const {
+        urlToGetPreviewImg,
+    } = useServerMapOperationsStore();
 
     const handleStartEdit = (id) => {
         Cookies.set('idEditingMap', id, { expires: 30 });
@@ -36,7 +42,7 @@ export default function PersonalMapCard({ id, name, updatedAt, imagePath}) {
                 </button>
             </div>
         
-            <img src={imagePath} className="mapCardImg" alt={name} />
+            <img src={urlToGetPreviewImg + id + '.jpg'} className="mapCardImg" alt={name} />
 
             <div className="flex-row-sb-c mapCardContent">
                 <h3>{name}</h3>
