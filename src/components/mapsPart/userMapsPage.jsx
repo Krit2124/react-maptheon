@@ -1,11 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { useUserStore } from 'store/store';
 import SearchField from "../sharedElements/searchField";
 import MapCardList from './mapCardList';
 
 import userWithoutAvatarImage from "../../assets/UserWithoutAvatar.png"
+import Cookies from 'js-cookie';
 
 function UserMapsPage() {
+    const {
+        getProfileInfo,
+    } = useUserStore();
+
+    const [userName, setUserName] = useState();
+    const [userDescription, setUserDescription] = useState();
+
+
+    const fetchUserProfileInfo = async () => {
+        try {
+            let id_user = Cookies.get('idUser');
+            const userInfo = await getProfileInfo(id_user);
+            setUserName(userInfo.username);
+            setUserDescription(userInfo.description);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        try {
+            fetchUserProfileInfo();
+        } catch (e) {
+            console.log(e);
+        }
+    }, [])
+
     return (
         <section className="background-gray-default">
             <div className="container">
@@ -13,8 +42,8 @@ function UserMapsPage() {
                     <img src={userWithoutAvatarImage} alt="Аватар" />
                     
                     <div className='flex-col-sb-left flex-gap-10'>
-                        <h1>Имя пользователя</h1>
-                        <p>Описание профиля</p>
+                        <h1>{userName}</h1>
+                        <p>{userDescription}</p>
                     </div>
                 </div>
             </div>

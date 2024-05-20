@@ -1,6 +1,6 @@
 import api from "../http/index";
 
-export default class AuthService {
+export default class UserService {
     static async login(emailOrUsername, password) {
         return api.post('/login', { emailOrUsername, password });
     }
@@ -11,5 +11,9 @@ export default class AuthService {
 
     static async logout() {
         return api.post('/logout');
+    }
+
+    static async getProfileInfo(id_user) {
+        return api.get('/profileInfo/' + id_user);
     }
 }

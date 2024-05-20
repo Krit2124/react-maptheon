@@ -79,33 +79,33 @@ export default function PersonalSingleMapPage() {
         return date.toLocaleString().slice(0, 10);
     };
 
-    useEffect(() => {
-        const fetchMapSettings = async () => {
-            try {
-                const id = Cookies.get('idEditingMap');
-                setMapId(id);
-                const mapSettings = await myMapSettings(id);
-                setMapName(mapSettings.name);
-                setMapDescription(mapSettings.description);
-                setLikeAmount(mapSettings.number_in_favourites);
-                setCreatedAt(mapSettings.createdAt);
-                setUpdatedAt(mapSettings.updatedAt);
-                setIsMapPublic(mapSettings.is_public);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
-        const fetchTags = async () => {
-            try {
-                const id = Cookies.get('idEditingMap');
-                const newTags = await tagsForMap(id);
-                setTags(newTags);
-            } catch (e) {
-                console.log(e);
-            }
+    const fetchMapSettings = async () => {
+        try {
+            const id = Cookies.get('idEditingMap');
+            setMapId(id);
+            const mapSettings = await myMapSettings(id);
+            setMapName(mapSettings.name);
+            setMapDescription(mapSettings.description);
+            setLikeAmount(mapSettings.number_in_favourites);
+            setCreatedAt(mapSettings.createdAt);
+            setUpdatedAt(mapSettings.updatedAt);
+            setIsMapPublic(mapSettings.is_public);
+        } catch (e) {
+            console.log(e);
         }
+    };
 
+    const fetchTags = async () => {
+        try {
+            const id = Cookies.get('idEditingMap');
+            const newTags = await tagsForMap(id);
+            setTags(newTags);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(() => {
         fetchMapSettings();
         fetchTags();
     }, []);

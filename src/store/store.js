@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { fabric } from 'fabric-all-modules';
 import axios from 'axios';
 
-import AuthService from '../services/AuthService';
+import UserService from '../services/UserService';
 import MapService from "services/MapService";
 import TagService from "services/TagService";
 import { API_URL } from '../http';
@@ -262,7 +262,7 @@ export const useUserStore = create((set) => ({
 
     login: async (emailOrUsername, password) => {
         try {
-            const response = await AuthService.login(emailOrUsername, password);
+            const response = await UserService.login(emailOrUsername, password);
             localStorage.setItem('token', response.data.accessToken);
             set({ isAuth: true, user: response.data.user });
             return {
@@ -280,7 +280,7 @@ export const useUserStore = create((set) => ({
 
     registration: async (username, email, password) => {
         try {
-            const response = await AuthService.registration(username,email, password);
+            const response = await UserService.registration(username,email, password);
             localStorage.setItem('token', response.data.accessToken);
             set({ isAuth: true, user: response.data.user });
             return {
@@ -298,7 +298,7 @@ export const useUserStore = create((set) => ({
 
     logout: async () => {
         try {
-            await AuthService.logout();
+            await UserService.logout();
             localStorage.removeItem('token');
             set({ isAuth: false, user: {} });
         } catch (e) {
@@ -316,6 +316,15 @@ export const useUserStore = create((set) => ({
             console.log(e.response?.data?.message);
         } finally {
             set({ isLoading: false });
+        }
+    },
+
+    getProfileInfo: async (id_user) => {
+        try {
+            const userInfo = await UserService.getProfileInfo(id_user);
+            return userInfo.data;
+        } catch (e) {
+            console.log(e.response?.data?.message);
         }
     },
 }));
@@ -341,6 +350,17 @@ export const useServerMapOperationsStore = create((set)=> ({
         try {
             const maps = await MapService.myMaps(textToFind, sortByField);
             return maps.data;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+
+    // Функция получения списка карт текущего пользователя
+    // Получаемые поля: maps (id, name, number_in_favourites), userInfo (id, username, description)
+    userMaps: async (id_user, textToFind, sortByField) => {
+        try {
+            const userMapsData = await MapService.userMaps(id_user, textToFind, sortByField);
+            return userMapsData.data;
         } catch (e) {
             console.log(e.response?.data?.message);
         }

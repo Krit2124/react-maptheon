@@ -9,6 +9,10 @@ export default class MapService {
         return api.post('/myMaps', {textToFind, sortByField});
     }
 
+    static async userMaps(id_user, textToFind, sortByField) {
+        return api.post('/userMaps', {id_user, textToFind, sortByField});
+    }
+
     static async myMapData(id_map) {
         return api.get('/myMapData/' + id_map);
     }

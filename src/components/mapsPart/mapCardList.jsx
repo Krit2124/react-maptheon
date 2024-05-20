@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 
 import { useSearchFieldStore, useServerMapOperationsStore } from 'store/store';
 
@@ -15,6 +16,7 @@ export default function MapCardList({reqCards}) {
     const {
         allMaps,
         myMaps,
+        userMaps,
     } = useServerMapOperationsStore();
     
     const [cards, setCards] = useState();
@@ -55,11 +57,34 @@ export default function MapCardList({reqCards}) {
         }
     }
 
+    const fetchUserMaps = async () => {
+        try {
+            let id_user = Cookies.get('idUser');
+
+            const response = await userMaps(id_user, textToFind, sortByField);
+
+            setCards(response.map(map => (
+                <UserMapCard
+                    key={map.id}
+                    id={map.id}
+                    name={map.name}
+                    number_in_favourites={map.number_in_favourites}
+                />
+            )))
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     useEffect(() => {
         if (reqCards === 'personal') {
             fetchPersonalMaps();
         } else if (reqCards === 'public') {
             fetchPublicMaps()
+        } else if (reqCards === 'favourite') {
+            setCards(null);
+        } else if (reqCards === 'user') {
+            fetchUserMaps();
         } else {
             setCards(null);
         }
