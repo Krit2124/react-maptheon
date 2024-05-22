@@ -21,6 +21,10 @@ export default class MapService {
         return api.get('/myMapSettings/' + id_map);
     }
 
+    static async userMapInfo(id_map, id_user) {
+        return api.post('/userMapInfo', {id_map, id_user});
+    }
+
     static async updateMapName(id_map, newName) {
         return api.post('/updateMapName', {id_map, newName});
     }

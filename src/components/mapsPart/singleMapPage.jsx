@@ -11,13 +11,15 @@ import favouriteImage from "../../assets/icons/Favourite.png";
 export default function SingleMapPage() {
     const { 
         urlToGetFullSizeImg,
+        userMapInfo,
     } = useServerMapOperationsStore();
 
     const { 
         tagsForMap,
     } = useServerTagOperationsStore();
 
-    const [mapId, setMapId] = useState('');
+    const id_user = Cookies.get('idUser');
+    const id_map = Cookies.get('idViewingMap');
     const [mapName, setMapName] = useState('Название карты');
     const [likeAmount, setLikeAmount] = useState(0);
     const [mapDescription, setMapDescription] = useState('Описание карты');
@@ -30,15 +32,13 @@ export default function SingleMapPage() {
 
     const fetchMapSettings = async () => {
         try {
-            const id = Cookies.get('idViewingMap');
-            setMapId(id);
-            // const mapSettings = await myMapSettings(id);
-            // setMapName(mapSettings.name);
-            // setMapDescription(mapSettings.description);
-            // setLikeAmount(mapSettings.number_in_favourites);
-            // setCreatedAt(mapSettings.createdAt);
-            // setUpdatedAt(mapSettings.updatedAt);
-            // setIsMapPublic(mapSettings.is_public);
+            const mapSettings = await userMapInfo(id_map, id_user);
+            setMapName(mapSettings.name);
+            setMapDescription(mapSettings.description);
+            setLikeAmount(mapSettings.number_in_favourites);
+            setCreatedAt(mapSettings.createdAt);
+            setUpdatedAt(mapSettings.updatedAt);
+            setCreatorName(mapSettings.creator_name);
         } catch (e) {
             console.log(e);
         }
@@ -46,8 +46,7 @@ export default function SingleMapPage() {
 
     const fetchTags = async () => {
         try {
-            const id = Cookies.get('idViewingMap');
-            const newTags = await tagsForMap(id);
+            const newTags = await tagsForMap(id_map);
             setTags(newTags);
         } catch (e) {
             console.log(e);
@@ -68,12 +67,14 @@ export default function SingleMapPage() {
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
             <div className="container-fullScreen size-full-vertical-pagePercent-withHeader flex-row-c-c flex-gap-50">
                 <div className="mapFillSizeImage">
-                    <img src={urlToGetFullSizeImg + mapId + '.jpg'} alt="Карта" />
+                    <img src={urlToGetFullSizeImg + id_map + '.jpg'} alt="Карта" />
                 </div>
 
                 <div className='flex-col-sb-left flex-gap-30 container-mapInfo'>
                     <div className='flex-row-c-c size-full-horizontal-percent'>
-                        <h1>{creatorName}</h1>
+                        <Link to={`/maps/user`}>
+                            <h1>{creatorName}</h1>
+                        </Link>
                     </div>
 
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
@@ -96,7 +97,7 @@ export default function SingleMapPage() {
 
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
                         <div className="flex-col-sb-left flex-gap-10">
-                            <a href={urlToGetFullSizeImg + mapId + '.jpg'} download={`${mapName}.jpg`} type='image/jpeg' className="button-text-usual">Скачать изображение</a>
+                            <a href={urlToGetFullSizeImg + id_map + '.jpg'} download={`${mapName}.jpg`} type='image/jpeg' className="button-text-usual">Скачать изображение</a>
                             <button className="button-text-usual">Перейти в редактор карты</button>
                         </div>
 

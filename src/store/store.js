@@ -366,12 +366,23 @@ export const useServerMapOperationsStore = create((set)=> ({
         }
     },
 
-    // Функция получения данных карты для продолжения работы с ней
-    // Получаемые поля: data (в формате JSON)
-    myMapData: async (id_map) => {
+    // Функция получения информации о карте любого пользователя
+    // Получаемые поля: id, name, creator_name, description, number_in_favourites, createdAt, updatedAt
+    userMapInfo: async (id_map, id_user) => {
         try {
-            const mapData = await MapService.myMapData(id_map);
-            return mapData;
+            const userMapsData = await MapService.userMapInfo(id_map, id_user);
+            return userMapsData.data;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+
+    // Функция получения настроек карты для её редактирования
+    // Получаемые поля: id, name, description, number_in_favourites, is_public, createdAt, updatedAt
+    myMapSettings: async (id_map) => {
+        try {
+            const mapSettings = await MapService.myMapSettings(id_map);
+            return mapSettings.data;
         } catch (e) {
             console.log(e.response?.data?.message);
         }
@@ -413,12 +424,12 @@ export const useServerMapOperationsStore = create((set)=> ({
         }
     },
 
-    // Функция получения настроек карты для её редактирования
-    // Получаемые поля: id, name, description, number_in_favourites, is_public, createdAt, updatedAt
-    myMapSettings: async (id_map) => {
+    // Функция получения данных карты для продолжения работы с ней
+    // Получаемые поля: data (в формате JSON)
+    myMapData: async (id_map) => {
         try {
-            const mapSettings = await MapService.myMapSettings(id_map);
-            return mapSettings.data;
+            const mapData = await MapService.myMapData(id_map);
+            return mapData;
         } catch (e) {
             console.log(e.response?.data?.message);
         }
