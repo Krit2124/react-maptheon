@@ -356,7 +356,7 @@ export default function CanvasComponent() {
 
     // Удаление выбранного объекта
     const handleKeyDown = (event) => {
-      if (event.key === 'Delete' || event.key === 'Backspace') {
+      if ((event.key === 'Delete' || event.key === 'Backspace') && event.shiftKey) {
         // Получаем выбранные объекты
         const activeObjects = middleCanvasRef.current.getActiveObjects();
         
@@ -650,7 +650,7 @@ export default function CanvasComponent() {
     index: 0,
   });
 
-  // Если карта была выбрана для редактирования, то то загружаем ее
+  // Если карта была выбрана для редактирования, то загружаем её
   useEffect(() => {
     async function loadMapData(Id) {
       try {
