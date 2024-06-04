@@ -112,7 +112,12 @@ export default function PersonalSingleMapPage() {
 
     const handleMapNameChange = async (newName) => {
         try {
-            toast(await updateMapName(mapId, newName));
+            if (newName !== '')  {
+                toast(await updateMapName(mapId, newName));
+            } else {
+                toast('Название карты не может быть пустым');
+            }
+            
             setMapName(newName);
         } catch (e) {
             console.log(e);

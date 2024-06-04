@@ -281,6 +281,7 @@ export const useUserStore = create((set) => ({
     registration: async (username, email, password) => {
         try {
             const response = await UserService.registration(username,email, password);
+            console.log(response);
             localStorage.setItem('token', response.data.accessToken);
             set({ isAuth: true, user: response.data.user });
             return {
@@ -439,8 +440,9 @@ export const useServerMapOperationsStore = create((set)=> ({
     // Получаемые данные: сообщение о состоянии запроса
     saveMapData: async (id_map, data, mapImage) => {
         try {
-            const message = await MapService.saveMapData(id_map, data, mapImage);
-            return message;
+            const savedMapId = await MapService.saveMapData(id_map, data, mapImage);
+            console.log(savedMapId);
+            return savedMapId;
         } catch (e) {
             console.log(e.response?.data?.message);
             return (e.response?.data?.message);

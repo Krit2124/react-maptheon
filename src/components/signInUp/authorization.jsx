@@ -16,6 +16,11 @@ export default function Authorization() {
 
     async function handleSubmit(e) {
         e.preventDefault();
+
+        if (emailOrUsername === '' || password === '')  {
+            toast.error('Все поля обязательны для заполнения');
+            return;
+        }
         
         let result = await login(emailOrUsername, password);
         if (result.isSuccess) {

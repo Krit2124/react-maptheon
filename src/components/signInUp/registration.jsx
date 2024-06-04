@@ -19,16 +19,33 @@ export default function Registration() {
     async function handleSubmit(e) {
         e.preventDefault();
         
-        if (password !== confirmPassword) {
-            toast.error('Пароли должны совпадать');
+        if (username === '' || email === '' || password === '' || confirmPassword === '')  {
+            toast.error('Все поля обязательны для заполнения');
+            return;
+        }
+
+        if (password.length < 6 || password.length > 63) {
+            toast.error('Пароль должен быть от 6 до 63 символов');
             return;
         }
 
         let result = await registration(username, email, password);
+        console.log(result);
         if (result.isSuccess) {
             return navigate(`/maps/personal/yours/`);
         } else {
-            toast.error(result.message);
+            if (result.errors && result.errors.length > 0) {
+                // Проверка на конкретную ошибку валидации email
+                const emailError = result.errors.find(err => err.path === 'email');
+                
+                if (emailError) {
+                    toast.error(emailError.msg);
+                } else {
+                    toast.error(result.message);
+                }
+            } else {
+                toast.error(result.message);
+            }
         }
     };
 

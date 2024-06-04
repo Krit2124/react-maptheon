@@ -165,7 +165,7 @@ export default function CanvasSettings() {
                 )}
             </div>
 
-            <div className='flex-col-top-left flex-gap-10 size-full-horizontal-percent'>
+            {/* <div className='flex-col-top-left flex-gap-10 size-full-horizontal-percent'>
                 <h2>Фильтр</h2>
 
                 <div className='flex-row-sb-c size-full-horizontal-percent'>
@@ -202,7 +202,7 @@ export default function CanvasSettings() {
                         <input type="number" min="0" max="1" step={0.01} value={filterIntensity} onChange={(e) => handleInputChange(parseFloat(e.target.value), setFilterIntensity, 0, 1)}/>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

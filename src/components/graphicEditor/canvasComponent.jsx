@@ -32,9 +32,9 @@ export default function CanvasComponent() {
     canvasHeight, setCanvasHeight,
     filterIntensity,
     isResetRequired, setIsResetRequired,
-    canvasBackgroundIsColorMode,
-    canvasBackgroundTexture,
-    canvasBackgroundColor,
+    canvasBackgroundIsColorMode, setCanvasBackgroundIsColorMode,
+    canvasBackgroundTexture, setCanvasBackgroundTexture,
+    canvasBackgroundColor, setCanvasBackgroundColor,
     filterSelected,
   } = useCanvasSettingsStore();
 
@@ -145,8 +145,6 @@ export default function CanvasComponent() {
         evented: false,
         erasable: false,
       });
-
-      console.log('workingArea', workingArea);
 
       workingAreaRef.current = workingArea;
 
@@ -652,6 +650,30 @@ export default function CanvasComponent() {
 
   // Если карта была выбрана для редактирования, то загружаем её
   useEffect(() => {
+    async function setNewWorkingArea() {
+      // Получаем объекты холста
+      const canvasObjects = lowerCanvasRef.current.getObjects();
+
+      // Поиск рабочей области по свойству нестираемости (есть только у неё)
+      canvasObjects.find((obj) => {
+        if (obj.erasable === false) {
+          console.log(obj);
+          workingAreaRef.current = obj;
+          setCanvasWidth(obj.width);
+          setCanvasHeight(obj.height);
+          if (typeof obj.fill === 'string') {
+            // obj.fill является цветом
+            setCanvasBackgroundIsColorMode(true);
+            setCanvasBackgroundColor(obj.fill);
+          } else if (typeof obj.fill === 'object' && obj.fill.type === 'pattern') {
+            // obj.fill является паттерном
+            setCanvasBackgroundIsColorMode(false);
+            setCanvasBackgroundTexture(obj.fill.source.src);
+          }
+        }
+      });
+    }
+
     async function loadMapData(Id) {
       try {
         let rawMapData = await myMapData(Id);
@@ -661,6 +683,7 @@ export default function CanvasComponent() {
         console.log(mapData);
 
         const lowerCanvasData = mapData.lowerCanvas;
+        console.log(lowerCanvasData);
         const middleCanvasData = mapData.middleCanvas;
         const upperCanvasData = mapData.upperCanvas;
 
@@ -669,20 +692,13 @@ export default function CanvasComponent() {
         await middleCanvasRef.current.clear();
         await upperCanvasRef.current.clear();
 
-        lowerCanvasRef.current.loadFromJSON(lowerCanvasData);
-        middleCanvasRef.current.loadFromJSON(middleCanvasData);
-        upperCanvasRef.current.loadFromJSON(upperCanvasData);
-
-        // Получаем объекты холста
-        const canvasObjects = lowerCanvasRef.current.getObjects();
-
-        // Поиск рабочей области по свойству нестираемости (есть только у неё)
-        canvasObjects.find((obj) => {
-          if (obj.erasable === false) {
-            workingAreaRef.current = obj;
-            setCanvasWidth(obj.width);
-            setCanvasHeight(obj.height);
-          }
+        // Загружаем данные
+        await lowerCanvasRef.current.loadFromJSON(lowerCanvasData, async () => {
+          await middleCanvasRef.current.loadFromJSON(middleCanvasData, async () => {
+            await upperCanvasRef.current.loadFromJSON(upperCanvasData, () => {
+              setNewWorkingArea();
+            });
+          });
         });
       } catch (error) {
         console.error('Ошибка при загрузке данных карты:', error);
@@ -700,13 +716,13 @@ export default function CanvasComponent() {
 
   useEffect(() => {
     // Сохранение начального состояния холста при загрузке приложения
-    const initialCanvasState = JSON.stringify({
-      lowerCanvas: lowerCanvasRef.current.toObject(),
-      middleCanvas: middleCanvasRef.current.toObject(),
-      upperCanvas: upperCanvasRef.current.toObject(),
-    });
-
     setTimeout(() => {
+      const initialCanvasState = JSON.stringify({
+        lowerCanvas: lowerCanvasRef.current.toObject(),
+        middleCanvas: middleCanvasRef.current.toObject(),
+        upperCanvas: upperCanvasRef.current.toObject(),
+      });
+
       setCanvasState(prevState => ({
         list: [initialCanvasState],
         index: 0,
@@ -885,18 +901,20 @@ export default function CanvasComponent() {
   // Сохранение карты на сервере
   useEffect(() => {
     async function handleSaveMapData() {
+      toast('Начало сохранения');
+      
       // Создаем временный холст для сбора всего содержимого
         const tempCanvas = new fabric.StaticCanvas(null, {
           width: canvasWidth,
           height: canvasHeight
       });
 
-      // Определяем центр рабочей области
-      const centerX = (window.screen.width - canvasWidth) / 2;
-      const centerY = (window.screen.height - canvasHeight) / 2;
+      // Определяем рамки рабочей области
+      const centerX = (workingAreaRef.current.left);
+      const centerY = (workingAreaRef.current.top);
       tempCanvas.absolutePan({
-          x: centerX,
-          y: centerY
+        x: centerX,
+        y: centerY
       });
 
       // Создаем копии объектов с каждого холста и добавляем их на временный холст
@@ -926,13 +944,11 @@ export default function CanvasComponent() {
 
       let mapData = canvasState.list[canvasState.index];
 
-      let message = await saveMapData(id_map, mapData, mapImageDataURL);
-      if (message === '') {
-        toast(message);
-      } else {
-        toast('Данные успешно сохранены');
-      }
+      let savedMapId = await saveMapData(id_map, mapData, mapImageDataURL);
       
+      Cookies.set('idEditingMap', savedMapId);
+
+      toast('Данные успешно сохранены');
     }
 
     if (isSaveRequired) {
@@ -950,9 +966,9 @@ export default function CanvasComponent() {
         height: canvasHeight
       });
   
-      // Определяем центр рабочей области
-      const centerX = (window.screen.width - canvasWidth) / 2;
-      const centerY = (window.screen.height - canvasHeight) / 2;
+      // Определяем рамки рабочей области
+      const centerX = (workingAreaRef.current.left);
+      const centerY = (workingAreaRef.current.top);
       tempCanvas.absolutePan({
         x: centerX,
         y: centerY
