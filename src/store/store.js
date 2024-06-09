@@ -331,8 +331,8 @@ export const useUserStore = create((set) => ({
 }));
 
 export const useServerMapOperationsStore = create((set)=> ({
-    urlToGetPreviewImg: 'http://localhost:3051/img/mapsPreviews/',
-    urlToGetFullSizeImg: 'http://localhost:3051/img/mapsFullSize/',
+    urlToGetPreviewImg: process.env.REACT_APP_IMG_URL + '/mapsPreviews/',
+    urlToGetFullSizeImg: process.env.REACT_APP_IMG_URL + '/mapsFullSize/',
 
     // Функция получения списка всех карт
     // Получаемые поля: id, name, id_creator, creator_name, number_in_favourites
