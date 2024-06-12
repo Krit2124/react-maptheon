@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
 import { useServerMapOperationsStore, useServerTagOperationsStore } from 'store/store';
@@ -11,6 +10,7 @@ import plusImage from "../../assets/icons/Plus.png";
 
 export default function PersonalSingleMapPage() {
     const navigate = useNavigate();
+    const { id } = useParams();
 
     const { 
         urlToGetFullSizeImg,
@@ -27,12 +27,11 @@ export default function PersonalSingleMapPage() {
         deleteTag, 
     } = useServerTagOperationsStore();
 
-    const [mapId, setMapId] = useState('');
-    const [mapName, setMapName] = useState('Название карты');
+    const [mapName, setMapName] = useState('');
     const [likeAmount, setLikeAmount] = useState(0);
-    const [mapDescription, setMapDescription] = useState('Описание карты');
-    const [createdAt, setCreatedAt] = useState('13.05.2024');
-    const [updatedAt, setUpdatedAt] = useState('14.05.2024');
+    const [mapDescription, setMapDescription] = useState('');
+    const [createdAt, setCreatedAt] = useState('');
+    const [updatedAt, setUpdatedAt] = useState('');
     const [isMapPublic, setIsMapPublic] = useState(false);
 
     const [tags, setTags] = useState([]);
@@ -43,7 +42,7 @@ export default function PersonalSingleMapPage() {
         const tagToDeleteObj = tags.find(tag => tag.name === tagToDelete);
         if (tagToDeleteObj) {
             try {
-                await deleteTag(mapId, tagToDeleteObj.id);
+                await deleteTag(id, tagToDeleteObj.id);
                 setTags(tags.filter(tag => tag.name !== tagToDelete));
             } catch (e) {
                 console.log(e);
@@ -60,8 +59,8 @@ export default function PersonalSingleMapPage() {
             const trimmedTag = newTag.trim();
             if (!tags.find(tag => tag.name === trimmedTag)) {
                 try {
-                    toast(await bindTagToMap(trimmedTag, mapId));
-                    const updatedTags = await tagsForMap(mapId);
+                    toast(await bindTagToMap(trimmedTag, id));
+                    const updatedTags = await tagsForMap(id);
                     setTags(updatedTags);
                 } catch (e) {
                     console.log(e);
@@ -81,8 +80,6 @@ export default function PersonalSingleMapPage() {
 
     const fetchMapSettings = async () => {
         try {
-            const id = Cookies.get('idEditingMap');
-            setMapId(id);
             const mapSettings = await myMapSettings(id);
             setMapName(mapSettings.name);
             setMapDescription(mapSettings.description);
@@ -97,7 +94,6 @@ export default function PersonalSingleMapPage() {
 
     const fetchTags = async () => {
         try {
-            const id = Cookies.get('idEditingMap');
             const newTags = await tagsForMap(id);
             setTags(newTags);
         } catch (e) {
@@ -113,7 +109,7 @@ export default function PersonalSingleMapPage() {
     const handleMapNameChange = async (newName) => {
         try {
             if (newName !== '')  {
-                toast(await updateMapName(mapId, newName));
+                toast(await updateMapName(id, newName));
             } else {
                 toast('Название карты не может быть пустым');
             }
@@ -126,7 +122,7 @@ export default function PersonalSingleMapPage() {
 
     const handleMapDescriptionChange = async (newDescription) => {
         try {
-            toast(await updateMapDescription(mapId, newDescription));
+            toast(await updateMapDescription(id, newDescription));
             setMapDescription(newDescription);
         } catch (e) {
             console.log(e);
@@ -135,7 +131,7 @@ export default function PersonalSingleMapPage() {
 
     const handleMapPublicStatusChange = async () => {
         try {
-            toast(await updateMapPublicStatus(mapId, !isMapPublic));
+            toast(await updateMapPublicStatus(id, !isMapPublic));
             setIsMapPublic(!isMapPublic);
         } catch (e) {
             console.log(e);
@@ -143,13 +139,13 @@ export default function PersonalSingleMapPage() {
     };
 
     const handleStartEdit = () => {
-        navigate(`/editor`);
+        navigate(`/editor/${id}`);
     };
 
     const handleDeleteMap = async () => {
         if (window.confirm("Вы действительно хотите удалить эту карту?")) {
             try {
-                await deleteMap(mapId);
+                await deleteMap(id);
                 navigate('/maps/personal/yours');
             } catch (e) {
                 console.log(e);
@@ -161,7 +157,7 @@ export default function PersonalSingleMapPage() {
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
             <div className="container-fullScreen size-full-vertical-pagePercent-withHeader flex-row-c-c flex-gap-50">
                 <div className="mapFillSizeImage">
-                    <img src={urlToGetFullSizeImg + mapId + '.jpg'} alt="Карта" />
+                    <img src={urlToGetFullSizeImg + id + '.jpg'} alt="Карта" />
                 </div>
 
                 <div className='flex-col-sb-left flex-gap-30 container-mapInfo'>
@@ -197,7 +193,7 @@ export default function PersonalSingleMapPage() {
 
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
                         <div className="flex-col-sb-left flex-gap-10">
-                            <a href={urlToGetFullSizeImg + mapId + '.jpg'} download={`${mapName}.jpg`} type='image/jpeg' className="button-text-usual">Скачать изображение</a>
+                            <a href={urlToGetFullSizeImg + id + '.jpg'} download={`${mapName}.jpg`} type='image/jpeg' className="button-text-usual">Скачать изображение</a>
                             <button className="button-text-usual" onClick={handleStartEdit}>Перейти в редактор карты</button>
                         </div>
 

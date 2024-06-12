@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 import { useServerMapOperationsStore } from 'store/store';
 
@@ -15,13 +14,11 @@ export default function PersonalMapCard({ id, name, updatedAt }) {
     } = useServerMapOperationsStore();
 
     const handleStartEdit = (id) => {
-        Cookies.set('idEditingMap', id, { expires: 30 });
-        navigate(`/editor`);
+        navigate(`/editor/${id}`);
     };
 
     const handleEditMapSettings = (id) => {
-        Cookies.set('idEditingMap', id, { expires: 30 });
-        navigate(`/maps/personalSingleMap`);
+        navigate(`/maps/personalSingleMap/${id}`);
     };
 
     // Функция для извлечения понятной даты

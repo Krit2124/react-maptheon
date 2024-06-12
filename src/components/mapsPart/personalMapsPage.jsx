@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Link, NavLink, Outlet } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 import SearchField from "../sharedElements/searchField";
 
@@ -18,7 +17,7 @@ export default function PersonalMapsPage() {
 
                     <SearchField />
 
-                    <Link onClick={() => Cookies.remove('idEditingMap')} to="/editor" className="button-text-usual">Создать карту</Link>
+                    <Link to="/editor/0" className="button-text-usual">Создать карту</Link>
                 </div>
             </div>
 

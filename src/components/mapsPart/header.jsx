@@ -11,8 +11,11 @@ import publicMapsImage from "../../assets/icons/PublicMaps.png"
 import userImage from "../../assets/icons/User.png"
 
 export default function Header() {
+    const navigate = useNavigate();
+
     const {
         logout,
+        user,
     } = useUserStore();
 
     return (
@@ -38,16 +41,19 @@ export default function Header() {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu className="flex-col-sb-right">
-                        <Dropdown.Item>
-                            <Link to="/maps/profileSettings">Настройки</Link>
+                        <Dropdown.Item onClick={() => navigate(`/maps/profileSettings/0`)}>
+                            <p>Настройки</p>
                         </Dropdown.Item>
 
-                        <Dropdown.Item>
-                            <Link to="/maps/user">Профиль</Link>
+                        <Dropdown.Item onClick={() => navigate(`/maps/user/${user.id}`)}>
+                            <p>Профиль</p>
                         </Dropdown.Item>
 
-                        <Dropdown.Item>
-                            <Link to="/sign/in/" onClick={logout}>Выход</Link>
+                        <Dropdown.Item onClick={() => {
+                            navigate(`/sign/in/`);
+                            logout();
+                        }}>
+                            <p>Выход</p>
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>

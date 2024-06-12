@@ -5,9 +5,11 @@ import SearchField from "../sharedElements/searchField";
 import MapCardList from './mapCardList';
 
 import userWithoutAvatarImage from "../../assets/UserWithoutAvatar.png"
-import Cookies from 'js-cookie';
+import { useParams } from 'react-router-dom';
 
 function UserMapsPage() {
+    const { id_user } = useParams();
+
     const {
         getProfileInfo,
     } = useUserStore();
@@ -15,10 +17,8 @@ function UserMapsPage() {
     const [userName, setUserName] = useState();
     const [userDescription, setUserDescription] = useState();
 
-
     const fetchUserProfileInfo = async () => {
         try {
-            let id_user = Cookies.get('idUser');
             const userInfo = await getProfileInfo(id_user);
             setUserName(userInfo.username);
             setUserDescription(userInfo.description);

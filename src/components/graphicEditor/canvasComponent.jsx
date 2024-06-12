@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric-all-modules';
-import Cookies from 'js-cookie';
 import { toast, ToastContainer } from 'react-toastify';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState, useObjectSettingsState, useObjectsStore, useServerMapOperationsStore } from 'store/store';
 
 export default function CanvasComponent() {
+  const { id_map } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const {
     currentTool, setCurrentTool,
     isExportRequired, setIsExportRequired,
@@ -705,10 +708,8 @@ export default function CanvasComponent() {
       }
     }
 
-    let editingMapId = Cookies.get('idEditingMap');
-
-    if (editingMapId) {
-      loadMapData(editingMapId);
+    if (Number(id_map) !== 0) {
+      loadMapData(id_map);
     }
   }, [])
 
@@ -939,14 +940,11 @@ export default function CanvasComponent() {
         quality: 1 // качество изображения
       });
 
-      let id_map = await Number(Cookies.get('idEditingMap'));
-      id_map = id_map ? Number(id_map) : 0;
-
       let mapData = canvasState.list[canvasState.index];
 
       let savedMapId = await saveMapData(id_map, mapData, mapImageDataURL);
       
-      Cookies.set('idEditingMap', savedMapId);
+      setSearchParams({ id_map: savedMapId });
 
       toast('Данные успешно сохранены');
     }

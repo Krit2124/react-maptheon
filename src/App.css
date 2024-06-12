@@ -255,7 +255,7 @@ section .container, .container-fullScreen {
 }
 
 /* Кнопки */
-button {
+button, .pointer {
   cursor: pointer;
 }
 

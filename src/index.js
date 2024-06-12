@@ -25,6 +25,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: 'maps',
@@ -49,19 +50,19 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: 'user',
+            path: 'user/:id_user',
             element: <UserMapsPage />,
           },
           {
-            path: 'singleMap',
+            path: 'singleMap/:id_map/:id_user',
             element: <SingleMapPage />,
           },
           {
-            path: 'personalSingleMap',
+            path: 'personalSingleMap/:id',
             element: <PersonalSingleMapPage />,
           },
           {
-            path: 'profileSettings',
+            path: 'profileSettings/:id',
             element: <UserSettingsPage />,
           },
         ],
@@ -81,12 +82,8 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'editor',
+        path: 'editor/:id_map',
         element: <MainGraphicEditor />,
-      },
-      {
-        path: '*',
-        element: <ErrorPage />,
       },
     ],
   },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
+import { useParams } from 'react-router-dom';
 
 import { useSearchFieldStore, useServerMapOperationsStore } from 'store/store';
 
@@ -7,7 +7,10 @@ import PersonalMapCard from "./personalMapCard";
 import UserMapCard from './userMapCard';
 import PublicMapCard from './publicMapCard';
 
+
 export default function MapCardList({reqCards}) {
+    const { id_user } = useParams();
+
     const {
         textToFind,
         sortByField,
@@ -59,8 +62,6 @@ export default function MapCardList({reqCards}) {
 
     const fetchUserMaps = async () => {
         try {
-            let id_user = Cookies.get('idUser');
-
             const response = await userMaps(id_user, textToFind, sortByField);
 
             setCards(response.map(map => (

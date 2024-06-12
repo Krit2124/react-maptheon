@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
 import { useServerMapOperationsStore, useServerTagOperationsStore } from 'store/store';
@@ -9,6 +8,9 @@ import LikeCounter from '../sharedElements/likeCounter';
 import favouriteImage from "../../assets/icons/Favourite.png";
 
 export default function SingleMapPage() {
+    const navigate = useNavigate();
+    const { id_map, id_user } = useParams();
+
     const { 
         urlToGetFullSizeImg,
         userMapInfo,
@@ -18,8 +20,6 @@ export default function SingleMapPage() {
         tagsForMap,
     } = useServerTagOperationsStore();
 
-    const id_user = Cookies.get('idUser');
-    const id_map = Cookies.get('idViewingMap');
     const [mapName, setMapName] = useState('Название карты');
     const [likeAmount, setLikeAmount] = useState(0);
     const [mapDescription, setMapDescription] = useState('Описание карты');
@@ -72,9 +72,7 @@ export default function SingleMapPage() {
 
                 <div className='flex-col-sb-left flex-gap-30 container-mapInfo'>
                     <div className='flex-row-c-c size-full-horizontal-percent'>
-                        <Link to={`/maps/user`}>
-                            <h1>{creatorName}</h1>
-                        </Link>
+                        <h1 onClick={() => navigate(`/maps/user/${id_user}`)} className='pointer'>{creatorName}</h1>
                     </div>
 
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
