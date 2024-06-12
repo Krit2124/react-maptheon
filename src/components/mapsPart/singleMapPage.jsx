@@ -78,10 +78,7 @@ export default function SingleMapPage() {
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
                         <h1>{mapName}</h1>
 
-                        <div className="flex-row-sb-c flex-gap-10">
-                            <p>{likeAmount}</p>
-                            <img src={favouriteImage} alt="Количество в избранном" className="size-image-small" />
-                        </div>
+                        <LikeCounter likeAmount={likeAmount} wasFavourite={false} />
                     </div>
 
                     <div className='size-full-horizontal-percent'>
@@ -93,16 +90,10 @@ export default function SingleMapPage() {
                         <p>Дата обновления: {formatDate(updatedAt)}</p>
                     </div>
 
-                    <div className='flex-row-sb-c size-full-horizontal-percent'>
-                        <div className="flex-col-sb-left flex-gap-10">
-                            <a href={urlToGetFullSizeImg + id_map + '.jpg'} download={`${mapName}.jpg`} type='image/jpeg' className="button-text-usual">Скачать изображение</a>
-                            <button className="button-text-usual">Перейти в редактор карты</button>
-                        </div>
+                    <div className='flex-row-sb-c size-full-horizontal-percent flex-gap-10'>
+                        <a href={urlToGetFullSizeImg + id_map + '.jpg'} rel="noreferrer" target="_blank" className="button-text-usual">Скачать изображение</a>
 
-                        <div className="flex-col-sb-right flex-gap-10">
-                            <button className="button-text-usual">Удалить карту</button>
-                            <button className="button-text-usual">Карта публичная</button>
-                        </div>
+                        <button className="button-text-usual">Клонировать (в разработке)</button>
                     </div>
 
                     <div className='flex-row-left-top flex-gap-15 flex-wrap'>

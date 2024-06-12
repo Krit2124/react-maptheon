@@ -42,7 +42,7 @@ export default function Header() {
 
                     <Dropdown.Menu className="flex-col-sb-right">
                         <Dropdown.Item onClick={() => navigate(`/maps/profileSettings/0`)}>
-                            <p>Настройки</p>
+                            <p>Настройки (в разработке)</p>
                         </Dropdown.Item>
 
                         <Dropdown.Item onClick={() => navigate(`/maps/user/${user.id}`)}>

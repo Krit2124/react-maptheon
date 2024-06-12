@@ -193,7 +193,7 @@ export default function PersonalSingleMapPage() {
 
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
                         <div className="flex-col-sb-left flex-gap-10">
-                            <a href={urlToGetFullSizeImg + id + '.jpg'} download={`${mapName}.jpg`} type='image/jpeg' className="button-text-usual">Скачать изображение</a>
+                            <a href={urlToGetFullSizeImg + id + '.jpg'} rel="noreferrer" target="_blank" className="button-text-usual">Скачать изображение</a>
                             <button className="button-text-usual" onClick={handleStartEdit}>Перейти в редактор карты</button>
                         </div>
 
