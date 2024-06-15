@@ -41,6 +41,10 @@
   width: 100%;
 }
 
+.size-full-horizontal-pagePercent {
+  width: 100vw;
+}
+
 .size-full-vertical-pagePercent-withHeader {
   height: calc(100vh - 72px);
 }
@@ -200,6 +204,10 @@ a {
 }
 
 /* Границы */
+.border-black {
+  border: 2px solid black;
+}
+
 .border-black-bottom {
   border-bottom: 2px solid black;
 }
@@ -653,6 +661,20 @@ header {
 .mapFillSizeImage {
   max-width: 100%;
   max-height: 100%;
+}
+
+/* Всплывающие панели */
+.popupContainer {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.popupPanel {
+  border-radius: 30px;
+  padding: 25px;
+  width: 600px;
 }
 
 /* Canvas */

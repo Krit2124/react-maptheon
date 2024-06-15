@@ -63,6 +63,10 @@ export const useGeneralGraphicEditorStore = create((set)=> ({
 
     typeOfChoosenObject: null,
     setTypeOfChoosenObject: (value) => set({ typeOfChoosenObject: value }),
+
+    // Настройка отображения горячих клавиш
+    isHotkeysPanelVisible: false,
+    setIsHotkeysPanelVisible: (value) => set({ isHotkeysPanelVisible: value }),
 }))
 
 export const useTextureStore = create((set)=> ({

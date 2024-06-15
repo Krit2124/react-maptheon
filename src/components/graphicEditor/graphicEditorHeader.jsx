@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGeneralGraphicEditorStore } from 'store/store';
 
 import exitImage from "../../assets/icons/Exit.png"
+import questionImage from "../../assets/icons/Question.png"
 import arrowBackImage from "../../assets/icons/ArrowBack.png"
 import arrowForwardImage from "../../assets/icons/ArrowForward.png"
 import showOrHideImage from "../../assets/icons/ShowOrHide.png"
@@ -12,8 +13,8 @@ export default function GraphicEditorHeader() {
     const navigate = useNavigate();
 
     const {
-        isObjectListVisible,
-        setIsObjectListVisible,
+        isObjectListVisible, setIsObjectListVisible,
+        isHotkeysPanelVisible, setIsHotkeysPanelVisible,
         setIsUndoRequired,
         setIsRedoRequired,
     } = useGeneralGraphicEditorStore();
@@ -54,10 +55,15 @@ export default function GraphicEditorHeader() {
                     </div>
                 </div>
 
-                {/* Кнопка для скрытия или показа панели со списком объектов */}
-                <button className="button-image-big" onClick={handleObjectListVisibility}>
-                    <img src={showOrHideImage} alt="Отображение слоёв" className={rotationClass}/>
-                </button>
+                <div className='flex-row-sb-c flex-gap-30'>
+                    <button className="button-image-big" onClick={() => setIsHotkeysPanelVisible(!isHotkeysPanelVisible)}>
+                        <img src={questionImage} alt="Горячие клавиши"/>
+                    </button>
+
+                    <button className="button-image-big" onClick={handleObjectListVisibility}>
+                        <img src={showOrHideImage} alt="Отображение списка объектов" className={rotationClass}/>
+                    </button>
+                </div>
             </div>
         </header>
     );
