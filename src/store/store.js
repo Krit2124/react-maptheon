@@ -445,8 +445,7 @@ export const useServerMapOperationsStore = create((set)=> ({
     saveMapData: async (id_map, data, mapImage) => {
         try {
             const savedMapId = await MapService.saveMapData(id_map, data, mapImage);
-            console.log(savedMapId);
-            return savedMapId;
+            return savedMapId.data;
         } catch (e) {
             console.log(e.response?.data?.message);
             return (e.response?.data?.message);

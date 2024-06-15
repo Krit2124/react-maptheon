@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fabric } from 'fabric-all-modules';
 import { toast, ToastContainer } from 'react-toastify';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useBrushSettingsStore, useCanvasSettingsStore, useGeneralGraphicEditorStore, useLabelSettingsState, useObjectSettingsState, useObjectsStore, useServerMapOperationsStore } from 'store/store';
 
 export default function CanvasComponent() {
   const { id_map } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const {
     currentTool, setCurrentTool,
@@ -944,7 +944,7 @@ export default function CanvasComponent() {
 
       let savedMapId = await saveMapData(id_map, mapData, mapImageDataURL);
       
-      setSearchParams({ id_map: savedMapId });
+      navigate("/editor/" + savedMapId);
 
       toast('Данные успешно сохранены');
     }
