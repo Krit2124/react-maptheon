@@ -67,6 +67,15 @@ export const useGeneralGraphicEditorStore = create((set)=> ({
     // Настройка отображения горячих клавиш
     isHotkeysPanelVisible: false,
     setIsHotkeysPanelVisible: (value) => set({ isHotkeysPanelVisible: value }),
+
+    // Сброс настроек
+    setGeneralDefaultSettings: () => set({ 
+        isObjectListVisible: true,
+        isToolSettingsPanelVisible: false,
+        currentTool: null,
+        typeOfChoosenObject: null,
+        isHotkeysPanelVisible: false,
+    }),
 }))
 
 export const useTextureStore = create((set)=> ({
@@ -141,6 +150,15 @@ export const useCanvasSettingsStore = create((set)=> ({
   
     filterIntensity: 1,
     setFilterIntensity: (value) => set({ filterIntensity: value }),
+
+    // Сброс настроек
+    setCanvasDefaultSettings: () => set({ 
+        canvasWidth: 800,
+        canvasHeight: 600,
+        canvasBackgroundIsColorMode: true,
+        canvasBackgroundColor: '#ffffff',
+        canvasBackgroundTexture: grassImage,
+    }),
 }))
 
 export const useBrushSettingsStore = create((set)=> ({
@@ -168,6 +186,18 @@ export const useBrushSettingsStore = create((set)=> ({
   
     brushSoftness: 1,
     setBrushSoftness: (value) => set({ brushSoftness: value }),
+
+    // Сброс настроек
+    setBrushDefaultSettings: () => set({ 
+        brushColorMode: 'color',
+        brushTexture: grassImage,
+        brushColor: '#000000',
+        brushCurrentLayer: 'lower',
+        brushThickness: 20,
+        brushShape: 'round',
+        brushOpacity: 1,
+        brushSoftness: 1,
+    }),
 }))
 
 export const useLabelSettingsState = create((set) => ({
@@ -213,13 +243,31 @@ export const useLabelSettingsState = create((set) => ({
 
     labelSelected: null,
     setLabelSelected: (value) => set({ labelSelected: value }),
+
+    // Сброс настроек
+    setLabelDefaultSettings: () => set({ 
+        labelText: '',
+        labelFontSize: 20,
+        labelCharSpacing: 0.5,
+        labelLineHeight: 1,
+        labelRotation: 0,
+        labelBorderWidth: 0,
+        labelFont: 'Times New Roman',
+        labelColor: '#000000',
+        labelBorderColor: '#000000',
+        labelIsBold: false,
+        labelIsItalic: false,
+        labelAlign: 'left',
+        labelOpacity: 1,
+        labelSelected: null,
+    }),
 }));
 
 export const useObjectSettingsState = create((set) => ({
+    // Настройки объекта
     objectIsUseRandom: true,
     setObjectIsUseRandom: (value) => set({ objectIsUseRandom: value }),
 
-    // Настройки объекта
     objectSize: 50,
     setObjectSize: (value) => set({ objectSize: value }),
 
@@ -246,6 +294,20 @@ export const useObjectSettingsState = create((set) => ({
 
     objectSelected: null,
     setObjectSelected: (value) => set({ objectSelected: value }),
+
+    // Сброс настроек
+    setObjectDefaultSettings: () => set({ 
+        objectIsUseRandom: true,
+        objectSize: 50,
+        objectOpacity: 1,
+        objectRotation: 0,
+        objectSaturation: 0.1,
+        objectBrightness: 0,
+        objectContrast: 0,
+        objectIsHorizontalMirrored: false,
+        objectIsVerticalMirrored: false,
+        objectSelected: null,
+    }),
 }));
 
 export const useSearchFieldStore = create((set)=> ({

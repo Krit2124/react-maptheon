@@ -17,6 +17,7 @@ export default function CanvasComponent() {
     isRedoRequired, setIsRedoRequired,
     setIsToolSettingsPanelVisible,
     typeOfChoosenObject, setTypeOfChoosenObject,
+    setGeneralDefaultSettings,
   } = useGeneralGraphicEditorStore();
   
   const {
@@ -28,6 +29,7 @@ export default function CanvasComponent() {
     brushShape,
     brushOpacity,
     brushSoftness,
+    setBrushDefaultSettings,
   } = useBrushSettingsStore();
 
   const {
@@ -39,6 +41,7 @@ export default function CanvasComponent() {
     canvasBackgroundTexture, setCanvasBackgroundTexture,
     canvasBackgroundColor, setCanvasBackgroundColor,
     filterSelected,
+    setCanvasDefaultSettings,
   } = useCanvasSettingsStore();
 
   const {
@@ -56,6 +59,7 @@ export default function CanvasComponent() {
     labelAlign, setLabelAlign,
     labelOpacity, setLabelOpacity,
     labelSelected, setLabelSelected,
+    setLabelDefaultSettings,
   } = useLabelSettingsState();
 
   const {
@@ -69,6 +73,7 @@ export default function CanvasComponent() {
     objectIsHorizontalMirrored, setObjectIsHorizontalMirrored,
     objectIsVerticalMirrored, setObjectIsVerticalMirrored,
     objectSelected, setObjectSelected,
+    setObjectDefaultSettings,
   } = useObjectSettingsState();
 
   const {
@@ -79,6 +84,15 @@ export default function CanvasComponent() {
     myMapData,
     saveMapData,
   } = useServerMapOperationsStore();
+
+  // Сброс настроек для избежания ошибок
+  useEffect(()  =>  {
+    setGeneralDefaultSettings();
+    setCanvasDefaultSettings();
+    setBrushDefaultSettings();
+    setLabelDefaultSettings();
+    setObjectDefaultSettings();
+  }, [])
 
   // Холсты и рабочая область
   const lowerCanvasRef = useRef(null);
@@ -474,6 +488,11 @@ export default function CanvasComponent() {
     function handleWheelDown(event) {
       if (event.button === 1) {
         isDragging = true;
+        [lowerCanvasRef, middleCanvasRef, upperCanvasRef].forEach(canvasRef => {
+          const canvas = canvasRef.current;
+          canvas.selection = false;
+          canvas.defaultCursor = 'grabbing'; // Изменить курсор на grabbing
+        });
         lowerCanvasRef.current.selection = false;
         middleCanvasRef.current.selection = false;
         upperCanvasRef.current.selection = false;
@@ -507,6 +526,7 @@ export default function CanvasComponent() {
           const canvas = canvasRef.current;
           canvas.setViewportTransform(canvas.viewportTransform);
           canvas.selection = true;
+          canvas.defaultCursor = 'default';
       });
   
       isDragging = false;
@@ -514,6 +534,12 @@ export default function CanvasComponent() {
 
     let upperContainer = document.querySelector('.canvas-upper-container');
     let middleContainer = document.querySelector('.canvas-middle-container');
+
+    // Присваивание событий для масштабирования и перемещения
+    mainContainer.addEventListener('wheel', handleMouseWheel);
+    mainContainer.addEventListener('mousedown', handleWheelDown);
+    mainContainer.addEventListener('mousemove', handleWheelMove);
+    mainContainer.addEventListener('mouseup', handleWheelUp);
 
     // Переключение активных слоёв
     if (currentTool === 'Canvas' || currentTool === 'Object' || currentTool === 'Label') {
@@ -620,11 +646,7 @@ export default function CanvasComponent() {
       disableBrushObjectsSelection();
     }
 
-    // Присваивание событий для масштабирования и перемещения
-    mainContainer.addEventListener('wheel', handleMouseWheel);
-    mainContainer.addEventListener('mousedown', handleWheelDown);
-    mainContainer.addEventListener('mousemove', handleWheelMove);
-    mainContainer.addEventListener('mouseup', handleWheelUp);
+    
 
     return () => {
       // Удаление обработчиков событий при размонтировании компонента
@@ -710,7 +732,7 @@ export default function CanvasComponent() {
 
     if (Number(id_map) !== 0) {
       loadMapData(id_map);
-    }
+    }    
   }, [])
 
   const [isUndoOrRedoInProgress, setIsUndoOrRedoInProgress] = useState(false);
