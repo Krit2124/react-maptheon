@@ -7,7 +7,7 @@ import LikeCounter from '../sharedElements/likeCounter';
 import userImage from "../../assets/icons/User.png";
 
 
-export default function PublicMapCard({ id, name, id_creator, creator_name, number_in_favourites }) {
+export default function PublicMapCard({ id, name, id_creator, creator_name, number_in_favourites, wasFavourite }) {
     const navigate = useNavigate();
 
     const {
@@ -34,7 +34,7 @@ export default function PublicMapCard({ id, name, id_creator, creator_name, numb
                     <p>{creator_name}</p>
                 </div>
 
-                <LikeCounter likeAmount={number_in_favourites} wasFavourite={false}/>
+                <LikeCounter likeAmount={number_in_favourites} wasFavourite={wasFavourite} idMap={id} />
             </div>
         </div>
     );

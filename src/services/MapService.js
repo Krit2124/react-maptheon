@@ -44,4 +44,16 @@ export default class MapService {
     static async deleteMap(id_map) {
         return api.post('/deleteMap', {id_map});
     }
+
+    static async allFavouriteMaps(textToFind, sortByField) {
+        return api.post('/allFavouriteMaps', {textToFind, sortByField});
+    }
+
+    static async addMapToFavourite(id_map) {
+        return api.post('/addMapToFavourite', { id_map });
+    }
+    
+    static async deleteMapFromFavourite(id_map) {
+        return api.post('/deleteMapFromFavourite', { id_map });
+    }
 }

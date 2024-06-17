@@ -7,7 +7,6 @@ import PersonalMapCard from "./personalMapCard";
 import UserMapCard from './userMapCard';
 import PublicMapCard from './publicMapCard';
 
-
 export default function MapCardList({reqCards}) {
     const { id_user } = useParams();
 
@@ -20,6 +19,7 @@ export default function MapCardList({reqCards}) {
         allMaps,
         myMaps,
         userMaps,
+        allFavouriteMaps
     } = useServerMapOperationsStore();
     
     const [cards, setCards] = useState();
@@ -45,14 +45,15 @@ export default function MapCardList({reqCards}) {
         try {
             const response = await allMaps(textToFind, sortByField);
 
-            setCards(response.map(map => (
+            setCards(response.map(thisMap => (
                 <PublicMapCard
-                    key={map.id}
-                    id={map.id}
-                    name={map.name}
-                    id_creator={map.id_creator}
-                    creator_name={map.creator_name}
-                    number_in_favourites={map.number_in_favourites}
+                    key={thisMap.id}
+                    id={thisMap.id}
+                    name={thisMap.name}
+                    id_creator={thisMap.id_creator}
+                    creator_name={thisMap.creator_name}
+                    number_in_favourites={thisMap.number_in_favourites}
+                    wasFavourite={thisMap.wasFavourite}
                 />
             )))
         } catch (e) {
@@ -70,6 +71,27 @@ export default function MapCardList({reqCards}) {
                     id={map.id}
                     name={map.name}
                     number_in_favourites={map.number_in_favourites}
+                    wasFavourite={map.wasFavourite}
+                />
+            )))
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const fetchFavouriteMaps = async () => {
+        try {
+            const response = await allFavouriteMaps(textToFind, sortByField);
+
+            setCards(response.map(thisMap => (
+                <PublicMapCard
+                    key={thisMap.id}
+                    id={thisMap.id}
+                    name={thisMap.name}
+                    id_creator={thisMap.id_creator}
+                    creator_name={thisMap.creator_name}
+                    number_in_favourites={thisMap.number_in_favourites}
+                    wasFavourite={thisMap.wasFavourite}
                 />
             )))
         } catch (e) {
@@ -83,35 +105,13 @@ export default function MapCardList({reqCards}) {
         } else if (reqCards === 'public') {
             fetchPublicMaps()
         } else if (reqCards === 'favourite') {
-            setCards(null);
+            fetchFavouriteMaps();
         } else if (reqCards === 'user') {
             fetchUserMaps();
         } else {
             setCards(null);
         }
     }, [reqCards, textToFind, sortByField]);
-
-    // if (reqCards === 'public') {
-    //     cards = Array(10).fill(<PublicMapCard />);
-    // } else if (reqCards === 'personal') {
-    //     console.log(maps);
-        
-    //     cards = maps[0].map(map => (
-    //         <PersonalMapCard
-    //             id={map.id}
-    //             name={map.name}
-    //             isPublic={map.is_public}
-    //             updatedAt={map.updatedAt}
-    //             imagePath={map.imagePath}
-    //         />
-    //     ));
-    // } else if (reqCards === 'favourite') {
-    //     cards = Array(10).fill(<PublicMapCard />);
-    // } else if (reqCards === 'user') {
-    //     cards = Array(10).fill(<UserMapCard />);
-    // } else {
-    //     cards = null;
-    // }
 
     return (
         <div className="flex-row-sb-c flex-wrap flex-gap-20">

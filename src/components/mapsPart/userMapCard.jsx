@@ -5,7 +5,7 @@ import { useServerMapOperationsStore } from 'store/store';
 
 import LikeCounter from '../sharedElements/likeCounter';
 
-export default function UserMapCard({ id, name, number_in_favourites }) {
+export default function UserMapCard({ id, name, number_in_favourites, wasFavourite }) {
     const navigate = useNavigate();
     const { id_user } = useParams();
 
@@ -24,7 +24,7 @@ export default function UserMapCard({ id, name, number_in_favourites }) {
             <div className="flex-row-sb-c mapCardContent">
                 <h3>{name}</h3>
                 
-                <LikeCounter likeAmount={number_in_favourites} wasFavourite={false} />
+                <LikeCounter likeAmount={number_in_favourites} wasFavourite={wasFavourite} idMap={id} />
             </div>
         </div>
     );

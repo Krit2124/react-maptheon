@@ -21,12 +21,13 @@ export default function SingleMapPage() {
     const [mapName, setMapName] = useState('Название карты');
     const [likeAmount, setLikeAmount] = useState(0);
     const [mapDescription, setMapDescription] = useState('Описание карты');
+    const [wasFavourite, setWasFavourite] = useState(false);
     const [createdAt, setCreatedAt] = useState('2024-05-14 15:55:48');
     const [updatedAt, setUpdatedAt] = useState('2024-05-14 15:55:48');
-
     const [creatorName, setCreatorName] = useState('Имя пользователя');
-
     const [tags, setTags] = useState([]);
+    // Состояние загрузки
+    const [isLoading, setIsLoading] = useState(true);
 
     const fetchMapSettings = async () => {
         try {
@@ -34,11 +35,14 @@ export default function SingleMapPage() {
             setMapName(mapSettings.name);
             setMapDescription(mapSettings.description);
             setLikeAmount(mapSettings.number_in_favourites);
+            setWasFavourite(mapSettings.wasFavourite);
             setCreatedAt(mapSettings.createdAt);
             setUpdatedAt(mapSettings.updatedAt);
             setCreatorName(mapSettings.creator_name);
         } catch (e) {
             console.log(e);
+        } finally {
+            setIsLoading(false); // Устанавливаем false после завершения загрузки
         }
     };
 
@@ -54,12 +58,16 @@ export default function SingleMapPage() {
     useEffect(() => {
         fetchMapSettings();
         fetchTags();
-    }, [])
+    }, []);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleString().slice(0, 10);
     };
+
+    if (isLoading) {
+        return <div className='size-full-vertical-pagePercent-withHeader flex-col-c-c'>Загрузка данных...</div>; // Показ загрузочного индикатора
+    }
 
     return (
         <section className="background-gray-default size-full-vertical-pagePercent-withHeader flex-col-c-c flex-gap-20">
@@ -76,7 +84,7 @@ export default function SingleMapPage() {
                     <div className='flex-row-sb-c size-full-horizontal-percent'>
                         <h1>{mapName}</h1>
 
-                        <LikeCounter likeAmount={likeAmount} wasFavourite={false} />
+                        <LikeCounter likeAmount={likeAmount} wasFavourite={wasFavourite} idMap={id_map} />
                     </div>
 
                     <div className='size-full-horizontal-percent'>

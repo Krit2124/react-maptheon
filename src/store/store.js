@@ -401,7 +401,7 @@ export const useServerMapOperationsStore = create((set)=> ({
     urlToGetFullSizeImg: process.env.REACT_APP_IMG_URL + '/mapsFullSize/',
 
     // Функция получения списка всех карт
-    // Получаемые поля: id, name, id_creator, creator_name, number_in_favourites
+    // Получаемые поля: id, name, id_creator, creator_name, number_in_favourites, wasFavourite
     allMaps: async (textToFind, sortByField) => {
         try {
             const maps = await MapService.allMaps(textToFind, sortByField);
@@ -423,7 +423,7 @@ export const useServerMapOperationsStore = create((set)=> ({
     },
 
     // Функция получения списка карт текущего пользователя
-    // Получаемые поля: maps (id, name, number_in_favourites), userInfo (id, username, description)
+    // Получаемые поля: maps (id, name, number_in_favourites, wasFavourite), userInfo (id, username, description)
     userMaps: async (id_user, textToFind, sortByField) => {
         try {
             const userMapsData = await MapService.userMaps(id_user, textToFind, sortByField);
@@ -434,10 +434,11 @@ export const useServerMapOperationsStore = create((set)=> ({
     },
 
     // Функция получения информации о карте любого пользователя
-    // Получаемые поля: id, name, creator_name, description, number_in_favourites, createdAt, updatedAt
+    // Получаемые поля: id, name, creator_name, description, number_in_favourites, wasFavourite, createdAt, updatedAt
     userMapInfo: async (id_map, id_user) => {
         try {
             const userMapsData = await MapService.userMapInfo(id_map, id_user);
+            console.log(userMapsData.data);
             return userMapsData.data;
         } catch (e) {
             console.log(e.response?.data?.message);
@@ -520,6 +521,41 @@ export const useServerMapOperationsStore = create((set)=> ({
         try {
             const message = await MapService.deleteMap(id_map);
             return message;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+            return (e.response?.data?.message);
+        }
+    },
+
+    // Функция для получения избранных карт
+    // Получаемые поля: id, name, id_creator, creator_name, number_in_favourites, wasFavourite
+    allFavouriteMaps: async (textToFind, sortByField) => {
+        try {
+            const maps = await MapService.allFavouriteMaps(textToFind, sortByField);
+            return maps.data;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+        }
+    },
+
+    // Функция для добавления карты в избранное
+    // Получаемые данные: новое количество лайков (likes)
+    addMapToFavourite: async (id_map) => {
+        try {
+            const likes = await MapService.addMapToFavourite(id_map);
+            return likes.data;
+        } catch (e) {
+            console.log(e.response?.data?.message);
+            return (e.response?.data?.message);
+        }
+    },
+
+    // Функция для удаления карты из избранного
+    // Получаемые данные: новое количество лайков (likes)
+    deleteMapFromFavourite: async (id_map) => {
+        try {
+            const likes = await MapService.deleteMapFromFavourite(id_map);
+            return likes.data;
         } catch (e) {
             console.log(e.response?.data?.message);
             return (e.response?.data?.message);
