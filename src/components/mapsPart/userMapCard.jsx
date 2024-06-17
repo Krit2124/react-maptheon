@@ -19,7 +19,7 @@ export default function UserMapCard({ id, name, number_in_favourites }) {
 
     return (
         <div className="flex-col-sb-c background-gray-search flex-gap-15 personalMapCard">
-            <img src={urlToGetPreviewImg + id + '.jpg'} className="mapCardImg pointer" alt={name} onClick={() => handleViewMap()}/>
+            <img src={urlToGetPreviewImg + id + '.jpg'} className="mapCardImg pointer" alt={name} onClick={() => handleViewMap()} title='Просмотр карты' />
             
             <div className="flex-row-sb-c mapCardContent">
                 <h3>{name}</h3>

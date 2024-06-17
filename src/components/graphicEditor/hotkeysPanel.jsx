@@ -6,7 +6,7 @@ import closeImage from "../../assets/icons/Close.png"
 
 export default function HotkeysPanel() {
     const { 
-        isHotkeysPanelVisible, setIsHotkeysPanelVisible,
+        setIsHotkeysPanelVisible,
     } = useGeneralGraphicEditorStore();
 
     return (

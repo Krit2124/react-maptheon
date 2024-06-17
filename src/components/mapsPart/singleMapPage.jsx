@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
 import { useServerMapOperationsStore, useServerTagOperationsStore } from 'store/store';
 import LikeCounter from '../sharedElements/likeCounter';
-
-import favouriteImage from "../../assets/icons/Favourite.png";
 
 export default function SingleMapPage() {
     const navigate = useNavigate();
@@ -64,14 +62,14 @@ export default function SingleMapPage() {
     };
 
     return (
-        <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
-            <div className="container-fullScreen size-full-vertical-pagePercent-withHeader flex-row-c-c flex-gap-50">
-                <div className="mapFillSizeImage">
+        <section className="background-gray-default size-full-vertical-pagePercent-withHeader flex-col-c-c flex-gap-20">
+            <div className="container-fullScreen flex-row-c-c flex-gap-50">
+                <div className="mapFillSizeImage size-full-vertical-percent">
                     <img src={urlToGetFullSizeImg + id_map + '.jpg'} alt="Карта" />
                 </div>
 
                 <div className='flex-col-sb-left flex-gap-30 container-mapInfo'>
-                    <div className='flex-row-c-c size-full-horizontal-percent'>
+                    <div className='flex-row-c-c size-full-horizontal-percent' title='Просмотр профиля пользователя'>
                         <h1 onClick={() => navigate(`/maps/user/${id_user}`)} className='pointer'>{creatorName}</h1>
                     </div>
 
@@ -105,6 +103,10 @@ export default function SingleMapPage() {
                     </div>
                 </div>
             </div>
+
+            <Link to="#" className='button-text-usual' onClick={() => window.history.back()}>
+                Вернуться назад
+            </Link>
 
             <ToastContainer theme="dark"/>
         </section>

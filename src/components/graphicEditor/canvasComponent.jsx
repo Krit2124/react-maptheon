@@ -646,8 +646,6 @@ export default function CanvasComponent() {
       disableBrushObjectsSelection();
     }
 
-    
-
     return () => {
       // Удаление обработчиков событий при размонтировании компонента
       mainContainer.removeEventListener('wheel', handleMouseWheel);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useGeneralGraphicEditorStore } from 'store/store';
 
@@ -8,7 +8,7 @@ import HotkeysPanel from './hotkeysPanel';
 
 export default function MainGraphicEditor() {
     const {
-        isHotkeysPanelVisible, setIsHotkeysPanelVisible,
+        isHotkeysPanelVisible,
     } = useGeneralGraphicEditorStore();
 
     return (

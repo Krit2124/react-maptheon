@@ -104,7 +104,7 @@ export default function BrushSettings() {
                             <p>Недавно использованные</p>
                             <div className='flex-row-left-c flex-wrap flex-gap-5 recentlyUsedContainer'>
                                 {recentlyUsedTextures.map((texture, index) => (
-                                    <div key={index} className='recentTexture' style={{ backgroundImage: `url(${texture})` }} onClick={() => handleTextureClick(texture)} />
+                                    <div key={index} className='recentTexture pointer' style={{ backgroundImage: `url(${texture})` }} onClick={() => handleTextureClick(texture)} />
                                 ))}
                             </div>
                         </div>

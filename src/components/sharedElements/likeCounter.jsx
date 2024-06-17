@@ -11,7 +11,7 @@ export default function LikeCounter({likeAmount, wasFavourite}) {
     };
 
     return (
-        <div className="flex-row-sb-c flex-gap-10" onClick={switchToFavourite}>
+        <div className="flex-row-sb-c flex-gap-10 pointer" onClick={switchToFavourite} title='Добавить в избранное'>
             <p>{likeAmount}</p>
             <img src={isFavourite ? favouriteImage : notFavouriteImage} alt="Избранное" className="size-image-small"/>
         </div>

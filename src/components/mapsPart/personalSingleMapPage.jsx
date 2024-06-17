@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
 import { useServerMapOperationsStore, useServerTagOperationsStore } from 'store/store';
@@ -154,9 +154,9 @@ export default function PersonalSingleMapPage() {
     };
 
     return (
-        <section className="background-gray-default size-full-vertical-pagePercent-withHeader">
-            <div className="container-fullScreen size-full-vertical-pagePercent-withHeader flex-row-c-c flex-gap-50">
-                <div className="mapFillSizeImage">
+        <section className="background-gray-default size-full-vertical-pagePercent-withHeader flex-col-c-c flex-gap-20">
+            <div className="container-fullScreen flex-row-c-c flex-gap-50">
+                <div className="mapFillSizeImage size-full-vertical-percent">
                     <img src={urlToGetFullSizeImg + id + '.jpg'} alt="Карта" />
                 </div>
 
@@ -233,6 +233,10 @@ export default function PersonalSingleMapPage() {
                     </div>
                 </div>
             </div>
+
+            <Link to="#" className='button-text-usual' onClick={() => window.history.back()}>
+                Вернуться назад
+            </Link>
 
             <ToastContainer theme="dark"/>
         </section>

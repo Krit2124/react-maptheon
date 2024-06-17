@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { useSearchFieldStore } from 'store/store';
 
 import loupeImage from "../../assets/icons/Loupe.png"
+import closeImage from "../../assets/icons/Close.png"
 import showOrHideImage from "../../assets/icons/ShowOrHide.png"
 
 function SearchField() {
@@ -29,7 +30,12 @@ function SearchField() {
 
     return (
         <InputGroup className="textInput-search flex-row-sb-c background-gray-search">
-            <img src={loupeImage} alt="Поиск"/>
+            {textToFind === "" ? (
+                <img src={loupeImage} alt="Поиск"/>
+            ) : (
+                <img src={closeImage} className='size-image-tiny pointer' alt="Очистить" onClick={() => {setTextToFind('')}}/>
+            )}
+            
 
             <FormControl
                 placeholder="Введите название или ключевые слова..."

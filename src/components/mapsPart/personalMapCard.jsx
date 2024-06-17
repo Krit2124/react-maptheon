@@ -30,11 +30,11 @@ export default function PersonalMapCard({ id, name, updatedAt }) {
     return (
         <div className="flex-col-sb-c background-gray-search flex-gap-15 personalMapCard">
             <div className='flex-row-sb-c mapCardButtons'>
-                <button className='button-image-small'>
+                <button className='button-image-small' title='Настройки карты'>
                     <img src={GearImage} alt="Настройки" onClick={() => handleEditMapSettings(id)} />
                 </button>
 
-                <button className='button-image-small' onClick={() => handleStartEdit(id)}>
+                <button className='button-image-small' onClick={() => handleStartEdit(id)} title='Перейти к рисованию'>
                     <img src={PencilImage} alt="Перейти к рисованию"/> 
                 </button>
             </div>

@@ -41,26 +41,26 @@ export default function GraphicEditorHeader() {
         <header className="border-black-bottom background-black header-graphicEditor">
             <div className="flex-row-sb-c">
                 <div className="flex-row-sb-c flex-gap-30">
-                    <button className="button-image-big" onClick={() => handleExit()}>
+                    <button className="button-image-big" onClick={() => handleExit()} title="Выйти из редактора">
                         <img src={exitImage} alt="Выйти из редактора"/>
                     </button>
 
                     <div className='flex-row-sb-c flex-gap-10'>
-                        <button className="button-image-big" onClick={() => setIsUndoRequired(true)}>
+                        <button className="button-image-big" onClick={() => setIsUndoRequired(true)} title="Отменить последнее действие">
                             <img src={arrowBackImage} alt="Отменить"/>
                         </button>
-                        <button className="button-image-big" onClick={() => setIsRedoRequired(true)}>
+                        <button className="button-image-big" onClick={() => setIsRedoRequired(true)} title="Вернуть последнее действие">
                             <img src={arrowForwardImage} alt="Вернуть"/>
                         </button>
                     </div>
                 </div>
 
                 <div className='flex-row-sb-c flex-gap-30'>
-                    <button className="button-image-big" onClick={() => setIsHotkeysPanelVisible(!isHotkeysPanelVisible)}>
+                    <button className="button-image-big" onClick={() => setIsHotkeysPanelVisible(!isHotkeysPanelVisible)} title="Список горячих клавиш">
                         <img src={questionImage} alt="Горячие клавиши"/>
                     </button>
 
-                    <button className="button-image-big" onClick={handleObjectListVisibility}>
+                    <button className="button-image-big" onClick={handleObjectListVisibility} title="Скрыть/показать список объектов">
                         <img src={showOrHideImage} alt="Отображение списка объектов" className={rotationClass}/>
                     </button>
                 </div>

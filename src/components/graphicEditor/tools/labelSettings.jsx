@@ -132,25 +132,25 @@ export default function LabelSettings() {
 
             <div className="flex-row-sb-c size-full-horizontal-percent">
                 <div className="flex-row-sb-c flex-gap-5">
-                    <button className={`button-image-medium ${labelIsBold ? 'active' : ''}`} onClick={() => setLabelIsBold(!labelIsBold)}>
+                    <button className={`button-image-medium ${labelIsBold ? 'active' : ''}`} onClick={() => setLabelIsBold(!labelIsBold)} title="Жирный шрифт">
                         <img src={boldFontImage} alt="Жирный шрифт"/>
                     </button>
 
-                    <button className={`button-image-medium ${labelIsItalic ? 'active' : ''}`} onClick={() => setLabelIsItalic(!labelIsItalic)}>
+                    <button className={`button-image-medium ${labelIsItalic ? 'active' : ''}`} onClick={() => setLabelIsItalic(!labelIsItalic)} title="Курсивный шрифт">
                         <img src={italicFontImage} alt="Курсивный шрифт"/>
                     </button>
                 </div>
 
                 <div className="flex-row-sb-c flex-gap-5">
-                    <button className={`button-image-medium ${labelAlign === 'left' ? 'active' : ''}`} onClick={() => setLabelAlign('left')}>
+                    <button className={`button-image-medium ${labelAlign === 'left' ? 'active' : ''}`} onClick={() => setLabelAlign('left')} title="Выравнивание по левому краю">
                         <img src={leftAlignmentImage} alt="Выравнивание по левому краю"/>
                     </button>
 
-                    <button className={`button-image-medium ${labelAlign === 'center' ? 'active' : ''}`} onClick={() => setLabelAlign('center')}>
+                    <button className={`button-image-medium ${labelAlign === 'center' ? 'active' : ''}`} onClick={() => setLabelAlign('center')} title="Выравнивание по центру">
                         <img src={centerAlignmentImage} alt="Выравнивание по центру"/>
                     </button>
 
-                    <button className={`button-image-medium ${labelAlign === 'right' ? 'active' : ''}`} onClick={() => setLabelAlign('right')}>
+                    <button className={`button-image-medium ${labelAlign === 'right' ? 'active' : ''}`} onClick={() => setLabelAlign('right')} title="Выравнивание по правому краю">
                         <img src={rightAlignmentImage} alt="Выравнивание по правому краю"/>
                     </button>
                 </div>

@@ -26,17 +26,17 @@ export default function Header() {
                         <img src={logoImage} alt="Логотип"/>
                     </Link>
                     
-                    <NavLink to="/maps/personal/yours" className="button-image-big">
+                    <NavLink to="/maps/personal/yours" className="button-image-big" title='Ваши карты'>
                         <img src={personalMapsImage} alt="Ваши карты" />
                     </NavLink>
 
-                    <NavLink to="/maps/public" className="button-image-big">
+                    <NavLink to="/maps/public" className="button-image-big" title='Карты сообщества'>
                         <img src={publicMapsImage} alt="Карты сообщества" />
                     </NavLink>
                 </div>
                 
                 <Dropdown className="flex-col-sb-right white-border-when-active" align="end">
-                    <Dropdown.Toggle variant="success" className="button-image-big" id="dropdown-basic">
+                    <Dropdown.Toggle variant="success" className="button-image-big" id="dropdown-basic" title='Действия с аккаунтом'>
                         <img src={userImage} alt="Действия с аккаунтом" />
                     </Dropdown.Toggle>
 

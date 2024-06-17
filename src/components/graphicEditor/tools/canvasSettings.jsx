@@ -129,11 +129,11 @@ export default function CanvasSettings() {
                         <input type="number" min="0" max="10000" value={canvasHeight} onChange={(e) => handleHeightChange(parseInt(e.target.value))}/>
                     </div>
 
-                    <button className={`button-image-medium ${isAspectRatioLocked ? 'active' : ''}`} onClick={handleAspectRatioToggle}>
+                    <button className={`button-image-medium ${isAspectRatioLocked ? 'active' : ''}`} onClick={handleAspectRatioToggle} title='Сохранение пропорций'>
                         <img src={chainImage} alt="Пропорции"/>
                     </button>
 
-                    <button className='button-image-medium' onClick={handleRotateCanvas}>
+                    <button className='button-image-medium' onClick={handleRotateCanvas} title='Обменять значения'>
                         <img src={reverseImage} alt="Развернуть"/>
                     </button>
                 </div>
@@ -158,7 +158,7 @@ export default function CanvasSettings() {
                         <p>Недавно использованные</p>
                         <div className='flex-row-left-c flex-wrap flex-gap-5 recentlyUsedContainer'>
                             {recentlyUsedTextures.map((texture, index) => (
-                                <div key={index} className='recentTexture' style={{ backgroundImage: `url(${texture})` }} onClick={() => handleTextureClick(texture)} />
+                                <div key={index} className='recentTexture pointer' style={{ backgroundImage: `url(${texture})` }} onClick={() => handleTextureClick(texture)} />
                             ))}
                         </div>
                     </div>

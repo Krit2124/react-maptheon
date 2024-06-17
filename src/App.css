@@ -53,6 +53,11 @@
   height: 100vh;
 }
 
+.size-image-tiny {
+  width: 15px;
+  height: 15px;
+}
+
 .size-image-small {
   max-width: 24px;
   max-height: 24px;

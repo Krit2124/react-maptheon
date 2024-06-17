@@ -32,32 +32,32 @@ export default function GraphicEditorToolsPanel() {
     return (
         <div className="border-black-right background-black flex-col-sb-c canvasPanel size-full-vertical-pagePercent-withHeader">
             <div className="flex-col-sb-c flex-gap-10">
-                <button className={`button-image-big ${currentTool === null ? 'active' : ''}`} onClick={handleCloseToolSettingsPanel}>
+                <button className={`button-image-big ${currentTool === null ? 'active' : ''}`} onClick={handleCloseToolSettingsPanel} title="Курсор для выбора объектов">
                     <img src={cursorImage} alt="Курсор"/>
                 </button>
 
-                <button className={`button-image-big ${currentTool === "Brush" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Brush")}>
+                <button className={`button-image-big ${currentTool === "Brush" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Brush")} title="Кисть">
                     <img src={brushImage} alt="Кисть"/>
                 </button>
 
-                <button className={`button-image-big ${currentTool === "Object" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Object")}>
+                <button className={`button-image-big ${currentTool === "Object" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Object")} title="Объекты">
                     <img src={objectImage} alt="Объект"/>
                 </button>
 
-                <button className={`button-image-big ${currentTool === "Label" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Label")}>
+                <button className={`button-image-big ${currentTool === "Label" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Label")} title="Подпись">
                     <img src={textImage} alt="Подпись"/>
                 </button>
 
-                <button className={`button-image-big ${currentTool === "Canvas" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Canvas")}>
+                <button className={`button-image-big ${currentTool === "Canvas" ? 'active' : ''}`} onClick={() => handleSwitchToolSettingsPannel("Canvas")} title="Свойства холста">
                     <img src={canvasImage} alt="Холст"/>
                 </button>
             </div>
 
             <div className="flex-col-sb-c flex-gap-10">
-                <button className="button-image-big" onClick={() => setIsExportRequired(true)}>
+                <button className="button-image-big" onClick={() => setIsExportRequired(true)} title="Скачать изображение">
                     <img src={downloadImage} alt="Скачать"/>
                 </button>
-                <button className="button-image-big" onClick={() => setIsSaveRequired(true)}>
+                <button className="button-image-big" onClick={() => setIsSaveRequired(true)} title="Сохранить на сервере">
                     <img src={saveImage} alt="Сохранить"/>
                 </button>
             </div>

@@ -43,7 +43,7 @@ export const useGeneralGraphicEditorStore = create((set)=> ({
     isSaveRequired: false,
     setIsSaveRequired: (value) => set({ isSaveRequired: value }),
 
-    isObjectListVisible: true,
+    isObjectListVisible: false,
     setIsObjectListVisible: (value) => set({ isObjectListVisible: value }),
 
     // Требуется ли отмена последнего действия
@@ -70,7 +70,7 @@ export const useGeneralGraphicEditorStore = create((set)=> ({
 
     // Сброс настроек
     setGeneralDefaultSettings: () => set({ 
-        isObjectListVisible: true,
+        isObjectListVisible: false,
         isToolSettingsPanelVisible: false,
         currentTool: null,
         typeOfChoosenObject: null,
